@@ -101,6 +101,7 @@ bool Client::tryConnect(sockaddr_in &socketAddress)
         }
         break;
       default:
+        debug("connect() error)");
         return false;
     }
   }
