@@ -711,7 +711,7 @@ void HttpClient::debug(const char * s)
 {
   if (m_log) {
     nds::File log;
-    log.open("bunjalloo.log", "a");
+    log.open("bunjalloo.log", "a+");
     log.write(s);
     log.write("\n");
     //printf("debug:%s\n",s);
