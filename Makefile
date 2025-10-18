@@ -16,7 +16,7 @@ NAME		:= bunjalloo
 GAME_TITLE	:= Bunjalloo
 GAME_SUBTITLE	:= Web Browser
 GAME_AUTHOR	:= By Richard Quirk
-GAME_ICON	:= bunjalloo/common/data/icon.bmp
+GAME_ICON	:= icon.bmp
 
 # DLDI and internal SD slot of DSi
 # --------------------------------
