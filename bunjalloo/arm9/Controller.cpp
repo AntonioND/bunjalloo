@@ -237,7 +237,7 @@ void Controller::mainLoop()
 {
   for (;;) {
     m_view->tick();
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
   }
 }
 
@@ -546,5 +546,6 @@ void Controller::checkDownloadQueue()
 
 void Controller::waitVBlank() const
 {
-  if (m_view) swiWaitForVBlank();
+  if (m_view)
+    cothread_yield_irq(IRQ_VBLANK);
 }

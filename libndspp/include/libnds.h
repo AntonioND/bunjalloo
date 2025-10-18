@@ -107,7 +107,6 @@ typedef struct sSpriteRotation {
   unsigned short filler4[3];
   short vdy;
 } SpriteRotation, * pSpriteRotation;
-void swiWaitForVBlank(); // tolua_export
 
 void dmaCopy(const void * source, void * destination, unsigned int length);
 
@@ -206,6 +205,7 @@ extern "C" {
 // No! #include <nds/arm9/videoGL.h>
 // No! #include <nds/arm9/boxtest.h>
 #include <nds/arm9/sprite.h>
+#include <nds/cothread.h>
 #ifdef __cplusplus
 }
 #endif

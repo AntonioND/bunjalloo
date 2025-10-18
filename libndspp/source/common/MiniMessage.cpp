@@ -63,7 +63,7 @@ void MiniMessage::failed()
   print("FAILED", 26, s_lastRow);
   for (;;)
   {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
   }
 }
 
