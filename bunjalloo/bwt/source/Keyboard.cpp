@@ -66,6 +66,7 @@ const static int SCROLLBAR_DECOR = 7;
 
 Keyboard::Keyboard():
   m_shift(false),
+  m_extra(false),
   m_capsLock(false),
   m_selectedStatus(OK),
   m_scrollPane(new ScrollPane),
