@@ -68,10 +68,9 @@ DEFINES		:= -DPOSIX \
 
 ARM7ELF		:= $(BLOCKSDS)/sys/arm7/main_core/arm7_dswifi.elf
 
-LIBS		:= -lmm9 -lnds9 -ldswifi9
-LIBDIRS		:= $(BLOCKSDS)/libs/maxmod \
-		   $(BLOCKSDS)/libs/libnds \
-		   $(BLOCKSDS)/libs/dswifi
+LIBS		:= -lnds9 -ldswifi9
+LIBDIRS		:= $(BLOCKSDS)/libs/libnds \
+			   $(BLOCKSDS)/libs/dswifi
 
 # Build artifacts
 # ---------------
