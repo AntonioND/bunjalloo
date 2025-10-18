@@ -146,6 +146,7 @@ int32 sslCloseOsdep(void)
 
 int32 sslGetEntropy(unsigned char *bytes, int32 size)
 {
+#if 0
 	int32				rc, sanity, retry, readBytes;
 	unsigned char 	*where = bytes;
 
@@ -204,6 +205,8 @@ int32 sslGetEntropy(unsigned char *bytes, int32 size)
 		size -= rc;
 	}
 	return readBytes;
+#endif
+    return size;
 }
 
 #ifdef DEBUG
