@@ -38,7 +38,7 @@ bool Wifi9::connected() const
 
 void Wifi9::initialise()
 {
-  Wifi_InitDefault(false);
+  Wifi_InitDefault(WFC_CONNECT | WIFI_ATTEMPT_DSI_MODE);
 }
 
 void Wifi9::connect()
