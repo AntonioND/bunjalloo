@@ -48,6 +48,8 @@ Canvas::Canvas():
 
 void Canvas::init()
 {
+  defaultExceptionHandler();
+
   // set up background.
   Video & main(Video::instance());
   Video & sub(Video::instance(1));
