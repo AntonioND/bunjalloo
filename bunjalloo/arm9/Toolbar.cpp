@@ -67,7 +67,7 @@ static void initSpriteData(unsigned short * oamData)
   nds::Image image("/"DATADIR"/fonts/toolbar.png", true);
   if (image.isValid())
   {
-    const unsigned short * data = image.data();
+    const unsigned char * data = (const unsigned char *)image.data();
     if (data)
     {
       // need to load in 16x16 tile order
@@ -93,7 +93,7 @@ static void initSpriteData(unsigned short * oamData)
               // index into oam:
               unsigned short * oamSlot = &oamData[oamIndex*8*8/2];
               oamIndex++;
-              const unsigned short * src = data + (tileY*8*bytesPerRow) + (tileX*8);
+              const unsigned char * src = data + (tileY*8*bytesPerRow) + (tileX*8);
               for (int row = 0; row < 8; row++)
               {
                 for (int col = 0; col < 4; col++, src+=2)

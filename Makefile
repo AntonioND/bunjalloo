@@ -35,9 +35,7 @@ SOURCEDIRS	:= 3rdparty/ \
 			   libndspp/source/arm9 \
 			   libndspp/source/common \
 
-INCLUDEDIRS	:= 3rdparty/giflib/lib/ \
-			   3rdparty/jpeg-6b/ \
-			   3rdparty/libpng/ \
+INCLUDEDIRS	:= 3rdparty/libplum/ \
 			   3rdparty/matrixssl/ \
 			   3rdparty/matrixssl/matrixssl-1-8-6-open/ \
 			   3rdparty/zlib/ \

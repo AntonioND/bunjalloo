@@ -303,8 +303,6 @@ void Document::setCacheFile(const std::string & cacheFile)
   }
 }
 
-#include <png.h>
-#include <gif_lib.h>
 void Document::magicMimeType(const char * data, int length)
 {
   if (length > 128)
@@ -319,15 +317,17 @@ void Document::magicMimeType(const char * data, int length)
   }
   else
   {
-    if (!png_sig_cmp((png_byte*)data, (png_size_t)0, 3))
+    if ((unsigned char)data[0] == 0x89 && (unsigned char)data[1] == 0x50 &&
+        (unsigned char)data[2] == 0x4E)
     {
       m_htmlDocument->parseContentType("image/png");
     }
-    else if (strncmp(GIF_STAMP, data, GIF_VERSION_POS) == 0)
+    else if ((unsigned char)data[0] == 0x47 && (unsigned char)data[1] == 0x49 &&
+             (unsigned char)data[2] == 0x46)
     {
       m_htmlDocument->parseContentType("image/gif");
     }
-    else if ((unsigned char)data[0] == 0xFF and (unsigned char)data[1] == 0xD8)
+    else if ((unsigned char)data[0] == 0xFF && (unsigned char)data[1] == 0xD8)
     {
       // naive check, but if it isn't a jpeg, then the proper
       // isJpeg call will catch it...

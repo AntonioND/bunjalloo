@@ -50,6 +50,8 @@ void Canvas::init()
 {
   defaultExceptionHandler();
 
+  //consoleDebugInit(DebugDevice_NOCASH);
+
   // set up background.
   Video & main(Video::instance());
   Video & sub(Video::instance(1));

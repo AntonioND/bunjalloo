@@ -26,7 +26,7 @@ namespace nds
   class Image
   {
     public:
-      /** Types of image.*/
+      /** Types of image. TODO: Unused */
       enum ImageType
       {
         ImagePNG,
@@ -122,13 +122,9 @@ namespace nds
       unsigned short * m_data;
       unsigned short * m_palette;
 
-      void readPng();
-      void readGif();
-      void readJpeg();
+      void readFile();
       static ImageType imageType(const char * filename);
 
-      /** Render line n from the given data. */
-      void renderLine(const unsigned char * line, int n);
       void calculateScale();
       void allocData();
       void allocPalette(size_t size);
