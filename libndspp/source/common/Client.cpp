@@ -75,7 +75,7 @@ void Client::disconnect()
 
 void Client::makeNonBlocking() {
   int i(1);
-  int iotclResult = ::ioctl(m_tcp_socket, FIONBIO, &i);
+  int iotclResult = ::ioctl(m_tcp_socket, FIONBIO, (char *)&i);
   if (iotclResult == -1) {
     debug("iotcl non blocking failed");
     // never happens on DS...
@@ -111,11 +111,11 @@ void Client::connectInitial()
 {
   // DS - must create the socket moments before using it!
   m_tcp_socket = socket(AF_INET, SOCK_STREAM, 0);
-  struct sockaddr_in socketAddress = {
-    AF_INET,          /* address family */
-    htons(m_port),    /* port in network byte order */
-    {inet_addr(m_ip)} /* internet address - network byte order */
-  };
+
+  struct sockaddr_in socketAddress = { 0 };
+  socketAddress.sin_family = AF_INET;              /* address family */
+  socketAddress.sin_port = htons(m_port);          /* port in network byte order */
+  socketAddress.sin_addr.s_addr = inet_addr(m_ip); /* internet address - network byte order */
 
   if (!m_socketAddress) {
     m_socketAddress = new sockaddr_in;
