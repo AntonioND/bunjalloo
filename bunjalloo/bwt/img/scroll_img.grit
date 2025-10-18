@@ -1,3 +1,2 @@
-# 8 bpp, tiles, not compressed
--gB8 -gt -m! -gTFF5AFF
+-pw 16 -gB 8 -m! -pe64
 
