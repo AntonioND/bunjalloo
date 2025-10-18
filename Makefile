@@ -29,20 +29,20 @@ SDIMAGE		:= image.bin
 # Source code paths
 # -----------------
 
-SOURCEDIRS	:= bunjalloo/arm9 \
- 			   bunjalloo/bwt/source \
+SOURCEDIRS	:= 3rdparty/ \
+			   bunjalloo/arm9 \
+			   bunjalloo/bwt/source \
 			   libndspp/source/arm9 \
 			   libndspp/source/common \
 
-INCLUDEDIRS	:= bunjalloo/arm9/matrixssl/ \
-			   bunjalloo/arm9/giflib/lib/ \
-			   bunjalloo/arm9/jpeg-6b/ \
+INCLUDEDIRS	:= 3rdparty/giflib/lib/ \
+			   3rdparty/jpeg-6b/ \
+			   3rdparty/libpng/ \
+			   3rdparty/matrixssl/ \
+			   3rdparty/matrixssl/matrixssl-1-8-6-open/ \
+			   3rdparty/zlib/ \
+			   3rdparty/zlib/contrib/minizip/ \
 			   bunjalloo/bwt/include/ \
-			   bunjalloo/arm9/zlib/contrib/minizip/ \
-			   bunjalloo/arm9/zlib/ \
-			   bunjalloo/arm9/libpng/ \
-			   bunjalloo/arm9/matrixssl/matrixssl/ \
-			   bunjalloo/arm9/matrixssl/matrixssl-1-8-6-open/ \
 			   libndspp/include/ \
 			   libndspp/source/arm9/
 
