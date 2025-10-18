@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <nds.h>
-#include <maxmod9.h>
+//#include <maxmod9.h>
 
 void setGenericSound( u32 rate, u8 vol, u8 pan, u8 format)
 {
