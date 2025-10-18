@@ -14,8 +14,8 @@ ARM_NONE_EABI_PATH	?= $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/bin/
 NAME		:= bunjalloo
 
 GAME_TITLE	:= Bunjalloo
-GAME_SUBTITLE	:= Built with BlocksDS
-GAME_AUTHOR	:= github.com/blocksds/sdk
+GAME_SUBTITLE	:= Web Browser
+GAME_AUTHOR	:= By Richard Quirk
 GAME_ICON	:= bunjalloo/common/data/icon.bmp
 
 # DLDI and internal SD slot of DSi
