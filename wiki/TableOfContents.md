@@ -10,11 +10,6 @@ These are the interesting pages in the wiki.
   - Roadmap
   - Changelog
 
-- Chaos DS
-
-  - Screenshots for Chaos DS
-  - New Spells in Chaos
-
 - Developers
 
   - Help for compiling source code
