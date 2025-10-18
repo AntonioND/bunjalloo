@@ -43,6 +43,9 @@ void Wifi9::initialise()
 
 void Wifi9::connect()
 {
+  m_connected = true;
+#if 0
+  // TODO: Let the user disconnect to save battery
   // if connected, you can use the berkley sockets interface to connect to the internet
   if (m_connected) {
     WifiStatus s = status();
@@ -65,7 +68,8 @@ void Wifi9::connect()
   m_connected = true;
   // simple WFC connect:
   // request connect - uses the stored data to connect
-  Wifi_AutoConnect();
+  //Wifi_AutoConnect();
+#endif
 }
 
 Wifi9::WifiStatus Wifi9::status() const
@@ -92,8 +96,11 @@ Wifi9::WifiStatus Wifi9::status() const
 
 void Wifi9::disconnect()
 {
+#if 0
+  // TODO: Let the user disconnect to save battery
   Wifi_DisconnectAP();
   Wifi_DisableWifi();
+#endif
   m_connected = false;
 }
 
