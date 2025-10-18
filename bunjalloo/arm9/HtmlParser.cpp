@@ -388,7 +388,7 @@ void HtmlParserImpl::handleCloseTagOpen()
         // parse error
         m_state = DATA;
         break;
-      case EOF:
+      case (unsigned int)EOF:
         emit('<');
         emit('/');
         rewind();
@@ -449,7 +449,7 @@ void HtmlParserImpl::handleTagName()
         m_state = BEFORE_ATTRIBUTE_NAME;
         break;
       case '<':
-      case EOF:
+      case (unsigned int)EOF:
         // parse error - but carry on.
       case '>':
         emitTagToken();
@@ -490,7 +490,7 @@ void HtmlParserImpl::handleBeforeAttributeName()
       m_state = BEFORE_ATTRIBUTE_NAME;
       break;
     case '<':
-    case EOF:
+    case (unsigned int)EOF:
       // parse error - carry on, reconsume in data state.
       rewind();
     case '>':
@@ -539,7 +539,7 @@ void HtmlParserImpl::handleAttributeName()
       m_state = BEFORE_ATTRIBUTE_VALUE;
       break;
     case '<':
-    case EOF:
+    case (unsigned int)EOF:
       // parse error - carry on, reconsume in data state. FALL THROUGH!
       rewind();
     case '>':
@@ -594,7 +594,7 @@ void HtmlParserImpl::handleAfterAttributeName()
       m_state = BEFORE_ATTRIBUTE_VALUE;
       break;
     case '<':
-    case EOF:
+    case (unsigned int)EOF:
       // parse error - carry on, reconsume in data state. FALL THROUGH!
       rewind();
     case '>':
@@ -644,7 +644,7 @@ void HtmlParserImpl::handleBeforeAttributeValue()
       break;
 
     case '<':
-    case EOF:
+    case (unsigned int)EOF:
       // parse error - carry on, reconsume in data state. FALL THROUGH!
       rewind();
     case '>':
@@ -677,7 +677,7 @@ void HtmlParserImpl::handleAttributeValueQuote()
         m_lastState = m_state;
         m_state = ENTITY_IN_ATTRIBUTE_VALUE;
         break;
-      case EOF:
+      case (unsigned int)EOF:
         emitTagToken();
         rewind();
         m_state = DATA;
@@ -706,7 +706,7 @@ void HtmlParserImpl::handleAttributeValueUnquoted()
       m_state = ENTITY_IN_ATTRIBUTE_VALUE;
       break;
     case '<':
-    case EOF:
+    case (unsigned int)EOF:
       // parse error - emit token but redo this value.
       rewind();
     case '>':
@@ -951,7 +951,7 @@ void HtmlParserImpl::handleComment()
     case '-':
       m_state = COMMENT_DASH;
       break;
-    case EOF:
+    case (unsigned int)EOF:
       emitComment();
       rewind();
       m_state = DATA;
@@ -968,7 +968,7 @@ void HtmlParserImpl::handleCommentDash()
     case '-':
       m_state = COMMENT_END;
       break;
-    case EOF:
+    case (unsigned int)EOF:
       emitComment();
       rewind();
       m_state = DATA;
@@ -984,7 +984,7 @@ void HtmlParserImpl::handleCommentEnd()
 {
   next();
   switch (m_value) {
-    case EOF:
+    case (unsigned int)EOF:
       rewind();
     case '>':
       emitComment();
@@ -1042,7 +1042,7 @@ void HtmlParserImpl::handleBeforeDoctypeName()
           emitDoctype(empty, true);
           m_state = DATA;
           break;
-        case EOF:
+        case (unsigned int)EOF:
           emitDoctype(empty, true);
           m_state = DATA;
           rewind();
@@ -1077,7 +1077,7 @@ void HtmlParserImpl::handleDoctypeName()
           emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
           m_state = DATA;
           break;
-        case EOF:
+        case (unsigned int)EOF:
           emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
           m_state = DATA;
           rewind();
@@ -1107,7 +1107,7 @@ void HtmlParserImpl::handleAfterDoctypeName()
         emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
         m_state = DATA;
         break;
-      case EOF:
+      case (unsigned int)EOF:
         emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
         m_state = DATA;
         rewind();
@@ -1130,7 +1130,7 @@ void HtmlParserImpl::handleBogusDoctype()
       emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
       m_state = DATA;
       break;
-    case EOF:
+    case (unsigned int)EOF:
       emitDoctype(m_doctypeToken, m_doctypeTokenIsError);
       m_state = DATA;
       rewind();

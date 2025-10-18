@@ -113,7 +113,7 @@ namespace utf8
         void advance (octet_iterator& it, distance_type n)
         {
             for (distance_type i = 0; i < n; ++i)
-                next(it);
+                utf8::unchecked::next(it);
         }
 
         template <typename octet_iterator>

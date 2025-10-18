@@ -25,5 +25,5 @@ const char * nds::System::uname()
 
 int nds::System::language()
 {
-  return PersonalData->_user_data.language;
+  return PersonalData->language;
 }

@@ -17,6 +17,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <cstring>
 #include <cstdio>
@@ -76,7 +77,7 @@ const char * nds::File::dirname(const char * path)
 nds::File::FileType nds::File::existsCommon(const char * path)
 {
   struct stat s;
-  int result = ::stat(path, &s);
+  int result = stat(path, &s);
   if (result == 0)
   {
     if (S_ISREG(s.st_mode))

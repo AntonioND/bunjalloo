@@ -239,7 +239,7 @@ void Video::capture() const
   REG_DISPCAPCNT = 
     DCAP_ENABLE      |  // Enable/Busy flag
     DCAP_MODE(mode)  |  // Capture mode    (0=Source A, 1=Source B, 2/3=Sources A+B blended)
-    DCAP_DST(0)      |  // VRAM Write Offset (0=00000h, 0=08000h, 0=10000h, 0=18000h)
+    DCAP_OFFSET(0)   |  // VRAM Write Offset (0=00000h, 0=08000h, 0=10000h, 0=18000h)
     DCAP_SRC(source) |  // Source A          (0=Graphics Screen BG+3D+OBJ, 1=3D Screen
     DCAP_SIZE(3)     |  // Capture Size      (0=128x128, 1=256x64, 2=256x128, 3=256x192 dots)
     DCAP_OFFSET(0)   |  // VRAM Read Offset  (0=00000h, 0=08000h, 0=10000h, 0=18000h)

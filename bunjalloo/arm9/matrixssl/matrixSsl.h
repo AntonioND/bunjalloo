@@ -34,9 +34,9 @@
 #ifndef _h_MATRIXSSL
 #define _h_MATRIXSSL
 
-/* #ifdef __cplusplus */
-/* extern "C" { */
-/* #endif */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "matrixCommon.h"
 
@@ -149,9 +149,9 @@ MATRIXPUBLIC int32 matrixSslGetResumptionFlag(ssl_t *ssl, char *flag);
 
 /******************************************************************************/
 
-/* #ifdef __cplusplus */
-/* } */
-/* #endif */
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _h_MATRIXSSL */
 

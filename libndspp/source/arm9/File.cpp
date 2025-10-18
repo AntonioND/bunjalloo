@@ -18,6 +18,7 @@
 #include "File.h"
 #include "MiniMessage.h"
 #include <string>
+#include <sys/stat.h>
 #include <cstring>
 #include <fat.h>
 #include <unistd.h>
@@ -228,7 +229,7 @@ int nds::File::mkdir(const char * path, unsigned int mode)
 bool nds::File::unlink(const char * path)
 {
   FatLibrary::instance();
-  return ::unlink(path) == 0;
+  return ::remove(path) == 0;
 }
 
 void nds::File::ls(const char * path, std::vector<std::string> & entries)

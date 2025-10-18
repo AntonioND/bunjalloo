@@ -80,7 +80,7 @@ int calculateCurrentAge(
     time_t requestTime)
 {
   // http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2
-  time_t apparent_age = std::max(0L, responseTime - date);
+  time_t apparent_age = std::max(0L, (long)(responseTime - date));
   int corrected_received_age = std::max(apparent_age, ageValue);
   int response_delay = responseTime - requestTime;
   int corrected_initial_age = corrected_received_age + response_delay;
@@ -107,7 +107,7 @@ bool CacheControl::shouldCache(time_t now) const
     int freshness_lifetime = -1;
     int maxAge = m_maxAge + now;
     if (m_maxAge == -1 and m_lastModified != -1) {
-      maxAge = std::max(-1L, now + ((now - m_lastModified) / 8));
+      maxAge = std::max(-1L, (long)(now + ((now - m_lastModified) / 8)));
     }
     if (maxAge != -1) {
       freshness_lifetime = maxAge;

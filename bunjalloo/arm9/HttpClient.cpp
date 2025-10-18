@@ -55,9 +55,6 @@
 #include "File.h"
 #include "Wifi9.h"
 #include "matrixSsl.h"
-#ifdef ARM9
-#define snprintf sniprintf
-#endif
 
 using namespace std;
 using nds::Wifi9;

@@ -3,6 +3,7 @@
 #include "DateUtils.h"
 #include "config_defs.h"
 #include <cstring>
+//#include <time.h>
 #ifdef ARM9
 // time.h doesn't have timezone on the DS.
 static int timezone = 0;
@@ -24,7 +25,7 @@ time_t DateUtils::parseDate(const char *date)
 
   struct tm val;
   memset(&val, 0, sizeof(val));
-  if (strptime(spaces.c_str(), FORMAT, &val) == 0) {
+  if (0) { //strptime(spaces.c_str(), FORMAT, &val) == 0) {
     return 0;
   }
   val.tm_isdst = 0;

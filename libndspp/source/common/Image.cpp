@@ -16,11 +16,13 @@
 */
 #include <memory>
 #include <cstdlib>
+#include <cstring>
 #include "libnds.h"
 #include "Image.h"
 #include "File.h"
 #include "png.h"
 #include "gif_lib.h"
+#include "png.h"
 extern "C" {
 #include "jpeglib.h"
 };
