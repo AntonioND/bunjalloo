@@ -31,7 +31,8 @@ SDIMAGE		:= image.bin
 
 SOURCEDIRS	:= bunjalloo/arm9 \
  			   bunjalloo/bwt/source \
-			   libndspp/source/ \
+			   libndspp/source/arm9 \
+			   libndspp/source/common \
 
 INCLUDEDIRS	:= bunjalloo/arm9/matrixssl/ \
 			   bunjalloo/arm9/giflib/lib/ \
