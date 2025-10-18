@@ -61,10 +61,10 @@ void Canvas::init()
   // redo the banks - we want enough VRAM for the main and sub screen
   // Can't use hardware double buffering on sub screen, have to fudge it.
   // Use bank D for the back buffer of the sub screen.
-  vramSetMainBanks( VRAM_A_MAIN_BG_0x06000000,
-                    VRAM_B_MAIN_BG_0x06020000,
-                    VRAM_C_SUB_BG,
-                    VRAM_D_MAIN_BG_0x06040000);
+  vramSetPrimaryBanks(VRAM_A_MAIN_BG_0x06000000,
+                      VRAM_B_MAIN_BG_0x06020000,
+                      VRAM_C_SUB_BG,
+                      VRAM_D_MAIN_BG_0x06040000);
   vramSetBankI(VRAM_I_SUB_SPRITE);
   vramSetBankE(VRAM_E_MAIN_SPRITE);
 
