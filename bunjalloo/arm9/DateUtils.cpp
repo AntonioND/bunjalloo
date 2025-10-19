@@ -25,6 +25,7 @@ time_t DateUtils::parseDate(const char *date)
 
   struct tm val;
   memset(&val, 0, sizeof(val));
+  // TODO(Antonio): Restore this
   if (0) { //strptime(spaces.c_str(), FORMAT, &val) == 0) {
     return 0;
   }
