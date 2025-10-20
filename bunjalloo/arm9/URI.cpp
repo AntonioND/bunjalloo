@@ -44,7 +44,7 @@ URI::URI(const std::string & uriString, bool fix):
 
 static void replace(std::string & spacey, const char * search, const char * replace)
 {
-  unsigned int space(spacey.find(search));
+  size_t space(spacey.find(search));
   while (space != string::npos)
   {
     spacey.replace(space, 1, replace);
@@ -56,7 +56,7 @@ void URI::setUri(const std::string & uriString)
 {
   string tmpUri = uriString;
   replace(tmpUri, " ", "%20");
-  unsigned int sep(tmpUri.find(":"));
+  size_t sep(tmpUri.find(":"));
   if (sep != string::npos)
   {
     // check it isn't the port seperator and we are missing a http: at the start
@@ -64,7 +64,7 @@ void URI::setUri(const std::string & uriString)
     if (tmpUri[sep+1] != '/')
     {
       // is it a port?
-      unsigned int nextSlash(tmpUri.find("/", sep));
+      size_t nextSlash(tmpUri.find("/", sep));
       if (nextSlash == string::npos) {
         sep = string::npos;
       } else {
