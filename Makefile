@@ -36,8 +36,6 @@ SOURCEDIRS	:= 3rdparty/ \
 			   libndspp/source/common \
 
 INCLUDEDIRS	:= 3rdparty/libplum/ \
-			   3rdparty/matrixssl/ \
-			   3rdparty/matrixssl/matrixssl-1-8-6-open/ \
 			   3rdparty/zlib/ \
 			   3rdparty/zlib/contrib/minizip/ \
 			   bunjalloo/bwt/include/ \
@@ -55,9 +53,7 @@ NITROFSDIR	:=
 # Defines passed to all files
 # ---------------------------
 
-DEFINES		:= -DPOSIX -DHAVE_UNISTD_H \
-			   -D__XSI_VISIBLE=1 -DLINUX=1 -Dunix \
-			   -DUSE_CLIENT_SIDE_SSL -DUSE_SERVER_SIDE_SSL
+DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
 
 # Libraries
 # ---------

@@ -106,8 +106,6 @@ class HttpClient: public nds::Client
     ConnectionState m_state;
     Controller * m_controller;
     int  m_maxConnectAttempts;
-    bool m_hasSsl;
-    SslClient * m_sslClient;
     bool m_log;
 
     void wifiConnection();
