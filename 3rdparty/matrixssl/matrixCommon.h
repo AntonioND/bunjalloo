@@ -42,8 +42,10 @@
 /*
 	Platform integer sizes
 */
-//typedef int int32;
-//typedef unsigned int uint32;
+#ifndef __NDS__
+typedef int int32;
+typedef unsigned int uint32;
+#endif
 
 /******************************************************************************/
 /*

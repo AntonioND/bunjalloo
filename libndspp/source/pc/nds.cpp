@@ -44,7 +44,7 @@ void irqSet(int, VoidFunctionPointer fn)
   SDLhandler::instance().enableVblank(fn);
 }
 
-void swiWaitForVBlank() 
+void cothread_yield_irq(uint32_t flag)
 {
   SDLhandler::instance().waitVsync();
 }

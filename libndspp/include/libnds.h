@@ -16,6 +16,9 @@
 */
 #ifndef nds_h_seen
 #define nds_h_seen
+
+#include <stdint.h>
+
 #if !defined(ARM9) && !defined(ARM7)
 // wrapper functions and defines to emulate NDS calls.
 typedef unsigned char           u8;
@@ -126,6 +129,8 @@ void powerOn(void);
 
 #define IRQ_VBLANK 0
 void irqInit();
+
+void cothread_yield_irq(uint32_t flag);
 
 #define COPY_MODE_HWORD  (0)
 #define COPY_MODE_WORD  (1<<26)

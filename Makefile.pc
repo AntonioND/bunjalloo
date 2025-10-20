@@ -1,0 +1,163 @@
+# SPDX-License-Identifier: CC0-1.0
+#
+# SPDX-FileContributor: Antonio Niño Díaz, 2023-2025
+
+export BLOCKSDS			?= /opt/blocksds/core
+export BLOCKSDSEXT		?= /opt/blocksds/external
+
+# User config
+# ===========
+
+NAME		:= bunjalloo_sdl
+
+# Source code paths
+# -----------------
+
+SOURCEDIRS	:= 3rdparty/ \
+			   bunjalloo/arm9 \
+			   bunjalloo/bwt/source \
+			   libndspp/source/pc \
+			   libndspp/source/common \
+
+INCLUDEDIRS	:= 3rdparty/libplum/ \
+			   3rdparty/matrixssl/ \
+			   3rdparty/matrixssl/matrixssl-1-8-6-open/ \
+			   3rdparty/zlib/ \
+			   3rdparty/zlib/contrib/minizip/ \
+			   bunjalloo/bwt/include/ \
+			   libndspp/include/ \
+			   libndspp/source/pc/
+
+GFXDIRS		:= bunjalloo/bwt/img/ \
+			   libndspp/source/common/
+
+# Defines passed to all files
+# ---------------------------
+
+DEFINES		:= -DPOSIX -DHAVE_UNISTD_H \
+			   -D__XSI_VISIBLE=1 -DLINUX=1 -Dunix \
+			   -DUSE_CLIENT_SIDE_SSL -DUSE_SERVER_SIDE_SSL -DUSE_MULTITHREADING
+
+# Libraries
+# ---------
+
+LIBS		:= -lmbedcrypto -lmbedtls -lmbedx509 -lSDL -lGL -lGLU
+
+# Build artifacts
+# ---------------
+
+BUILDDIR	:= build/$(NAME)
+ELF		:= $(NAME).elf
+
+# Tools
+# -----
+
+PREFIX		:=
+CC		:= $(PREFIX)gcc
+CXX		:= $(PREFIX)g++
+LD		:= $(PREFIX)gcc
+OBJDUMP		:= $(PREFIX)objdump
+MKDIR		:= mkdir
+RM		:= rm -rf
+
+# Verbose flag
+# ------------
+
+ifeq ($(VERBOSE),1)
+V		:=
+else
+V		:= @
+endif
+
+# Source files
+# ------------
+
+ifneq ($(GFXDIRS),)
+    SOURCES_PNG	:= $(shell find -L $(GFXDIRS) -name "*.png")
+    INCLUDEDIRS	+= $(addprefix $(BUILDDIR)/,$(GFXDIRS))
+endif
+
+SOURCES_C	:= $(shell find -L $(SOURCEDIRS) -name "*.c")
+SOURCES_CPP	:= $(shell find -L $(SOURCEDIRS) -name "*.cpp")
+
+# Compiler and linker flags
+# -------------------------
+
+WARNFLAGS	:= -Wall
+
+ifeq ($(SOURCES_CPP),)
+	LIBS	+= -lc
+else
+	LIBS	+= -lstdc++ -lc
+endif
+
+INCLUDEFLAGS	:= $(foreach path,$(INCLUDEDIRS),-I$(path)) \
+		   $(foreach path,$(LIBDIRS),-I$(path)/include)
+
+CFLAGS		+= -std=gnu17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+		   -O2 -ffunction-sections -fdata-sections
+
+CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+		   -O2 -ffunction-sections -fdata-sections
+
+LDFLAGS		+= $(DEFINES) -Wl,--start-group $(LIBS) -Wl,--end-group
+
+# Intermediate build files
+# ------------------------
+
+OBJS_ASSETS	:= $(addsuffix .o,$(addprefix $(BUILDDIR)/,$(SOURCES_PNG)))
+
+HEADERS_ASSETS	:= $(patsubst %.png,%.h,$(addprefix $(BUILDDIR)/,$(SOURCES_PNG)))
+
+OBJS_SOURCES	:= $(addsuffix .o,$(addprefix $(BUILDDIR)/,$(SOURCES_S))) \
+		   $(addsuffix .o,$(addprefix $(BUILDDIR)/,$(SOURCES_C))) \
+		   $(addsuffix .o,$(addprefix $(BUILDDIR)/,$(SOURCES_CPP)))
+
+OBJS		:= $(OBJS_ASSETS) $(OBJS_SOURCES)
+
+DEPS		:= $(OBJS:.o=.d)
+
+# Targets
+# -------
+
+.PHONY: all clean
+
+all: $(ELF)
+
+$(ELF): $(OBJS)
+	@echo "  LD      $@"
+	$(V)$(LD) -o $@ $(OBJS) $(LDFLAGS)
+
+clean:
+	@echo "  CLEAN"
+	$(V)$(RM) $(ROM) $(DUMP) build $(SDIMAGE)
+
+# Rules
+# -----
+
+$(BUILDDIR)/%.c.o : %.c
+	@echo "  CC      $<"
+	@$(MKDIR) -p $(@D)
+	$(V)$(CC) $(CFLAGS) -MMD -MP -c -o $@ $<
+
+$(BUILDDIR)/%.cpp.o : %.cpp
+	@echo "  CXX     $<"
+	@$(MKDIR) -p $(@D)
+	$(V)$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
+
+$(BUILDDIR)/%.png.o $(BUILDDIR)/%.h : %.png %.grit
+	@echo "  GRIT    $<"
+	@$(MKDIR) -p $(@D)
+	$(V)$(BLOCKSDS)/tools/grit/grit $< -ftc -W1 -o$(BUILDDIR)/$*
+	$(V)$(CC) $(CFLAGS) -MMD -MP -c -o $(BUILDDIR)/$*.png.o $(BUILDDIR)/$*.c
+	$(V)touch $(BUILDDIR)/$*.png.o $(BUILDDIR)/$*.h
+
+# All assets must be built before the source code
+# -----------------------------------------------
+
+$(SOURCES_S) $(SOURCES_C) $(SOURCES_CPP): $(HEADERS_ASSETS)
+
+# Include dependency files if they exist
+# --------------------------------------
+
+-include $(DEPS)

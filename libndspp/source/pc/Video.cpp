@@ -111,7 +111,7 @@ void Video::fade(bool fadeout, unsigned int speed)
   for (int loop = 0; loop < 17; loop++) {
     if ( (loop % 2) == 0) 
     {
-      swiWaitForVBlank();
+      cothread_yield_irq(IRQ_VBLANK);
     }
     if (fadeout)
       setFade(loop);
@@ -192,7 +192,7 @@ void Video::whiteout(bool towhite, unsigned int speed)
 {
   for (int loop = 0; loop < 17; loop++) {
     for (unsigned int i = 0; i < speed; ++i) {
-      swiWaitForVBlank();
+      cothread_yield_irq(IRQ_VBLANK);
     }
     if (towhite)
       setWhite(loop);
@@ -239,7 +239,7 @@ void Video::capture() const
     DCAP_B(0);
   int loops = 4;
   while (DISP_CAPTURE & DCAP_ENABLE) {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
     // shouldn't block if the emulator is broken...
     if ((--loops)==0)
       break;
