@@ -20,6 +20,5 @@
 #include <errno.h>
 #include <nds.h>
 #define TIMEOUT 2
-#define closesocket_platform close
 //#define socklen_t int
 #endif

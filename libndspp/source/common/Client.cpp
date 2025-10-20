@@ -51,7 +51,7 @@ Client::~Client()
 {
   if (isConnected())
   {
-    ::closesocket_platform(m_tcp_socket);
+    ::close(m_tcp_socket);
   }
   free(m_ip);
 }
@@ -68,7 +68,7 @@ void Client::setConnection(const char * ip, int port)
 void Client::disconnect()
 {
   if (isConnected())
-    ::closesocket_platform(m_tcp_socket);
+    ::close(m_tcp_socket);
   m_connected = false;
   m_connectState = CLIENT_CONNECT_INITIAL;
 }

@@ -19,5 +19,4 @@
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #define TIMEOUT 1
-#define closesocket_platform close
 #endif
