@@ -117,6 +117,8 @@ bool nds::File::mkdirCommon(const char * path)
       nds::File::mkdir(component.c_str(), 0777);
     }
     pos = str.find("/", pos+1);
+    if ((int)pos == -1)
+        break;
   }
   component = str;
   if (not component.empty() and component != "." and exists(component.c_str()) == F_NONE)
