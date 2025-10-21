@@ -121,10 +121,7 @@ void HttpClient::setController(Controller * c)
 // implement the pure virtual functions
 void HttpClient::handle(void * bufferIn, int amountRead)
 {
-  if (m_state != SSL_HANDSHAKE)
-  {
-    handleRaw(bufferIn, amountRead);
-  }
+  handleRaw(bufferIn, amountRead);
 }
 
 void HttpClient::handleRaw(void * bufferIn, int amountRead)
@@ -179,7 +176,7 @@ void HttpClient::debug(const char * s)
 void HttpClient::proxyConnect()
 {
   const string &proxy(proxyString());
-  if (isSsl() and not proxy.empty())
+  if (!proxy.empty())
   {
     // need to trick the proxy into providing the TCP/IP tunnel.
     string s;
@@ -196,9 +193,7 @@ void HttpClient::proxyConnect()
     s += "\r\n\r\n";
     write(s.c_str(), s.length());
     // read the response - it doesn't interest us much (yet)
-    //m_hasSsl = false; // TODO(Antonio)
     read();
-    //m_hasSsl = true; // TODO(Antonio)
   }
 }
 
@@ -214,7 +209,7 @@ std::string HttpClient::cookieString(const URI &uri) const
 std::string HttpClient::filenamePart(const URI &uri) const
 {
   const string &proxy(proxyString());
-  if (not isSsl() and not proxy.empty())
+  if (!proxy.empty())
   {
     // for proxy connection, need to send the whole request:
     return uri.asString();
@@ -338,17 +333,8 @@ void HttpClient::handleNextState()
       this->connect();
       if (isConnected())
       {
-        debug("Connected, get URL");
-        if (isSsl())
-        {
-          m_state = SSL_HANDSHAKE;
-        }
-        else
-        {
-          m_state = GET_URL;
-          m_controller->waitVBlank();
-          m_controller->waitVBlank();
-        }
+        debug("Connected, setup proxy and SSL");
+        m_state = PROXY_SSL_HANDSHAKE;
         m_connectAttempts = 0;
       }
       else
@@ -362,24 +348,30 @@ void HttpClient::handleNextState()
       }
       break;
 
-    case SSL_HANDSHAKE:
+    case PROXY_SSL_HANDSHAKE:
       {
         proxyConnect();
-#if 0
-        // TODO(Antonio): Do SSL handshake
-        int result = m_sslClient->sslConnect();
-        if (result == -1)
+
+        if (m_uri.protocol() == URI::HTTPS_PROTOCOL)
         {
-          debug("SSL_HANDSHAKE failed");
-          m_state = FAILED;
+          // Do the SSL handshake now
+          int result = this->sslEnable();
+          if (result == -1)
+          {
+            debug("SSL handshake failed");
+            m_state = FAILED;
+          }
+          else
+          {
+            debug("SSL handshake ok!");
+            m_state = GET_URL;
+          }
         }
-        else {
-          debug("SSL_HANDSHAKE OK!");
+        else
+        {
+          debug("No SSL handshake");
           m_state = GET_URL;
         }
-#else
-        m_state = GET_URL;
-#endif
       }
       break;
 
@@ -523,12 +515,6 @@ void HttpClient::readAll()
 HttpClient::ConnectionState HttpClient::state() const
 {
   return m_state;
-}
-
-bool HttpClient::isSsl() const
-{
-  //return m_hasSsl and m_uri.protocol() == URI::HTTPS_PROTOCOL; // TODO(Antonio)
-  return false;
 }
 
 void HttpClient::setUri(const URI & uri)

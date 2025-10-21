@@ -70,6 +70,11 @@ namespace nds {
        */
       void setConnection(const char * ip, int port);
 
+      /*! @brief Sends the SSL handshake and starts SSL encryption.
+       * @returns 0 on success, other values on error.
+       */
+      int sslEnable(void);
+
     protected:
       /*! @brief Pure virtual function to handle the bytes read from the server
        * @param buffer Data recieved from the other end.
@@ -93,6 +98,8 @@ namespace nds {
       int m_tcp_socket;
       //! The status of the connection
       bool m_connected;
+      ///! The connection has done the SSL handshake and is encrypted
+      bool m_sslEnabled;
       //! The time to wait between selects (in seconds)
       int m_timeout;
 

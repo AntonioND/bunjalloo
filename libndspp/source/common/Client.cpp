@@ -40,6 +40,7 @@ Client::Client(const char * ip, int port):
   m_port(port),
   m_tcp_socket(0),
   m_connected(false),
+  m_sslEnabled(false),
   m_timeout(TIMEOUT),
   m_connectState(CLIENT_CONNECT_INITIAL),
   m_socketAddress(0)
@@ -202,6 +203,12 @@ void Client::connect()
     case CLIENT_CONNECT_DONE:
       break;
   }
+}
+
+int Client::sslEnable(void)
+{
+  m_sslEnabled = true;
+  return 0;
 }
 
 unsigned int Client::write(const void * data, unsigned int length)

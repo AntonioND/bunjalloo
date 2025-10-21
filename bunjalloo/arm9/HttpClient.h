@@ -31,7 +31,7 @@ class HttpClient: public nds::Client
       WIFI_OFF,         //!< Initial state.
       CONNECT_WIFI,     //!< Wifi is being started.
       CONNECT_SOCKET,   //!< Can use sockets, connect to server
-      SSL_HANDSHAKE,    //!< Have connected to server, using HTTPS, do SSL handshake.
+      PROXY_SSL_HANDSHAKE, //!< Have connected to server. Setup proxy, do SSL handshake if needed
       GET_URL,          //!< Have connected to server, get url.
       READING_FIRST,    //!< Sent Rqst, see if there is a response.
       READING_ALL,      //!< Response OK, read all data.
@@ -119,7 +119,6 @@ class HttpClient: public nds::Client
     std::string filenamePart(const URI &uri) const;
     std::string userAgent() const;
     std::string proxyString() const;
-    inline bool isSsl() const;
 };
 
 #endif
