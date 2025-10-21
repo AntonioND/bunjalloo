@@ -1,5 +1,18 @@
 # Bunjaloo Changelog
 
+## Changes 0.9
+
+- Migrated to BlocksDS from devkitARM. Now Bunjalloo can take advantage of the
+  Wifi driver in DSi mode, with WPA2 support and the additional RAM of DSi.
+- The old versions of libpng, libjpeg and giflib have been replaced by libplum.
+- MatrixSsl isn't currently maintained and it has been replaced by Mbed TLS.
+  Switching between HTTP and HTTPS is still a bit unreliable.
+- The PC port has been fixed. It builds, some infinite loops have been fixed,
+  and images are now displayed correctly.
+- Test can't be built at the moment, they will be re-enabled in the future.
+- Initialize keyboard state correctly so that the extra symbols aren't displayed
+  after the first key press.
+
 ## Changes 0.8
 
 - Updated to the latest devkitARM, libnds, libfat and libpng

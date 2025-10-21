@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: CC0-1.0
 #
-# SPDX-FileContributor: Antonio Niño Díaz, 2023-2024
+# SPDX-FileContributor: Antonio Niño Díaz, 2023-2025
 
 export BLOCKSDS			?= /opt/blocksds/core
 export BLOCKSDSEXT		?= /opt/blocksds/external
@@ -13,7 +13,7 @@ ARM_NONE_EABI_PATH	?= $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/bin/
 
 NAME		:= bunjalloo
 
-GAME_TITLE	:= Bunjalloo
+GAME_TITLE	:= Bunjalloo 0.9.0
 GAME_SUBTITLE	:= Web Browser
 GAME_AUTHOR	:= By Richard Quirk
 GAME_ICON	:= icon.bmp
