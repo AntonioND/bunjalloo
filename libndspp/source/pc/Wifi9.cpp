@@ -14,6 +14,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <stdlib.h>
 #include "libnds.h"
 #include "Wifi9.h"
 
@@ -70,4 +72,9 @@ int Wifi9::signalStrength() const
 
   // ??? 
   return 10;
+}
+
+extern "C" uint32_t Wifi_Random(void)
+{
+  return rand();
 }

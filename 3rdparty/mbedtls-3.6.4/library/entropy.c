@@ -24,6 +24,20 @@
 
 #define ENTROPY_MAX_LOOP    256     /**< Maximum amount to loop before error */
 
+int mbedtls_hardware_poll(void *data,
+                          unsigned char *output, size_t len, size_t *olen)
+{
+    (void)data;
+
+    uint32_t Wifi_Random(void); // Internal function of DSWiFi
+
+    for (size_t i = 0; i < len; i++)
+        output[i] = Wifi_Random();
+    *olen = len;
+
+    return 0;
+}
+
 void mbedtls_entropy_init(mbedtls_entropy_context *ctx)
 {
     ctx->source_count = 0;
