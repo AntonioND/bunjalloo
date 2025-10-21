@@ -127,7 +127,7 @@ void Controller::handleUri(const URI & uri)
       break;
 
     case URI::CONFIG_PROTOCOL:
-      configureUrl(DATADIR"/config/" + uri.fileName());
+      configureUrl(DATADIR "/config/" + uri.fileName());
       break;
 
     default:

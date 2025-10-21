@@ -3,7 +3,7 @@
 #include "File.h"
 #include "config_defs.h"
 
-static const char COOKIE_DIR[] = DATADIR"/cookies/";
+static const char COOKIE_DIR[] = DATADIR "/cookies/";
 
 CookieWriter::CookieWriter(time_t now)
   : m_now(now) {}

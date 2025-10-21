@@ -26,8 +26,8 @@
 static const char * s_datadir = DATADIR;
 static const char s_configFile[] = "config.ini";
 static const char s_templateName[] = "config-example.txt";
-static const char USER_DIR[] = "/"DATADIR"/user";
-static const char DOCS_DIR[] = "/"DATADIR"/docs/";
+static const char USER_DIR[] = DATADIR "/user";
+static const char DOCS_DIR[] = DATADIR "/docs/";
 
 const char Config::PROXY_STR[] = "proxy";
 const char Config::FONT_STR[] = "font";
@@ -42,7 +42,7 @@ const char Config::UPDATE[] = "update";
 const char Config::USER_AGENT_STR[] = "useragent";
 const char Config::FULL_REF[] = "fullref";
 const char Config::SHOW_IMAGES[] = "images";
-const char Config::BOOKMARK_FILE[] = "/"DATADIR"/user/bookmarks.html";
+const char Config::BOOKMARK_FILE[] = DATADIR "/user/bookmarks.html";
 const char Config::LEFTY[] = "lefty";
 const char LANG_STR[] = "language";
 using namespace std;
@@ -157,8 +157,8 @@ void Config::configPathMember(const std::string & value, std::string & member)
   if (value[0] != '/')
   {
     // == "/DATADIR/value"
-    member = "/"+value;
-    member = DATADIR+member;
+    member = "/" + value;
+    member = DATADIR + member;
   }
   else
   {

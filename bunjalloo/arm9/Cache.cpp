@@ -24,7 +24,7 @@
 #include "File.h"
 #include "config_defs.h"
 
-const char * Cache::CACHE_DIR("/"DATADIR"/cache");
+const char * Cache::CACHE_DIR(DATADIR "/cache");
 
 Cache::Cache(Document & document, bool useCache)
 : m_document(document), m_useCache(useCache)
