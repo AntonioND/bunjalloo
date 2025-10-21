@@ -1,10 +1,10 @@
 "<html><head><title>Bunjalloo</title></head><body>\
 Bunjalloo (C) 2009 Richard Quirk <br>\
 Bunjalloo comes with ABSOLUTELY NO WARRANTY; for details touch \
-<a href='"DATADIR"/docs/warranty'>'show warranty'</a>. \
+<a href='" DATADIR "/docs/warranty'>'show warranty'</a>. \
 This is free software, and you are welcome to redistribute it \
-under certain conditions; Touch <a href='"DATADIR"/docs/copying'>'show copying'</a> \
+under certain conditions; Touch <a href='" DATADIR "/docs/copying'>'show copying'</a> \
 for details.<p>\
-<a href='http://code.google.com/p/quirkysoft'><img src='data/bunjalloo/docs/bunjalloo.png'></a>\
+<a href='http://code.google.com/p/quirkysoft'><img src='" DATADIR "/docs/bunjalloo.png'></a>\
 <a href='http://code.google.com/p/quirkysoft'>quirkysoft.googlecode.com</a>\
 </body></html>"

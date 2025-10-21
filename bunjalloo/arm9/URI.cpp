@@ -337,8 +337,6 @@ URI URI::navigateTo(const std::string & newFile ) const
   it = newPath.begin();
   newURI = tmp.m_protocol + "://";
   bool needSep(false);
-  if (protocol() == FILE_PROTOCOL)
-    needSep = true;
 
   for (; it != newPath.end();++it)
   {
