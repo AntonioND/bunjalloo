@@ -59,7 +59,7 @@
 using namespace std;
 using nds::Wifi9;
 
-static const int MAX_CONNECT_ATTEMPTS(10);
+static const int MAX_CONNECT_ATTEMPTS(3);
 extern const char * VERSION;
 
 HttpClient::HttpClient():
@@ -110,7 +110,8 @@ void HttpClient::setController(Controller * c)
     }
   }
 #endif
-  m_maxConnectAttempts = 60;
+
+  m_maxConnectAttempts = 3;
   m_controller->config().resource(Config::MAX_CONNECT, m_maxConnectAttempts);
   if (m_maxConnectAttempts == 0)
   {
