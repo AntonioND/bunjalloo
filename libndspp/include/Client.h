@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2007,2008 Richard Quirk
+  Copyright (C) 2025 Antonio Niño Díaz
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,7 +18,16 @@
 #ifndef Client_h_seen
 #define Client_h_seen
 
+#include <mbedtls/ctr_drbg.h>
+#include <mbedtls/debug.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/error.h>
+#include <mbedtls/net_sockets.h>
+#include <mbedtls/platform.h>
+#include <mbedtls/ssl.h>
+
 #include "util/classhelper.h"
+
 struct sockaddr_in;
 struct hostent;
 namespace nds {
@@ -70,6 +80,10 @@ namespace nds {
        */
       void setConnection(const char * ip, int port);
 
+#if 0
+      int sslLoadCerts();
+#endif
+
       /*! @brief Sends the SSL handshake and starts SSL encryption.
        * @returns 0 on success, other values on error.
        */
@@ -94,36 +108,35 @@ namespace nds {
       char * m_ip;
       //! The port on the server to connect to
       int m_port;
-      //! The socket
-      int m_tcp_socket;
       //! The status of the connection
       bool m_connected;
       ///! The connection has done the SSL handshake and is encrypted
       bool m_sslEnabled;
+      ///! Set to true if Mbed TLS has been initialized
+      bool m_mbedtlsInitialized;
       //! The time to wait between selects (in seconds)
       int m_timeout;
+
+      mbedtls_net_context server_fd;
+      mbedtls_entropy_context entropy;
+      mbedtls_ctr_drbg_context ctr_drbg;
+      mbedtls_ssl_context ssl;
+      mbedtls_ssl_config conf;
+      mbedtls_x509_crt cacert;
 
       enum ClientConnectState {
         CLIENT_CONNECT_INITIAL, // not started
         CLIENT_CONNECT_READY_TO_CONNECT, // initialised, now can call ::connect()
-        CLIENT_CONNECT_EINPROGRESS, // not connected, need to wait
-        CLIENT_CONNECT_TRY_NEXT_HADDR, // failed to connect, try next host address
         CLIENT_CONNECT_DONE  // tried all addresses *or* connected
                              // check the m_connected flag for result
       };
       ClientConnectState m_connectState;
 
-      sockaddr_in *m_socketAddress;
-      hostent *m_hostByNameEntry;
-      int m_hostAddrIndex;
-
-
-      bool tryConnect(sockaddr_in &socketAddress);
-      void makeNonBlocking();
+      bool tryConnect();
       void connectInitial();
       void connectReadyToConnect();
-      void connectInprogress();
-      void connectTryNextHaddr();
+
+      void mbedtls_print_error(int ret);
 
       DISALLOW_COPY_AND_ASSIGN(Client);
   };

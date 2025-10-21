@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2007,2008 Richard Quirk
+  Copyright (C) 2025 Antonio Niño Díaz
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,156 +32,154 @@
 #include <string>
 #include <errno.h>
 
+#include <mbedtls/ctr_drbg.h>
+#include <mbedtls/debug.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/error.h>
+#include <mbedtls/net_sockets.h>
+#include <mbedtls/platform.h>
+#include <mbedtls/ssl.h>
+
+// Debug level for Mbed TLS
+#define DEBUG_LEVEL 0
+
 using namespace std;
 using namespace nds;
 const int Client::BUFFER_SIZE(1024*16);
 
+#if DEBUG_WITH_SSTREAM
+// This function will be called when Mbed TLS prints debug messages
+void mbedtls_debug_callback(void *ctx, int level, const char *file, int line,
+                            const char *str)
+{
+  (void)ctx;
+  (void)level;
+
+  fprintf(stderr, "%s:%04d: %s\n", file, line, str);
+}
+#endif
+
+void Client::mbedtls_print_error(int ret)
+{
+  char error_buf[256];
+  mbedtls_strerror(ret, error_buf, 100);
+  debug(error_buf);
+}
+
 Client::Client(const char * ip, int port):
-  m_ip(0),
+  m_ip(NULL),
   m_port(port),
-  m_tcp_socket(0),
   m_connected(false),
   m_sslEnabled(false),
+  m_mbedtlsInitialized(false),
   m_timeout(TIMEOUT),
-  m_connectState(CLIENT_CONNECT_INITIAL),
-  m_socketAddress(0)
+  m_connectState(CLIENT_CONNECT_INITIAL)
 {
   setConnection(ip, port);
 }
 
 Client::~Client()
 {
-  if (isConnected())
-  {
-    ::close(m_tcp_socket);
-  }
+  disconnect();
   free(m_ip);
 }
 
 void Client::setConnection(const char * ip, int port)
 {
   free(m_ip);
-  m_ip = (char*)malloc(strlen(ip)+1);
-  memcpy(m_ip, ip, strlen(ip));
-  m_ip[strlen(ip)] = 0;
+  m_ip = strdup(ip);
   m_port = port;
 }
 
 void Client::disconnect()
 {
+  debug("Client::disconnect()");
+
   if (isConnected())
-    ::close(m_tcp_socket);
-  m_connected = false;
-  m_connectState = CLIENT_CONNECT_INITIAL;
-}
+  {
+    m_connected = false;
+    m_sslEnabled = false;
+    m_connectState = CLIENT_CONNECT_INITIAL;
+  }
 
-void Client::makeNonBlocking() {
-  int i(1);
-  int iotclResult = ::ioctl(m_tcp_socket, FIONBIO, (char *)&i);
-  if (iotclResult == -1) {
-    debug("iotcl non blocking failed");
-    // never happens on DS...
-  }
-}
+  if (m_mbedtlsInitialized)
+  {
+    mbedtls_net_close(&server_fd);
+    mbedtls_net_free(&server_fd);
+    mbedtls_x509_crt_free(&cacert);
+    mbedtls_ssl_free(&ssl);
+    mbedtls_ssl_config_free(&conf);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    mbedtls_entropy_free(&entropy);
 
-bool Client::tryConnect(sockaddr_in &socketAddress)
-{
-  makeNonBlocking();
-  socklen_t addrlen = sizeof(struct sockaddr_in);
-  errno = 0;
-  int result = ::connect(m_tcp_socket, (struct sockaddr*)&socketAddress, addrlen);
-  int tmperr = errno;
-  if (result == 0) {
-    // connected immediately
-    m_connected = true;
+    m_mbedtlsInitialized = false;
   }
-  else {
-    switch (tmperr) {
-      case EINPROGRESS:
-        {
-          m_connectState = CLIENT_CONNECT_EINPROGRESS;
-        }
-        break;
-      default:
-        debug("connect() error)");
-        return false;
-    }
-  }
-  return m_connected;
 }
 
 void Client::connectInitial()
 {
-  // DS - must create the socket moments before using it!
-  m_tcp_socket = socket(AF_INET, SOCK_STREAM, 0);
+  debug("Client::connectInitial");
 
-  struct sockaddr_in socketAddress = { 0 };
-  socketAddress.sin_family = AF_INET;              /* address family */
-  socketAddress.sin_port = htons(m_port);          /* port in network byte order */
-  socketAddress.sin_addr.s_addr = inet_addr(m_ip); /* internet address - network byte order */
+  disconnect();
 
-  if (!m_socketAddress) {
-    m_socketAddress = new sockaddr_in;
-  }
-  *m_socketAddress = socketAddress;
-  m_hostByNameEntry = 0;
-  // is it an ip address?
-  std::string serverName(m_ip);
-  std::string::const_iterator end = std::find_if(serverName.begin(), serverName.end(), ::isalpha);
-  if (end != serverName.end())
+  mbedtls_debug_set_threshold(DEBUG_LEVEL);
+
+  mbedtls_net_init(&server_fd);
+  mbedtls_ssl_init(&ssl);
+  mbedtls_ssl_config_init(&conf);
+  mbedtls_x509_crt_init(&cacert);
+  mbedtls_ctr_drbg_init(&ctr_drbg);
+  mbedtls_entropy_init(&entropy);
+
+  m_mbedtlsInitialized = true;
+
+  const char *pers = "ssl_client1";
+  int ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
+                                  (const unsigned char *)pers, strlen(pers));
+  if (ret != 0)
+    mbedtls_print_error(ret);
+
+  m_connectState = CLIENT_CONNECT_READY_TO_CONNECT;
+}
+
+bool Client::tryConnect()
+{
+  debug("Client::tryConnect");
+
+  std::string port_str = std::to_string(m_port);
+  debug(m_ip);
+  debug(port_str.c_str());
+  int ret = mbedtls_net_connect(&server_fd, m_ip, port_str.c_str(),
+                                MBEDTLS_NET_PROTO_TCP);
+  if (ret != 0)
   {
-    // it is not an IP address, it contains letters
-    errno = 0;
-    //struct hostent * host = gethostbyname(m_ip);
-    m_hostByNameEntry = gethostbyname(m_ip);
-    m_hostAddrIndex = -1;
-    m_connectState = CLIENT_CONNECT_TRY_NEXT_HADDR;
-  } else {
-    m_connectState = CLIENT_CONNECT_READY_TO_CONNECT;
+    mbedtls_print_error(ret);
+    return false;
   }
+
+  // TODO: Is this actually working?
+  ret = mbedtls_net_set_nonblock(&server_fd);
+  if (ret != 0)
+  {
+    mbedtls_print_error(ret);
+    return false;
+  }
+
+  mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
+#if DEBUG_WITH_SSTREAM
+  mbedtls_ssl_conf_dbg(&conf, mbedtls_debug_callback, stdout);
+#endif
+
+  return true;
 }
 
 void Client::connectReadyToConnect()
 {
-  if (m_hostByNameEntry)
-    memcpy(&m_socketAddress->sin_addr, m_hostByNameEntry->h_addr_list[m_hostAddrIndex], sizeof(struct in_addr));
-  if (tryConnect(*m_socketAddress)) {
-    m_connectState = CLIENT_CONNECT_DONE;
-  }
-}
-
-void Client::connectInprogress()
-{
-  debug("Client::connectInprogress");
-  // select connect for write
-  fd_set wfds;
-  timeval timeout;
-  int retval;
-  FD_ZERO(&wfds);
-  FD_SET(m_tcp_socket, &wfds);
-  timeout.tv_sec = m_timeout;
-  timeout.tv_usec = 0;
-  retval = select(m_tcp_socket+1, NULL, &wfds, NULL, &timeout);
-  debug("Client::connectInprogress, post select");
-  if (retval == -1) {
-    debug("Select error");
-    m_connected = false;
-    m_connectState = CLIENT_CONNECT_TRY_NEXT_HADDR;
-  }
-  else if (retval) {
-    debug("connect - Data is available now.");
+  if (tryConnect())
+  {
     m_connected = true;
     m_connectState = CLIENT_CONNECT_DONE;
   }
-}
-
-void Client::connectTryNextHaddr()
-{
-  ++m_hostAddrIndex;
-  if (m_hostByNameEntry and m_hostByNameEntry->h_addr_list[m_hostAddrIndex] != NULL)
-    m_connectState = CLIENT_CONNECT_READY_TO_CONNECT;
-  else
-    m_connectState = CLIENT_CONNECT_DONE;
 }
 
 void Client::connect()
@@ -194,20 +193,104 @@ void Client::connect()
     case CLIENT_CONNECT_READY_TO_CONNECT:
       connectReadyToConnect();
       break;
-    case CLIENT_CONNECT_EINPROGRESS:
-      connectInprogress();
-      break;
-    case CLIENT_CONNECT_TRY_NEXT_HADDR:
-      connectTryNextHaddr();
-      break;
     case CLIENT_CONNECT_DONE:
       break;
   }
 }
 
+#if 0
+int Client::sslLoadCerts()
+{
+  printf("Client::sslLoadCerts");
+
+  // In Linux, for example, they are stored in /etc/ssl/certs/
+  int ret = mbedtls_x509_crt_parse_file(&cacert, "example-com-chain.pem");
+  if (ret < 0)
+  {
+    mbedtls_print_error(ret);
+    //printf("\n  Error! ret = -0x%x\n", (unsigned int)-ret);
+    return -1;
+  }
+
+  //printf(" (%d skipped)", ret);
+  return 0;
+}
+#endif
+
 int Client::sslEnable(void)
 {
+  debug("Setting up SSL/TLS");
+
+  int ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT,
+                                        MBEDTLS_SSL_TRANSPORT_STREAM,
+                                        MBEDTLS_SSL_PRESET_DEFAULT);
+  if (ret != 0)
+  {
+    mbedtls_print_error(ret);
+    return -1;
+  }
+
+  // MBEDTLS_SSL_VERIFY_OPTIONAL means that the certificates are checked but
+  // any failure is ignored, which is useful for debugging. You need to set
+  // DEBUG_LEVEL to a non-zero value if you want to see the error messages.
+  //
+  // If you use MBEDTLS_SSL_VERIFY_REQUIRED Mbed TLS will refuse to connect if
+  // the certificates aren't valid, which is the right setting for a finished
+  // program.
+  //
+  // MBEDTLS_SSL_VERIFY_NONE skips the decrificate check.
+  mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE);
+  //mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
+  mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
+
+  ret = mbedtls_ssl_setup(&ssl, &conf);
+  if (ret != 0)
+  {
+    mbedtls_print_error(ret);
+    return -1;
+  }
+
+  ret = mbedtls_ssl_set_hostname(&ssl, m_ip);
+  if (ret != 0)
+  {
+    mbedtls_print_error(ret);
+    return -1;
+  }
+
+  mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
+
+  debug("Doing SSL/TLS handshake");
+
+  while (1)
+  {
+    ret = mbedtls_ssl_handshake(&ssl);
+    if (ret == 0)
+      break;
+
+    if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+    {
+      mbedtls_print_error(ret);
+      return -1;
+    }
+
+    //cothread_yield_irq(IRQ_VBLANK);
+  }
+
+  debug("Verifying peer X.509 cert");
+
+  // In real life, we probably want to exit when ret != 0
+  uint32_t flags = mbedtls_ssl_get_verify_result(&ssl);
+  if (flags != 0)
+  {
+    debug("Certificate check failed!");
+    char vrfy_buf[512];
+    mbedtls_x509_crt_verify_info(vrfy_buf, sizeof(vrfy_buf), "  ! ", flags);
+    debug(vrfy_buf);
+    return -1;
+  }
+
   m_sslEnabled = true;
+
   return 0;
 }
 
@@ -226,25 +309,28 @@ unsigned int Client::write(const void * data, unsigned int length)
       debug(dbg.str().c_str());
     }
 #endif
-    //writeCallback();
-    fd_set wfds;
-    timeval timeout;
-    int retval;
-    FD_ZERO(&wfds);
-    FD_SET(m_tcp_socket, &wfds);
-    timeout.tv_sec = m_timeout;
-    timeout.tv_usec = 0;
-    retval = select(m_tcp_socket+1, NULL, &wfds, NULL, &timeout);
-    if (retval < 0) {
-      continue;
-    }
-    int sent = ::send(m_tcp_socket, cdata, length, 0);
-    if (sent <= 0)
+
+    int ret;
+    if (m_sslEnabled)
+      ret = ::mbedtls_ssl_write(&ssl, (const unsigned char *)cdata, length);
+    else
+      ret = ::mbedtls_net_send(&server_fd, (const unsigned char *)cdata, length);
+
+    if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+    {
+      // Retry later
       break;
-    cdata += sent;
-    length -= sent;
-    total += sent;
-    // wait for the cores to sync
+    }
+    else if (ret <= 0)
+    {
+      Client::mbedtls_print_error(ret);
+      break;
+    }
+
+    cdata += ret;
+    length -= ret;
+    total += ret;
+
 #if DEBUG_WITH_SSTREAM
     {
       stringstream dbg;
@@ -262,85 +348,62 @@ int Client::read(int max)
 {
   if (max > BUFFER_SIZE)
     max = BUFFER_SIZE;
-  fd_set rfds;
-  timeval timeout;
-  int retval;
-  FD_ZERO(&rfds);
-  FD_SET(m_tcp_socket, &rfds);
 
-  timeout.tv_sec = m_timeout;
-  timeout.tv_usec = 0;
-
-  errno = 0;
-  retval = select(m_tcp_socket+1, &rfds, NULL, NULL, &timeout);
-  int tmperr = errno;
-  if (retval == -1) {
-#if DEBUG_WITH_SSTREAM
-    stringstream dbg;
-    dbg << "select error: " << tmperr;
-    debug(dbg.str().c_str());
-#endif
-    return READ_ERROR;
-  } 
-  else if (retval) {
-    debug("Data is readable");
-  }
+  int ret;
+  if (m_sslEnabled)
+    ret = ::mbedtls_ssl_read(&ssl, (unsigned char *)s_buffer, max);
   else
+    ret = ::mbedtls_net_recv(&server_fd, (unsigned char *)s_buffer, max);
+
+  if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE)
   {
-    debug("not ready");
-    // on the DS this plays tricks with us.
-    // May return not ready when the socket has actually been closed.
-    // In that case, recv will return -1 with errno == ESHUTDOWN.
-//#ifndef ARM9
     return RETRY_LATER;
-//#endif
   }
-  errno = 0;
-  int amountRead = ::recv(m_tcp_socket, s_buffer, max, 0 /*MSG_DONTWAIT*/);
-  tmperr = errno;
-  if (amountRead < 0) {
+  else if (ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY)
+  {
+    debug("Connection closed from server");
+    return CONNECTION_CLOSED;
+  }
+  else if (ret < 0)
+  {
     debug("Error on recv");
+    Client::mbedtls_print_error(ret);
 #if DEBUG_WITH_SSTREAM
     stringstream dbg;
-    dbg << "Error on recv errno: " << tmperr;
+    dbg << "Error on recv errno: " << errno;
     debug(dbg.str().c_str());
 #endif
-    // if we read and there is an error
-    if (tmperr == EAGAIN)
-    {
-      // not ready yet - from man recv:
-      // EAGAIN The socket is marked non-blocking and the receive operation
-      // would block.
-      return RETRY_LATER;
-    }
     return READ_ERROR;
   }
-  if (amountRead == 0)
+  else if (ret == 0)
   {
     // man recv(2):
     // The return value will be 0 when the peer has performed an orderly shutdown.
     debug("Read 0 bytes");
 #if DEBUG_WITH_SSTREAM
     stringstream dbg;
-    dbg << "Read 0 errno: " << tmperr;
+    dbg << "Read 0 errno: " << errno;
     debug(dbg.str().c_str());
 #endif
-    if (tmperr == EINVAL or tmperr == ESHUTDOWN) {
+    if (errno == EINVAL or errno == ESHUTDOWN)
+    {
       debug("EINVAL or ESHUTDOWN");
-      return READ_ERROR;
+      return CONNECTION_CLOSED;
     }
-    return amountRead;
+    return ret;
   }
-  handle(s_buffer, amountRead);
+
+  handle(s_buffer, ret);
 #if DEBUG_WITH_SSTREAM
   stringstream dbg;
-  dbg << "Read " << amountRead << " bytes";
+  dbg << "Read " << ret << " bytes";
   debug(dbg.str().c_str());
 #endif
-  return amountRead;
+  return ret;
 }
 
 void Client::setTimeout(int timeout)
 {
+  // TODO: Use the timeout for something
   m_timeout = timeout;
 }

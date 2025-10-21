@@ -13,7 +13,8 @@ NAME		:= bunjalloo_sdl
 # Source code paths
 # -----------------
 
-SOURCEDIRS	:= 3rdparty/ \
+SOURCEDIRS	:= 3rdparty/libplum \
+			   3rdparty/zlib \
 			   bunjalloo/arm9 \
 			   bunjalloo/bwt/source \
 			   libndspp/source/pc \

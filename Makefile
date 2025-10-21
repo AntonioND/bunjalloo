@@ -29,7 +29,8 @@ SDIMAGE		:= image.bin
 # Source code paths
 # -----------------
 
-SOURCEDIRS	:= 3rdparty/ \
+SOURCEDIRS	:= 3rdparty/libplum \
+			   3rdparty/zlib \
 			   bunjalloo/arm9 \
 			   bunjalloo/bwt/source \
 			   libndspp/source/arm9 \
@@ -60,9 +61,10 @@ DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
 
 ARM7ELF		:= $(BLOCKSDS)/sys/arm7/main_core/arm7_dswifi.elf
 
-LIBS		:= -lnds9 -ldswifi9
+LIBS		:= -lmbedcrypto -lmbedtls -lmbedx509 -lnds9 -ldswifi9
 LIBDIRS		:= $(BLOCKSDS)/libs/libnds \
-			   $(BLOCKSDS)/libs/dswifi
+			   $(BLOCKSDS)/libs/dswifi \
+			   $(BLOCKSDSEXT)/mbedtls
 
 # Build artifacts
 # ---------------

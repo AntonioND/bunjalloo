@@ -342,7 +342,7 @@ void HttpClient::handleNextState()
         m_connectAttempts++;
         if (m_connectAttempts == m_maxConnectAttempts)
         {
-          debug("FAILED m_connectAttempts == m_maxConnectAttempts");
+          debug("FAILED m_maxConnectAttempts");
           m_state = FAILED;
         }
       }
