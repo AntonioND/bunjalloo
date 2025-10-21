@@ -258,6 +258,10 @@ mbedtls_ms_time_t mbedtls_ms_time(void)
     return current_ms;
 }
 #else
-#error "No mbedtls_ms_time available"
+#include <time.h>
+mbedtls_ms_time_t mbedtls_ms_time(void)
+{
+    return time(NULL) * 1000;
+}
 #endif
 #endif /* MBEDTLS_HAVE_TIME && !MBEDTLS_PLATFORM_MS_TIME_ALT */

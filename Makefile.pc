@@ -14,6 +14,7 @@ NAME		:= bunjalloo_sdl
 # -----------------
 
 SOURCEDIRS	:= 3rdparty/libplum \
+			   3rdparty/mbedtls-3.6.4 \
 			   3rdparty/zlib \
 			   bunjalloo/arm9 \
 			   bunjalloo/bwt/source \
@@ -21,6 +22,7 @@ SOURCEDIRS	:= 3rdparty/libplum \
 			   libndspp/source/common \
 
 INCLUDEDIRS	:= 3rdparty/libplum/ \
+			   3rdparty/mbedtls-3.6.4/include/ \
 			   3rdparty/zlib/ \
 			   3rdparty/zlib/contrib/minizip/ \
 			   bunjalloo/bwt/include/ \
@@ -38,7 +40,7 @@ DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
 # Libraries
 # ---------
 
-LIBS		:= -lmbedcrypto -lmbedtls -lmbedx509 -lSDL -lGL -lGLU
+LIBS		:= -lSDL -lGL -lGLU
 
 # Build artifacts
 # ---------------

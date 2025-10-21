@@ -30,6 +30,7 @@ SDIMAGE		:= image.bin
 # -----------------
 
 SOURCEDIRS	:= 3rdparty/libplum \
+			   3rdparty/mbedtls-3.6.4 \
 			   3rdparty/zlib \
 			   bunjalloo/arm9 \
 			   bunjalloo/bwt/source \
@@ -37,6 +38,7 @@ SOURCEDIRS	:= 3rdparty/libplum \
 			   libndspp/source/common \
 
 INCLUDEDIRS	:= 3rdparty/libplum/ \
+			   3rdparty/mbedtls-3.6.4/include/ \
 			   3rdparty/zlib/ \
 			   3rdparty/zlib/contrib/minizip/ \
 			   bunjalloo/bwt/include/ \
@@ -61,10 +63,9 @@ DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
 
 ARM7ELF		:= $(BLOCKSDS)/sys/arm7/main_core/arm7_dswifi.elf
 
-LIBS		:= -lmbedcrypto -lmbedtls -lmbedx509 -lnds9 -ldswifi9
+LIBS		:= -lnds9 -ldswifi9
 LIBDIRS		:= $(BLOCKSDS)/libs/libnds \
 			   $(BLOCKSDS)/libs/dswifi \
-			   $(BLOCKSDSEXT)/mbedtls
 
 # Build artifacts
 # ---------------
