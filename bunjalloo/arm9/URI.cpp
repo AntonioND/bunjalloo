@@ -83,7 +83,7 @@ void URI::setUri(const std::string & uriString)
     if (not m_fix) {
       return;
     }
-    tmpUri = HTTP_STR;
+    tmpUri = HTTPS_STR;
     tmpUri += "://" + uriString;
     sep = tmpUri.find(":");
   }
