@@ -15,7 +15,7 @@ cookiefile=user/ckallow.lst
 # File that contains search configuration.
 searchfile=user/search.cfg
 
-cafile=cert/CAcertSrv.pem
+cafile=cert/cacert.pem
 
 # Uncomment the proxy line to enable proxy server.
 # The value is of the form server[:port]
