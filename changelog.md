@@ -15,6 +15,7 @@
 - Modify cache CRC32 calculation to include the protocol, not just the rest of
   the address. This lets us retry a website with http and then https if it
   fails, for example. Previously it would just reload the cached error page.
+- Added missing copyright notices to the "show copying" page.
 
 ## Changes 0.8
 
