@@ -161,23 +161,13 @@ bool Client::tryConnect()
     return false;
   }
 
-#if 0
-  // TODO: Is this actually working?
+  // TODO: Is this actually working on Linux?
   ret = mbedtls_net_set_nonblock(&server_fd);
   if (ret != 0)
   {
     mbedtls_print_error(ret);
     return false;
   }
-#else
-  int opt = 1;
-  ret = ioctl(server_fd.fd, FIONBIO, (char *)&opt);
-  if (ret < 0)
-  {
-    debug("ioctl() failed");
-    return false;
-  }
-#endif
 
   mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
 #if DEBUG_WITH_SSTREAM
