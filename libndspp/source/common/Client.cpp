@@ -73,14 +73,20 @@ Client::Client(const char * ip, int port):
   m_sslEnabled(false),
   m_mbedtlsInitialized(false),
   m_timeout(TIMEOUT),
+  m_certificatesLoaded(false),
   m_connectState(CLIENT_CONNECT_INITIAL)
 {
   setConnection(ip, port);
+
+  mbedtls_x509_crt_init(&cacert);
 }
 
 Client::~Client()
 {
   disconnect();
+
+  mbedtls_x509_crt_free(&cacert);
+
   free(m_ip);
 }
 
@@ -95,7 +101,7 @@ void Client::disconnect()
 {
   debug("Client::disconnect()");
 
-  if (isConnected())
+  if (m_connected)
   {
     m_connected = false;
     m_sslEnabled = false;
@@ -106,7 +112,6 @@ void Client::disconnect()
   {
     mbedtls_net_close(&server_fd);
     mbedtls_net_free(&server_fd);
-    mbedtls_x509_crt_free(&cacert);
     mbedtls_ssl_free(&ssl);
     mbedtls_ssl_config_free(&conf);
     mbedtls_ctr_drbg_free(&ctr_drbg);
@@ -127,7 +132,6 @@ void Client::connectInitial()
   mbedtls_net_init(&server_fd);
   mbedtls_ssl_init(&ssl);
   mbedtls_ssl_config_init(&conf);
-  mbedtls_x509_crt_init(&cacert);
   mbedtls_ctr_drbg_init(&ctr_drbg);
   mbedtls_entropy_init(&entropy);
 
@@ -198,24 +202,33 @@ void Client::connect()
   }
 }
 
-#if 0
-int Client::sslLoadCerts()
+int Client::sslLoadCerts(std::string cacerts)
 {
-  printf("Client::sslLoadCerts");
+#if 0
+  // TODO: Disabled for now
+  debug("Client::sslLoadCerts");
+
+  if (m_certificatesLoaded)
+      return 0;
 
   // In Linux, for example, they are stored in /etc/ssl/certs/
-  int ret = mbedtls_x509_crt_parse_file(&cacert, "example-com-chain.pem");
+  int ret = mbedtls_x509_crt_parse_file(&cacert, cacerts.c_str());
   if (ret < 0)
   {
     mbedtls_print_error(ret);
-    //printf("\n  Error! ret = -0x%x\n", (unsigned int)-ret);
     return -1;
   }
 
-  //printf(" (%d skipped)", ret);
+#if DEBUG_WITH_SSTREAM
+  stringstream dbg;
+  dbg << "Skipped " << ret << " certificates";
+  debug(dbg.str().c_str());
+#endif
+
+  m_certificatesLoaded = true;
+#endif
   return 0;
 }
-#endif
 
 int Client::sslEnable(void)
 {
@@ -239,8 +252,8 @@ int Client::sslEnable(void)
   // program.
   //
   // MBEDTLS_SSL_VERIFY_NONE skips the decrificate check.
+  // TODO: Enable this?
   mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE);
-  //mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
   mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
 
   ret = mbedtls_ssl_setup(&ssl, &conf);

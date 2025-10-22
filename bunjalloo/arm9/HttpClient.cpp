@@ -63,7 +63,7 @@ static const int MAX_CONNECT_ATTEMPTS(3);
 extern const char * VERSION;
 
 HttpClient::HttpClient():
-  nds::Client("",0),
+  nds::Client("", 0),
   m_total(0),
   m_finished(false),
   m_connectAttempts(0),
@@ -98,18 +98,13 @@ void HttpClient::setController(Controller * c)
     setConnection(uri.server().c_str(), uri.port());
   }
   m_controller->config().resource("logger", m_log);
-#if 0
   // TODO(Antonio): Enable certificate checks
+  // Load CA certificates
   string caFile;
-  if (m_hasSsl and s_sslKeys == 0 and m_controller->config().resource(Config::CERT_FILE, caFile))
+  if (m_controller->config().resource(Config::CERT_FILE, caFile))
   {
-    // initialise keys - this is a one off deal
-    if (matrixSslReadKeys(&s_sslKeys, 0, 0, 0, caFile.c_str()) < 0)
-    {
-      m_hasSsl = false;
-    }
+    sslLoadCerts(caFile);
   }
-#endif
 
   m_maxConnectAttempts = 3;
   m_controller->config().resource(Config::MAX_CONNECT, m_maxConnectAttempts);

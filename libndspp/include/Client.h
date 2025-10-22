@@ -18,6 +18,8 @@
 #ifndef Client_h_seen
 #define Client_h_seen
 
+#include <string>
+
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/debug.h>
 #include <mbedtls/entropy.h>
@@ -80,9 +82,10 @@ namespace nds {
        */
       void setConnection(const char * ip, int port);
 
-#if 0
-      int sslLoadCerts();
-#endif
+      /** Load CA certificates.
+       * @param cacerts Path to a file containing certificates.
+       */
+      int sslLoadCerts(std::string cacerts);
 
       /*! @brief Sends the SSL handshake and starts SSL encryption.
        * @returns 0 on success, other values on error.
@@ -116,6 +119,8 @@ namespace nds {
       bool m_mbedtlsInitialized;
       //! The time to wait between selects (in seconds)
       int m_timeout;
+      //! Set to true when the certificates are loaded
+      bool m_certificatesLoaded;
 
       mbedtls_net_context server_fd;
       mbedtls_entropy_context entropy;
