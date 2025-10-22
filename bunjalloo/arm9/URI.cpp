@@ -487,9 +487,9 @@ std::string URI::internalLink() const
 unsigned int URI::crc32int() const
 {
   uLong crc = ::crc32(0, Z_NULL, 0);
-  crc = ::crc32(crc, (const Bytef*)m_address.c_str(), m_address.length());
+  std::string full = asString();
+  crc = ::crc32(crc, (const Bytef*)full.c_str(), full.length());
   return crc;
-
 }
 
 std::string URI::crc32() const

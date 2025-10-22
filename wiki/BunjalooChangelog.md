@@ -12,6 +12,9 @@
 - Test can't be built at the moment, they will be re-enabled in the future.
 - Initialize keyboard state correctly so that the extra symbols aren't displayed
   after the first key press.
+- Modify cache CRC32 calculation to include the protocol, not just the rest of
+  the address. This lets us retry a website with http and then https if it
+  fails, for example. Previously it would just reload the cached error page.
 
 ## Changes 0.8
 
