@@ -376,14 +376,16 @@ void HttpClient::handleNextState()
       get(m_uri);
       m_controller->waitVBlank();
       m_controller->waitVBlank();
-      m_state = READING_FIRST;
+      m_state = READING_ALL;
       break;
 
+#if 0
     case READING_FIRST:
       // read something, anything, to make sure all is well
       setTimeout(5);
       readFirst();
       break;
+#endif
 
     case READING_ALL:
       // now we know the server is connected, read the remaining bytes.
@@ -495,6 +497,9 @@ void HttpClient::readAll()
         debug("m_maxConnectAttempts reached - surely it is done...");
         m_state = FINISHED;
       } else {
+        m_controller->waitVBlank();
+        m_controller->waitVBlank();
+        m_controller->waitVBlank();
         m_controller->waitVBlank();
         m_controller->waitVBlank();
       }
