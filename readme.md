@@ -59,6 +59,28 @@ Then simply run:
 ./bunjalloo_sdl.elf
 ```
 
+## melonDS
+
+If you want to run this in melonDS you will need a SD image. Unfortunately you
+will need to add some file to `sdroot` (preferably a few tens of megabytes) that
+you remove later. This is required because Bunjalloo will use the SD card to
+store some user settings, cookies, cached pages, etc.
+
+Run:
+
+```sh
+cp myfile sdroot/
+make sdimage
+
+mkdir fs
+sudo mount image.bin fs
+rm fs/myfile
+sudo umount fs
+rmdir fs
+```
+
+Then you can use this image in melonDS.
+
 ## Credits
 
 Richard Quirk (quirkysoft): Author of Bunjalloo (http://code.google.com/p/quirkysoft)
