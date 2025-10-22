@@ -161,6 +161,7 @@ bool Client::tryConnect()
     return false;
   }
 
+#if 0
   // TODO: Is this actually working?
   ret = mbedtls_net_set_nonblock(&server_fd);
   if (ret != 0)
@@ -168,6 +169,15 @@ bool Client::tryConnect()
     mbedtls_print_error(ret);
     return false;
   }
+#else
+  int opt = 1;
+  ret = ioctl(server_fd.fd, FIONBIO, (char *)&opt);
+  if (ret < 0)
+  {
+    debug("ioctl() failed");
+    return false;
+  }
+#endif
 
   mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
 #if DEBUG_WITH_SSTREAM
@@ -329,7 +339,7 @@ unsigned int Client::write(const void * data, unsigned int length)
     else
       ret = ::mbedtls_net_send(&server_fd, (const unsigned char *)cdata, length);
 
-    if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+    if (ret == MBEDTLS_ERR_SSL_WANT_WRITE)
     {
       // Retry later
       break;
@@ -368,11 +378,12 @@ int Client::read(int max)
   else
     ret = ::mbedtls_net_recv(&server_fd, (unsigned char *)s_buffer, max);
 
-  if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE)
+  if (ret == MBEDTLS_ERR_SSL_WANT_READ)
   {
     return RETRY_LATER;
   }
-  else if (ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY)
+  else if ((ret == MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY) ||
+           (ret == MBEDTLS_ERR_NET_CONN_RESET))
   {
     debug("Connection closed from server");
     return CONNECTION_CLOSED;
