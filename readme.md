@@ -10,6 +10,7 @@ protocols.
 
 ## Features
 
+- Bookmark support.
 - Cookie and image support.
 
 ## Controls
@@ -34,7 +35,7 @@ make -j`nproc`
 
 Copy `bunjalloo.nds` to your flashcard and the folder `sdroot/` to the root of
 your SD card (either in your flashcard or your DSi). The `data` folder inside
-`sdroot` must be in the root of your SD card.
+`sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
 
 ## Build (Linux)
 
