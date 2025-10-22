@@ -1,6 +1,6 @@
 # Bunjaloo Changelog
 
-## Changes 0.9
+## Version 0.9.0
 
 - Migrated to BlocksDS from devkitARM. Now Bunjalloo can take advantage of the
   Wifi driver in DSi mode, with WPA2 support and the additional RAM of DSi.

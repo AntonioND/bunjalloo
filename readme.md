@@ -1,11 +1,12 @@
 # Bunjalloo
 
 This is Bunjalloo, the open source Nintendo DS web browser. It was originally
-developed by Richard Quirk until 2010 and then abandoned. This repository
-contains a working fork that you can build with modern BlocksDS
+developed by Richard Quirk until 2010. This repository contains a working fork
+that you can build with modern BlocksDS.
 
 This fork can take advantage of the additional RAM, CPU power, and WPA2 support
-of DSi.
+of DSi. It also uses modern cryptographic libraries to support modern TLS
+protocols.
 
 ## Features
 
@@ -21,7 +22,9 @@ of DSi.
 - Click stylus: Follow link, enter data in forms, press keys.
 - Hold stylus: Scroll.
 
-## Build
+## Build (NDS)
+
+Install [BlocksDS](https://blocksds.skylyrac.net/docs/).
 
 Clone this repository and run:
 
@@ -33,6 +36,31 @@ Copy `bunjalloo.nds` to your flashcard and the folder `sdroot/` to the root of
 your SD card (either in your flashcard or your DSi). The `data` folder inside
 `sdroot` must be in the root of your SD card.
 
+## Build (Linux)
+
+Install [BlocksDS](https://blocksds.skylyrac.net/docs/). You will need it for
+some tools.
+
+Install SDL 1:
+
+```sh
+sudo apt install libsdl-dev
+```
+
+Clone this repository and run:
+
+```sh
+make -f Makefile.pc -j`nproc`
+```
+
+Then simply run:
+
+```sh
+./bunjalloo_sdl.elf
+```
+
 ## Credits
 
 Richard Quirk (quirkysoft): Author of Bunjalloo (http://code.google.com/p/quirkysoft)
+
+Antonio Niño Díaz: Port to BlocksDS.
