@@ -239,7 +239,7 @@ void View::notify()
         }
         char buffer[10];
         string s(m_filenameForProgress);
-        sprintf_platform(buffer, " %d%%", pc);
+        snprintf(buffer, sizeof(buffer), " %d%%", pc);
         s += buffer;
         m_progress->setVisible();
         m_keyboard->forceRedraw();

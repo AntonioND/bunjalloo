@@ -39,7 +39,7 @@ void CacheControl::setCacheControl(const std::string &value)
   std::string ma;
   if (paramSet.parameter("max-age", ma)) {
     // got
-    int matches = sscanf_platform(ma.c_str(), "%d", &m_maxAge);
+    int matches = sscanf(ma.c_str(), "%d", &m_maxAge);
     if (matches != 1) {
       m_maxAge = 0;
     }

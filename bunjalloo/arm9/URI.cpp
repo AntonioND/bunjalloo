@@ -389,7 +389,7 @@ std::string URI::escape(const std::string &input)
     char value = *it;
     if ( isEscapable(value))
     {
-      sprintf_platform(buffer, "%%%02X", value);
+      snprintf(buffer, sizeof(buffer), "%%%02X", value);
       char * src = buffer;
       while (*src != 0) {
         output += *src;
@@ -496,7 +496,7 @@ std::string URI::crc32() const
 {
   uLong crc(crc32int());
   char buffer[32];
-  sprintf_platform(buffer, "%08X", (unsigned int)crc);
+  snprintf(buffer, sizeof(buffer), "%08X", (unsigned int)crc);
   return buffer;
 
 }
