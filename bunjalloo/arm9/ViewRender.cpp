@@ -462,14 +462,13 @@ void ViewRender::notify()
 {
   Document::Status status(m_self->document().status());
   static int progressId(0);
-  static int pc(0);
+
   switch (status)
   {
     case Document::LOADED_ITEM:
     case Document::LOADED_HTML:
       {
         progressId = 0;
-        pc = 0;
         m_self->m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
       }
       break;
@@ -494,7 +493,6 @@ void ViewRender::notify()
         renderImage();
       }
       progressId = 0;
-      pc = 0;
       break;
   }
 }
