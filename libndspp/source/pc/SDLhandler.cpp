@@ -625,7 +625,7 @@ void SDLhandler::waitVsync()
 
     SDL_Rect areas[2] = {
       {0, 0, WIDTH, HEIGHT/2 },
-      {0, GAP.h + GAP.y, WIDTH, HEIGHT/2}
+      {0, Sint16(GAP.h + GAP.y), WIDTH, HEIGHT/2}
     };
     for (int i = 0; i < 2; ++i)
     {
