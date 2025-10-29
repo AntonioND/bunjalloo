@@ -17,8 +17,6 @@ CacheControl::CacheControl()
 
 void CacheControl::reset()
 {
-  if (!this) return;
-
   m_ageValue = -1;
   m_date = -1;
   m_expires = -1;
@@ -36,9 +34,6 @@ void CacheControl::setAge(time_t age)
 
 void CacheControl::setCacheControl(const std::string &value)
 {
-  if (!this)
-    return;
-
   // split on commas
   ParameterSet paramSet(value, ',');
   std::string ma;
