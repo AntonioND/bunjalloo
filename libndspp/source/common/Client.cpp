@@ -390,20 +390,18 @@ int Client::read(int max)
   }
   else if (ret == 0)
   {
-    // man recv(2):
-    // The return value will be 0 when the peer has performed an orderly shutdown.
     debug("Read 0 bytes");
 #if DEBUG_WITH_SSTREAM
     stringstream dbg;
     dbg << "Read 0 errno: " << errno;
     debug(dbg.str().c_str());
 #endif
-    if (errno == EINVAL or errno == ESHUTDOWN)
+    if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
     {
-      debug("EINVAL or ESHUTDOWN");
-      return CONNECTION_CLOSED;
+      return ret;
     }
-    return ret;
+    //if (errno == EINVAL or errno == ESHUTDOWN)
+    return CONNECTION_CLOSED;
   }
 
   handle(s_buffer, ret);

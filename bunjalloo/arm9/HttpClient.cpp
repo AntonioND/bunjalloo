@@ -60,7 +60,7 @@
 using namespace std;
 using nds::Wifi9;
 
-static const int DEFAULT_TIMEOUT(60);
+static const int DEFAULT_TIMEOUT(60); // Timeout in seconds
 extern const char * VERSION;
 
 HttpClient::HttpClient():
@@ -412,6 +412,7 @@ bool HttpClient::hasPage() const
   return m_state == FINISHED;
 }
 
+#if 0
 void HttpClient::readFirst()
 {
   // printf("Read First\n");
@@ -467,6 +468,7 @@ void HttpClient::readFirst()
   }
 
 }
+#endif
 
 void HttpClient::readAll()
 {
@@ -476,7 +478,7 @@ void HttpClient::readAll()
   switch (read)
   {
     case READ_ERROR:
-      m_state = FINISHED;
+      //m_state = FINISHED;
       break;
     case CONNECTION_CLOSED:
       debug("readAll(): CONNECTION_CLOSED");
