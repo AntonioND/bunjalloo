@@ -184,7 +184,7 @@ void HttpClient::proxyConnect()
     s += buffer;
     s += " HTTP/1.1\r\n";
     s += "Proxy-Connection: keep-alive\r\n";
-    s += "Host:";
+    s += "Host: ";
     s += m_uri.server();
     s += "\r\n\r\n";
     write(s.c_str(), s.length());
@@ -242,7 +242,7 @@ void HttpClient::get(const URI & uri)
     s += " ";
     s += filenamePart(uri);
     s += " HTTP/1.1\r\n";
-    s += "Host:" + uri.server()+"\r\n";
+    s += "Host: " + uri.server() + "\r\n";
     if (uri.method() != "HEAD")
     {
       // HEAD requests can leave the connection open for reuse, since they know
