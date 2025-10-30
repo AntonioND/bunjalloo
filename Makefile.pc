@@ -82,7 +82,8 @@ SOURCES_CPP	:= $(shell find -L $(SOURCEDIRS) -name "*.cpp")
 # Compiler and linker flags
 # -------------------------
 
-WARNFLAGS	:= -Wall
+WARNFLAGS_C		:=
+WARNFLAGS_CPP	:= -Wall -Wno-deprecated-declarations
 
 ifeq ($(SOURCES_CPP),)
 	LIBS	+= -lc
@@ -93,10 +94,10 @@ endif
 INCLUDEFLAGS	:= $(foreach path,$(INCLUDEDIRS),-I$(path)) \
 		   $(foreach path,$(LIBDIRS),-I$(path)/include)
 
-CFLAGS		+= -std=gnu17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+CFLAGS		+= -std=gnu17 $(WARNFLAGS_C) $(INCLUDEFLAGS) $(DEFINES) \
 		   -O2 -ffunction-sections -fdata-sections
 
-CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS_CPP) $(INCLUDEFLAGS) $(DEFINES) \
 		   -O2 -ffunction-sections -fdata-sections
 
 LDFLAGS		+= $(DEFINES) -Wl,--start-group $(LIBS) -Wl,--end-group

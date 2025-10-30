@@ -133,7 +133,8 @@ ARCH		:= -mthumb -mcpu=arm946e-s+nofp
 
 SPECS		:= $(BLOCKSDS)/sys/crts/ds_arm9.specs
 
-WARNFLAGS	:= -Wall
+WARNFLAGS_C		:=
+WARNFLAGS_CPP	:= -Wall -Wno-deprecated-declarations
 
 ifeq ($(SOURCES_CPP),)
 	LIBS	+= -lc
@@ -150,11 +151,11 @@ ASFLAGS		+= -x assembler-with-cpp $(INCLUDEFLAGS) $(DEFINES) \
 		   $(ARCH) -ffunction-sections -fdata-sections \
 		   -specs=$(SPECS)
 
-CFLAGS		+= -std=gnu17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+CFLAGS		+= -std=gnu17 $(WARNFLAGS_C) $(INCLUDEFLAGS) $(DEFINES) \
 		   $(ARCH) -Os -ffunction-sections -fdata-sections \
 		   -specs=$(SPECS)
 
-CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS) $(INCLUDEFLAGS) $(DEFINES) \
+CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS_CPP) $(INCLUDEFLAGS) $(DEFINES) \
 		   $(ARCH) -O2 -ffunction-sections -fdata-sections \
 		   -fno-exceptions -fno-rtti \
 		   -specs=$(SPECS)
