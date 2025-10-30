@@ -78,7 +78,7 @@ static int makedir (const char * newdir)
         p++;
       hold = *p;
       *p = 0;
-      if ((nds::File::mkdir(buffer) == -1) && (errno == ENOENT))
+      if ((!nds::File::mkdir(buffer)) && (errno == ENOENT))
         {
           // printf("couldn't create directory %s\n",buffer);
           free(buffer);
