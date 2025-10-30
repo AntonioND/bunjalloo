@@ -220,7 +220,7 @@ void FormControl::input(Controller & controller, URI & uri)
   else {
     std::string contentType;
     char buffer[256];
-    snprintf(buffer, sizeof(buffer), "%lu", processedData.length());
+    snprintf(buffer, sizeof(buffer), "%zu", processedData.length());
     contentType += "Content-Length: ";
     contentType += buffer;
     contentType += "\r\n";
