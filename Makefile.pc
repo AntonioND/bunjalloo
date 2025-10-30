@@ -35,7 +35,7 @@ GFXDIRS		:= bunjalloo/bwt/img/ \
 # Defines passed to all files
 # ---------------------------
 
-DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
+DEFINES		:= -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
 
 # Libraries
 # ---------

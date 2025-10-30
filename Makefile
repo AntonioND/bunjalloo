@@ -56,7 +56,7 @@ NITROFSDIR	:=
 # Defines passed to all files
 # ---------------------------
 
-DEFINES		:= -DPOSIX -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix
+DEFINES		:= -DHAVE_UNISTD_H -D__XSI_VISIBLE=1 -Dunix -DMINIZIP_FOPEN_NO_64
 
 # Libraries
 # ---------
