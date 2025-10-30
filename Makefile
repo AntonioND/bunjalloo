@@ -31,7 +31,7 @@ SDIMAGE		:= image.bin
 
 SOURCEDIRS	:= 3rdparty/libplum \
 			   3rdparty/mbedtls-3.6.4 \
-			   3rdparty/zlib \
+			   3rdparty/zlib-1.3.1 \
 			   bunjalloo/arm9 \
 			   bunjalloo/bwt/source \
 			   libndspp/source/arm9 \
@@ -39,8 +39,8 @@ SOURCEDIRS	:= 3rdparty/libplum \
 
 INCLUDEDIRS	:= 3rdparty/libplum/ \
 			   3rdparty/mbedtls-3.6.4/include/ \
-			   3rdparty/zlib/ \
-			   3rdparty/zlib/contrib/minizip/ \
+			   3rdparty/zlib-1.3.1/ \
+			   3rdparty/zlib-1.3.1/contrib/minizip/ \
 			   bunjalloo/bwt/include/ \
 			   libndspp/include/ \
 			   libndspp/source/arm9/
