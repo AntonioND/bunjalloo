@@ -168,11 +168,6 @@ bool Client::tryConnect()
     return false;
   }
 
-  mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
-#if DEBUG_WITH_SSTREAM
-  mbedtls_ssl_conf_dbg(&conf, mbedtls_debug_callback, stdout);
-#endif
-
   return true;
 }
 
@@ -241,6 +236,11 @@ int Client::sslEnable(void)
     mbedtls_print_error(ret);
     return -1;
   }
+
+  mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
+#if DEBUG_WITH_SSTREAM
+  mbedtls_ssl_conf_dbg(&conf, mbedtls_debug_callback, stdout);
+#endif
 
   // MBEDTLS_SSL_VERIFY_OPTIONAL means that the certificates are checked but
   // any failure is ignored, which is useful for debugging. You need to set
