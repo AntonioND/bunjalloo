@@ -102,12 +102,12 @@ class scoped_ptr {
   explicit scoped_ptr(T* p = 0): ptr(p) {}
 
   ~scoped_ptr() {
-    typedef char type_must_be_complete[sizeof(T)];
+    static_assert(sizeof(T) != 0, "type must be complete");
     delete ptr;
   }
 
   void reset(T* p = 0) {
-    typedef char type_must_be_complete[sizeof(T)];
+    static_assert(sizeof(T) != 0, "type must be complete");
 
     if (ptr != p) {
       delete ptr;
@@ -191,12 +191,12 @@ class scoped_array {
   explicit scoped_array(T* p = 0) : ptr(p) {}
 
   ~scoped_array() {
-    typedef char type_must_be_complete[sizeof(T)];
+    static_assert(sizeof(T) != 0, "type must be complete");
     delete[] ptr;
   }
 
   void reset(T* p = 0) {
-    typedef char type_must_be_complete[sizeof(T)];
+    static_assert(sizeof(T) != 0, "type must be complete");
 
     if (ptr != p) {
       delete [] ptr;
