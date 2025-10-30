@@ -99,13 +99,13 @@ class HttpClient: public nds::Client
   private:
     int  m_total;
     bool m_finished;
-    int  m_connectAttempts;
-    int  m_reconnects;
+    time_t m_startTime;
+    int m_timeout;
+    int m_reconnects;
     URI m_uri;
     URI m_referer;
     ConnectionState m_state;
     Controller * m_controller;
-    int  m_maxConnectAttempts;
     bool m_log;
 
     void wifiConnection();

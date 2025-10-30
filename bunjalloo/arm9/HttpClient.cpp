@@ -43,6 +43,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cstdio>
+#include <ctime>
 #include "libnds.h"
 #include "System.h"
 #include "Config.h"
@@ -59,17 +60,17 @@
 using namespace std;
 using nds::Wifi9;
 
-static const int MAX_CONNECT_ATTEMPTS(3);
+static const int DEFAULT_TIMEOUT(60);
 extern const char * VERSION;
 
 HttpClient::HttpClient():
   nds::Client("", 0),
   m_total(0),
   m_finished(false),
-  m_connectAttempts(0),
+  m_startTime(0),
+  m_timeout(DEFAULT_TIMEOUT),
   m_state(WIFI_OFF),
   m_controller(0),
-  m_maxConnectAttempts(MAX_CONNECT_ATTEMPTS),
   m_log(false)
 {
 }
@@ -106,11 +107,11 @@ void HttpClient::setController(Controller * c)
     sslLoadCerts(caFile);
   }
 
-  m_maxConnectAttempts = 3;
-  m_controller->config().resource(Config::MAX_CONNECT, m_maxConnectAttempts);
-  if (m_maxConnectAttempts == 0)
+  m_timeout = 0;
+  m_controller->config().resource(Config::MAX_CONNECT, m_timeout);
+  if (m_timeout == 0)
   {
-    m_maxConnectAttempts = MAX_CONNECT_ATTEMPTS;
+    m_timeout = DEFAULT_TIMEOUT;
   }
 }
 
@@ -319,26 +320,25 @@ void HttpClient::handleNextState()
 
     case CONNECT_WIFI:
       wifiConnection();
-      m_connectAttempts = 0;
+      m_startTime = time(NULL);
       m_reconnects = 0;
       break;
 
     case CONNECT_SOCKET:
+      debug("CONNECT_SOCKET");
       // connect to the socket.
-      setTimeout(1);
       this->connect();
       if (isConnected())
       {
         debug("Connected, setup proxy and SSL");
         m_state = PROXY_SSL_HANDSHAKE;
-        m_connectAttempts = 0;
+        m_startTime = time(NULL);
       }
       else
       {
-        m_connectAttempts++;
-        if (m_connectAttempts == m_maxConnectAttempts)
+        if (time(NULL) > (m_startTime + m_timeout))
         {
-          debug("FAILED m_maxConnectAttempts");
+          debug("Timeout!");
           m_state = FAILED;
         }
       }
@@ -372,7 +372,6 @@ void HttpClient::handleNextState()
       break;
 
     case GET_URL:
-      setTimeout(5);
       get(m_uri);
       m_controller->waitVBlank();
       m_controller->waitVBlank();
@@ -382,7 +381,6 @@ void HttpClient::handleNextState()
     case READING_FIRST:
 #if 0
       // read something, anything, to make sure all is well
-      setTimeout(5);
       readFirst();
 #endif
       m_state = READING_ALL;
@@ -390,7 +388,6 @@ void HttpClient::handleNextState()
 
     case READING_ALL:
       // now we know the server is connected, read the remaining bytes.
-      setTimeout(1);
       readAll();
       break;
 
@@ -423,19 +420,21 @@ void HttpClient::readFirst()
   switch (read)
   {
     case CONNECTION_CLOSED:
-      debug("readFirst returned 0 - Failure");
-      m_state = FAILED;
+      debug("CONNECTION_CLOSED");
+      m_state = FINISHED;
       break;
 
     case READ_ERROR:
       {
-        // not be ready yet. This is the select() returning early.
-        m_connectAttempts++;
-        if (m_connectAttempts >= m_maxConnectAttempts)
+        debug("READ_ERROR");
+
+        if (time(NULL) > (m_startTime + m_timeout))
         {
-          // once we reach the maximum number, retry the socket.
+          debug("Timeout!");
+
+          // once we timeout, retry the socket.
           this->disconnect();
-          m_connectAttempts = 0;
+          m_startTime = time(NULL);
           m_state = CONNECT_SOCKET;
           m_reconnects++;
           if (m_reconnects == 3)
@@ -444,6 +443,7 @@ void HttpClient::readFirst()
             m_state = FAILED;
           }
         }
+
         m_controller->waitVBlank();
         m_controller->waitVBlank();
       }
@@ -451,18 +451,18 @@ void HttpClient::readFirst()
 
     case RETRY_LATER:
       /* Keep going! */
-      debug("RETRY_LATER readFirst");
+      debug("RETRY_LATER");
       m_controller->waitVBlank();
       m_controller->waitVBlank();
-      m_connectAttempts++;
-      if (m_connectAttempts == m_maxConnectAttempts) {
+      if (time(NULL) > (m_startTime + m_timeout)) {
+        debug("Timeout!");
         m_state = FAILED;
       }
       break;
 
     default:
       m_state = READING_ALL;
-      m_connectAttempts = 0;
+      m_startTime = time(NULL);
       break;
   }
 
@@ -479,14 +479,13 @@ void HttpClient::readAll()
       m_state = FINISHED;
       break;
     case CONNECTION_CLOSED:
-      debug("readAll returned 0 - set to FINISHED");
+      debug("readAll(): CONNECTION_CLOSED");
       m_state = FINISHED;
       break;
 
     case RETRY_LATER:
       /* Keep going */
-      debug("RETRY_LATER readAll");
-      m_connectAttempts++;
+      debug("readAll(): RETRY_LATER");
       if (m_controller->m_document->uri() != m_uri.asString())
       {
         // redirected.
@@ -494,8 +493,9 @@ void HttpClient::readAll()
         debug(m_controller->m_document->uri().c_str());
         m_state = FINISHED;
       }
-      if (m_connectAttempts == m_maxConnectAttempts) {
-        debug("m_maxConnectAttempts reached - surely it is done...");
+
+      if (time(NULL) > (m_startTime + m_timeout)) {
+        debug("Timeout!");
         m_state = FINISHED;
       } else {
         m_controller->waitVBlank();
@@ -509,7 +509,7 @@ void HttpClient::readAll()
     default:
       // ok - there may be more bytes.
       m_state = READING_ALL;
-      m_connectAttempts = 0;
+      m_startTime = time(NULL);
       break;
   }
 }
@@ -541,9 +541,8 @@ void HttpClient::reset()
   disconnect();
   m_total = 0;
   m_finished = false;
-  m_connectAttempts = 0;
+  m_startTime = time(NULL);
   m_state = WIFI_OFF;
-  m_maxConnectAttempts = MAX_CONNECT_ATTEMPTS;
 }
 
 void HttpClient::setReferer(const URI & referer)

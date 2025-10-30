@@ -18,5 +18,4 @@
 #define Client_platform_h_seen
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
-#define TIMEOUT 1
 #endif

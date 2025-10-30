@@ -72,7 +72,6 @@ Client::Client(const char * ip, int port):
   m_connected(false),
   m_sslEnabled(false),
   m_mbedtlsInitialized(false),
-  m_timeout(TIMEOUT),
   m_certificatesLoaded(false),
   m_connectState(CLIENT_CONNECT_INITIAL)
 {
@@ -414,10 +413,4 @@ int Client::read(int max)
   debug(dbg.str().c_str());
 #endif
   return ret;
-}
-
-void Client::setTimeout(int timeout)
-{
-  // TODO: Use the timeout for something
-  m_timeout = timeout;
 }

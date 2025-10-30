@@ -16,9 +16,6 @@
 */
 #ifndef Client_platform_h_seen
 #define Client_platform_h_seen
-// use the dswifi ESHUTDOWN
 #include <errno.h>
 #include <nds.h>
-#define TIMEOUT 2
-//#define socklen_t int
 #endif

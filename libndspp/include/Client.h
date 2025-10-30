@@ -103,9 +103,6 @@ namespace nds {
        * @param c Characters to print (or whatever). */
       virtual void debug(const char * c)=0;
 
-      /** Set the current timeout. */
-      void setTimeout(int timeout);
-
     private:
       //! The IP address
       char * m_ip;
@@ -117,8 +114,6 @@ namespace nds {
       bool m_sslEnabled;
       ///! Set to true if Mbed TLS has been initialized
       bool m_mbedtlsInitialized;
-      //! The time to wait between selects (in seconds)
-      int m_timeout;
       //! Set to true when the certificates are loaded
       bool m_certificatesLoaded;
 
