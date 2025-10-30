@@ -379,13 +379,14 @@ void HttpClient::handleNextState()
       m_state = READING_ALL;
       break;
 
-#if 0
     case READING_FIRST:
+#if 0
       // read something, anything, to make sure all is well
       setTimeout(5);
       readFirst();
-      break;
 #endif
+      m_state = READING_ALL;
+      break;
 
     case READING_ALL:
       // now we know the server is connected, read the remaining bytes.

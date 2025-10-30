@@ -481,7 +481,7 @@ bool Keyboard::tick()
 
 #ifndef ARM9
   static int pressed = 0;
-  char sdlKeyPress[2] = { keysRealKeyboard(), 0};
+  char sdlKeyPress[2] = { char(keysRealKeyboard()), 0};
   if ((not pressed) and sdlKeyPress[0])
   {
     pressed = 30;

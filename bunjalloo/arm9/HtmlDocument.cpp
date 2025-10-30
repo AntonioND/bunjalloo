@@ -1228,7 +1228,7 @@ void HtmlDocument::reconstructActiveFormatters()
   {
     //4. If there are no entries before entry in the list of active formatting elements, then jump to step 8.
     HtmlElement * entry = *it;
-    bool lastEntry(false);
+    __attribute__((unused)) bool lastEntry(false);
     ElementList::iterator currentIt(it);
     ++it;
     if  ( it != end)
