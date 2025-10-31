@@ -156,7 +156,7 @@ CFLAGS		+= -std=gnu17 $(WARNFLAGS_C) $(INCLUDEFLAGS) $(DEFINES) \
 		   -specs=$(SPECS)
 
 CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS_CPP) $(INCLUDEFLAGS) $(DEFINES) \
-		   $(ARCH) -O2 -ffunction-sections -fdata-sections \
+		   $(ARCH) -Os -ffunction-sections -fdata-sections \
 		   -fno-exceptions -fno-rtti \
 		   -specs=$(SPECS)
 
