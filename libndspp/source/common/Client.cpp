@@ -160,7 +160,6 @@ bool Client::tryConnect()
     return false;
   }
 
-  // TODO: Is this actually working on Linux?
   ret = mbedtls_net_set_nonblock(&server_fd);
   if (ret != 0)
   {
