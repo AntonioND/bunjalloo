@@ -37,6 +37,7 @@
 #include <mbedtls/debug.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/error.h>
+#include <mbedtls/mbedtls_config.h>
 #include <mbedtls/net_sockets.h>
 #include <mbedtls/platform.h>
 #include <mbedtls/ssl.h>
@@ -127,7 +128,9 @@ void Client::connectInitial()
 
   disconnect();
 
+#ifdef MBEDTLS_DEBUG_C
   mbedtls_debug_set_threshold(DEBUG_LEVEL);
+#endif
 
   mbedtls_net_init(&server_fd);
   mbedtls_ssl_init(&ssl);
