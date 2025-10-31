@@ -18,6 +18,7 @@
 #define DEBUG_WITH_SSTREAM 0
 #include "Client.h"
 #include "Client_platform.h"
+#include "libnds.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -284,7 +285,7 @@ int Client::sslEnable(void)
       return -1;
     }
 
-    //cothread_yield_irq(IRQ_VBLANK);
+    cothread_yield_irq(IRQ_VBLANK);
   }
 
   debug("Verifying peer X.509 cert");
