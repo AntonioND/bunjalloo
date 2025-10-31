@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Palette.h"
+#include <nds/arm9/cache.h>
 #include <nds/arm9/video.h>
 #include <nds/dma.h>
 #include <nds/memory.h>
@@ -55,7 +56,9 @@ m_p(&(screen?BG_PALETTE_SUB:BG_PALETTE)[(palette&15)*16]),m_16(true)
 void Palette::load(const unsigned short * palette, unsigned int length)
 {
   if (!length)
-    length = m_16?16:256;
+    length = m_16 ? 16 : 256;
+
+  DC_FlushRange(m_p, length * 2);
   dmaCopy(palette, m_p, length * 2);
 }
 
