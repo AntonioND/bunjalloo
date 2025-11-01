@@ -488,6 +488,7 @@ void HttpClient::readAll()
     case RETRY_LATER:
       /* Keep going */
       debug("readAll(): RETRY_LATER");
+#if 0
       if (m_controller->m_document->uri() != m_uri.asString())
       {
         // redirected.
@@ -495,7 +496,7 @@ void HttpClient::readAll()
         debug(m_controller->m_document->uri().c_str());
         m_state = FINISHED;
       }
-
+#endif
       if (time(NULL) > (m_startTime + m_timeout)) {
         debug("Timeout!");
         m_state = FINISHED;
