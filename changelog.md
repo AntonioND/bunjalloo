@@ -1,5 +1,28 @@
 # Bunjaloo Changelog
 
+## Version DEV
+
+- Fixed SSL connections. Entropy is now gathered correctly and the main thread
+  yields every now and then to let the SSL handshake finish.
+- Support checking CA certificates when using SSL. This uses a lot of RAM and
+  it's a bit slow so it's disabled by default.
+- Fixed the type of position markers when searching strings. It was only valid
+  in 32-bit platforms like the DS, so some code wasn't working on the SDL port.
+  This prevented the configuration settings page from showing up.
+- The DS version now expects the `data/bunjalloo` folder to be in the root of
+  the SD, not in the same folder as the NDS ROM.
+- A bad debug check has been removed. This prevented some elements from loading,
+  like some (but not all) images.
+- Improved handling of errors when receiving packets.
+- Fix timeout counter so that it uses seconds instead of retry attempts.
+- Zlib has been updated to version 1.3.1.
+- Some unused features of Mbed TLS have been disabled to reduce code size.
+- The code is now built with `-Os` to save RAM.
+- Flush data cache before doing a DMA copy.
+- Fixed some warnings, silenced some of them.
+- Some internal code cleanup.
+- Updated instructions in readme.
+
 ## Version 0.9.0
 
 - Migrated to BlocksDS from devkitARM. Now Bunjalloo can take advantage of the
