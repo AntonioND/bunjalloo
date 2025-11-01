@@ -11,14 +11,20 @@
   This prevented the configuration settings page from showing up.
 - The DS version now expects the `data/bunjalloo` folder to be in the root of
   the SD, not in the same folder as the NDS ROM.
+- Support BMP and APNG formats.
+- Fix scale down calculations for very big images. Sometimes they were left too
+  big in one dimension.
+- Display transparent pixels as white instead of black.
 - A bad debug check has been removed. This prevented some elements from loading,
   like some (but not all) images.
 - Improved handling of errors when receiving packets.
+- Restore code that parses dates.
 - Fix timeout counter so that it uses seconds instead of retry attempts.
 - Zlib has been updated to version 1.3.1.
 - Some unused features of Mbed TLS have been disabled to reduce code size.
 - The code is now built with `-Os` to save RAM.
 - Flush data cache before doing a DMA copy.
+- Removed some superfluous waits for VBL.
 - Fixed some warnings, silenced some of them.
 - Some internal code cleanup.
 - Updated instructions in readme.
