@@ -354,6 +354,9 @@ const unsigned short * Image::palette() const
 
 void Image::reload()
 {
+  if (m_valid)
+    return;
+
   readFile();
 }
 
