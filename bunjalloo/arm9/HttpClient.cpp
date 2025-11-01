@@ -373,8 +373,6 @@ void HttpClient::handleNextState()
 
     case GET_URL:
       get(m_uri);
-      m_controller->waitVBlank();
-      m_controller->waitVBlank();
       m_state = READING_ALL;
       break;
 
@@ -430,12 +428,6 @@ void HttpClient::readAll()
       if (time(NULL) > (m_startTime + m_timeout)) {
         debug("Timeout!");
         m_state = FINISHED;
-      } else {
-        m_controller->waitVBlank();
-        m_controller->waitVBlank();
-        m_controller->waitVBlank();
-        m_controller->waitVBlank();
-        m_controller->waitVBlank();
       }
       break;
 
