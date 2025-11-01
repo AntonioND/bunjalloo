@@ -201,8 +201,6 @@ void Client::connect()
 
 int Client::sslLoadCerts(std::string cacerts)
 {
-#if 0
-  // TODO: Disabled for now
   debug("Client::sslLoadCerts");
 
   if (m_certificatesLoaded)
@@ -223,7 +221,6 @@ int Client::sslLoadCerts(std::string cacerts)
 #endif
 
   m_certificatesLoaded = true;
-#endif
   return 0;
 }
 
@@ -254,8 +251,10 @@ int Client::sslEnable(void)
   // program.
   //
   // MBEDTLS_SSL_VERIFY_NONE skips the decrificate check.
-  // TODO: Enable this?
-  mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE);
+  if (m_certificatesLoaded)
+    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
+  else
+    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE);
   mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
 
   ret = mbedtls_ssl_setup(&ssl, &conf);
