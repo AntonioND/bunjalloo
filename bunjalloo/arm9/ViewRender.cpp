@@ -186,8 +186,7 @@ void ViewRender::renderImage()
   nds::Image * image(0);
   if (not filename.empty())
   {
-    image = new nds::Image(filename.c_str(),
-        (nds::Image::ImageType)m_self->m_document.htmlDocument()->mimeType());
+    image = new nds::Image(filename.c_str());
   }
   ImageComponent * imageComponent = new ImageComponent(image, m_box, &m_self->document());
   m_self->m_scrollPane->add(imageComponent);
