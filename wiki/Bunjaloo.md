@@ -149,7 +149,3 @@ sed -i 's/vera/myfont/' /media/disk/data/bunjalloo/config.ini
 ```
 
 The output font name is always all-lowercase.
-
-## Compiling from source
-
-Please see Compiling
