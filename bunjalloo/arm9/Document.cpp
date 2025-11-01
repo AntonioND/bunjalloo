@@ -305,10 +305,10 @@ void Document::setCacheFile(const std::string & cacheFile)
 
 void Document::magicMimeType(const char * data, int length)
 {
+  // This is used to determine the type of local cached data. Data from http
+  // should already have content-type in the headers or in meta or whatever.
   if (length > 128)
     length = 128;
-  // this is only for local data - data from http should already have
-  // content-type in the headers or in meta or whatever.
   if (length < 3)
   {
     // assume plain text we only have 2 bytes...
@@ -321,11 +321,17 @@ void Document::magicMimeType(const char * data, int length)
         (unsigned char)data[2] == 0x4E)
     {
       m_htmlDocument->parseContentType("image/png");
+      // This could also be an APNG file, but we need to do a more clever
+      // parsing to detect it...
     }
     else if ((unsigned char)data[0] == 0x47 && (unsigned char)data[1] == 0x49 &&
              (unsigned char)data[2] == 0x46)
     {
       m_htmlDocument->parseContentType("image/gif");
+    }
+    else if ((unsigned char)data[0] == 'B' && (unsigned char)data[1] =='M')
+    {
+      m_htmlDocument->parseContentType("image/bmp");
     }
     else if ((unsigned char)data[0] == 0xFF && (unsigned char)data[1] == 0xD8)
     {
