@@ -80,11 +80,10 @@ Image::Image(const char * filename, bool keepPalette):
   m_filename(filename),
   m_width(0),
   m_height(0),
-  m_currentLine(0),
   m_paletteSize(0),
   m_channels(3),
-  m_data(0),
-  m_palette(0)
+  m_data(NULL),
+  m_palette(NULL)
 {
   ImageType type(imageType(filename));
   m_type = type;
@@ -290,7 +289,6 @@ void Image::calculateScale()
   // e.g. 400x200 => xRatio = 2
   int yRatio = (m_realHeight * 256) / m_realWidth;
   // e.g. 400x200 => yRatio = 0.5
-  m_currentLine = 0;
 
   if (m_realWidth > MAX_IMAGE_WIDTH or m_realHeight > MAX_IMAGE_HEIGHT)
   {

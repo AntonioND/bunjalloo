@@ -100,7 +100,6 @@ namespace nds
       // scaled w, h
       unsigned int m_width;
       unsigned int m_height;
-      unsigned int m_currentLine;
 
       // actual w, h of image
       unsigned int m_realWidth;
