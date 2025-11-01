@@ -31,10 +31,9 @@ class HttpClient: public nds::Client
       WIFI_OFF,         //!< Initial state.
       CONNECT_WIFI,     //!< Wifi is being started.
       CONNECT_SOCKET,   //!< Can use sockets, connect to server
-      PROXY_SSL_HANDSHAKE, //!< Have connected to server. Setup proxy, do SSL handshake if needed
+      PROXY_SSL_HANDSHAKE, //!< Connected to server. Setup proxy, do SSL handshake if needed
       GET_URL,          //!< Have connected to server, get url.
-      READING_FIRST,    //!< Sent Rqst, see if there is a response.
-      READING_ALL,      //!< Response OK, read all data.
+      READING_ALL,      //!< Read all data.
       FINISHED,         //!< Finished reading data.
       FAILED            //!< Failed to do anything.
     };

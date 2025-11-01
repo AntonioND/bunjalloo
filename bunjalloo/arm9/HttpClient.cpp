@@ -378,14 +378,6 @@ void HttpClient::handleNextState()
       m_state = READING_ALL;
       break;
 
-    case READING_FIRST:
-#if 0
-      // read something, anything, to make sure all is well
-      readFirst();
-#endif
-      m_state = READING_ALL;
-      break;
-
     case READING_ALL:
       // now we know the server is connected, read the remaining bytes.
       readAll();
@@ -411,64 +403,6 @@ bool HttpClient::hasPage() const
 {
   return m_state == FINISHED;
 }
-
-#if 0
-void HttpClient::readFirst()
-{
-  // printf("Read First\n");
-  int read = this->read();
-
-  switch (read)
-  {
-    case CONNECTION_CLOSED:
-      debug("CONNECTION_CLOSED");
-      m_state = FINISHED;
-      break;
-
-    case READ_ERROR:
-      {
-        debug("READ_ERROR");
-
-        if (time(NULL) > (m_startTime + m_timeout))
-        {
-          debug("Timeout!");
-
-          // once we timeout, retry the socket.
-          this->disconnect();
-          m_startTime = time(NULL);
-          m_state = CONNECT_SOCKET;
-          m_reconnects++;
-          if (m_reconnects == 3)
-          {
-            debug("FAILED m_reconnects == 3");
-            m_state = FAILED;
-          }
-        }
-
-        m_controller->waitVBlank();
-        m_controller->waitVBlank();
-      }
-      break;
-
-    case RETRY_LATER:
-      /* Keep going! */
-      debug("RETRY_LATER");
-      m_controller->waitVBlank();
-      m_controller->waitVBlank();
-      if (time(NULL) > (m_startTime + m_timeout)) {
-        debug("Timeout!");
-        m_state = FAILED;
-      }
-      break;
-
-    default:
-      m_state = READING_ALL;
-      m_startTime = time(NULL);
-      break;
-  }
-
-}
-#endif
 
 void HttpClient::readAll()
 {
