@@ -1480,6 +1480,12 @@ void HtmlParser::setMimeType(const std::string &mt)
   else if (mt == IMAGE_JPEG_STR or mt == IMAGE_JPG_STR) {
     m_mimeType = IMAGE_JPEG;
   }
+  else if (mt == "image/apng") {
+    m_mimeType = IMAGE_APNG;
+  }
+  else if (mt == "image/bmp") {
+    m_mimeType = IMAGE_BMP;
+  }
   else if (mt == "application/zip") {
     m_mimeType = ZIP;
   }
