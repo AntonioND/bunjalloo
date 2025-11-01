@@ -101,6 +101,12 @@ void ImageComponent::reload()
   //{
   //  m_image->setType((nds::Image::ImageType)m_document->htmlDocument()->mimeType());
   //}
+
+  //nds::Image::ImageType imgType = m_image->type();
+  //nds::Image::ImageType mimeType = (nds::Image::ImageType)m_document->htmlDocument()->mimeType();
+  //if (imgType != mimeType)
+  //  return;
+
   unsigned int w = m_image->width();
   unsigned int h = m_image->height();
   m_image->reload();
