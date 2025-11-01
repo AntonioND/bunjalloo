@@ -300,41 +300,32 @@ error:
 
 void Image::calculateScale()
 {
-  // calc the ratios
-  int xRatio = (m_realWidth * 256) / m_realHeight;
-  // e.g. 400x200 => xRatio = 2
-  int yRatio = (m_realHeight * 256) / m_realWidth;
-  // e.g. 400x200 => yRatio = 0.5
-
-  if (m_realWidth > MAX_IMAGE_WIDTH or m_realHeight > MAX_IMAGE_HEIGHT)
+  if ((m_realWidth > MAX_IMAGE_WIDTH) && (m_realHeight > MAX_IMAGE_HEIGHT))
   {
-    // scale so that fits on screen.
-    if (xRatio > yRatio)
-    {
-      if (m_realWidth > MAX_IMAGE_WIDTH)
-      {
-        m_width = MAX_IMAGE_WIDTH;
-        m_height = (m_width * yRatio)/256;
-      }
-      else
-      {
-        m_height = MAX_IMAGE_HEIGHT;
-        m_width = (m_height * xRatio)/256;
-      }
-    }
+    int factor_for_height = (MAX_IMAGE_HEIGHT * 256) / m_realHeight;
+    int factor_for_width = (MAX_IMAGE_WIDTH * 256) / m_realWidth;
+
+    int factor;
+
+    // We need to pick the factor that reduces the image the most so that both
+    // dimensions fit
+    if (factor_for_height < factor_for_width)
+      factor = factor_for_height;
     else
-    {
-      if (m_realHeight > MAX_IMAGE_HEIGHT)
-      {
-        m_height = MAX_IMAGE_HEIGHT;
-        m_width = (m_height * xRatio)/256;
-      }
-      else
-      {
-        m_width = MAX_IMAGE_WIDTH;
-        m_height = (m_width * yRatio)/256;
-      }
-    }
+      factor = factor_for_width;
+
+    m_width = (m_realWidth * factor) / 256;
+    m_height = (m_realHeight * factor) / 256;
+  }
+  else if (m_realWidth > MAX_IMAGE_WIDTH)
+  {
+    m_width = MAX_IMAGE_WIDTH;
+    m_height = (m_realHeight * m_width) / m_realWidth;
+  }
+  else if (m_realHeight > MAX_IMAGE_HEIGHT)
+  {
+    m_height = MAX_IMAGE_HEIGHT;
+    m_width = (m_realWidth * m_height) / m_realHeight;
   }
   else
   {
