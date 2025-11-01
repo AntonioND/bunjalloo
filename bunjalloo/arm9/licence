@@ -1,10 +1,22 @@
 "<html><head><title>Bunjalloo</title></head><body>\
-Bunjalloo (C) 2009 Richard Quirk <br>\
+<img src='" DATADIR "/docs/bunjalloo.png'>\
+ <p>\
+Bunjalloo is an <a href='https://github.com/AntonioND/bunjalloo'>open source</a> \
+web browser for Nintendo DS and DSi.<br>\
+ <p>\
+Copyright (C) 2007-2009 Richard Quirk<br>\
+Copyright (C) 2025 Antonio Ni&ntilde;o D&iacute;az<br>\
+ <p>\
 Bunjalloo comes with ABSOLUTELY NO WARRANTY; for details touch \
-<a href='" DATADIR "/docs/warranty'>'show warranty'</a>. \
+<a href='" DATADIR "/docs/warranty'>here</a>.\
+ <p>\
 This is free software, and you are welcome to redistribute it \
-under certain conditions; Touch <a href='" DATADIR "/docs/copying'>'show copying'</a> \
-for details.<p>\
-<a href='http://code.google.com/p/quirkysoft'><img src='" DATADIR "/docs/bunjalloo.png'></a>\
-<a href='http://code.google.com/p/quirkysoft'>quirkysoft.googlecode.com</a>\
+under certain conditions. Touch the following links for details:<p>\
+ <p>\
+<a href='" DATADIR "/docs/copying_bunjalloo'>Bunjalloo license</a><br> \
+<a href='" DATADIR "/docs/copying_mbedtls'>Mbed TLS license</a><br> \
+<a href='" DATADIR "/docs/copying_zlib'>Zlib license</a><br> \
+<a href='" DATADIR "/docs/copying_libplum'>libplum license</a><p> \
+ <p>\
+Bunjalloo was originally hosted in <a href='https://code.google.com/p/quirkysoft'>Google Code</a>.<br>\
 </body></html>"
