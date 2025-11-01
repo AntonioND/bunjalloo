@@ -24,7 +24,8 @@ cafile=cert/cacert_none.pem
 # proxy=192.168.169.20:8080
 # proxy=192.168.169.20
 
-# The maximum number of connections before we consider a connection lost.
+# The number of seconds to wait before we consider a connection
+# lost.
 timeout=60
 
 # Use an on disk cache of files. Speeds up browsing.
