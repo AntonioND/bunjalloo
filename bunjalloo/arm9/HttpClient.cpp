@@ -99,7 +99,7 @@ void HttpClient::setController(Controller * c)
     setConnection(uri.server().c_str(), uri.port());
   }
   m_controller->config().resource("logger", m_log);
-  // TODO(Antonio): Enable certificate checks
+
   // Load CA certificates
   string caFile;
   if (m_controller->config().resource(Config::CERT_FILE, caFile))
@@ -385,10 +385,6 @@ void HttpClient::handleNextState()
 
     case FINISHED:
       m_finished = true;
-#if 0
-      // TODO(Antonio): Free SSL information
-      m_sslClient->freeSession();
-#endif
       break;
 
     case FAILED:
