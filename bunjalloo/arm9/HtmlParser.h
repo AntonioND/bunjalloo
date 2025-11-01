@@ -93,14 +93,19 @@ class HtmlParser
 
     enum MimeType
     {
-      IMAGE_PNG,
-      IMAGE_GIF,
-      IMAGE_JPEG,
-      TEXT_HTML,
-      TEXT_PLAIN,
-      ZIP,
-      UNINITIALISED,
-      OTHER
+      // Make sure that nds::Image::ImageType entries match the values here
+      IMAGE_PNG     = 1,
+      IMAGE_GIF     = 2,
+      IMAGE_JPEG    = 3,
+
+      TEXT_HTML     = 10,
+      TEXT_PLAIN    = 11,
+
+      ZIP           = 20,
+
+      UNINITIALISED = 30,
+
+      OTHER         = 40
     };
 
     static const char * IMAGE_JPEG_STR;

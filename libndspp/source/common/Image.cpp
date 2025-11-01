@@ -68,15 +68,10 @@ class Array
     unsigned int m_size;
 };
 
-Image::ImageType Image::imageType(const char * filename)
-{
-  // TODO: Add more types to this enum
-  return Image::ImagePNG;
-}
-
 Image::Image(const char * filename, bool keepPalette):
   m_valid(false),
   m_keepPalette(keepPalette),
+  m_type(ImageNONE),
   m_filename(filename),
   m_width(0),
   m_height(0),
@@ -85,8 +80,6 @@ Image::Image(const char * filename, bool keepPalette):
   m_data(NULL),
   m_palette(NULL)
 {
-  ImageType type(imageType(filename));
-  m_type = type;
   reload();
 }
 
@@ -154,6 +147,29 @@ void Image::readFile()
         //        plum_get_error_text(error), error);
         //fflush(stderr);
         return;
+    }
+
+    switch (image->type)
+    {
+        case PLUM_IMAGE_BMP:
+            m_type = ImageBMP;
+            break;
+        case PLUM_IMAGE_GIF:
+            m_type = ImageGIF;
+            break;
+        case PLUM_IMAGE_PNG:
+            m_type = ImagePNG;
+            break;
+        case PLUM_IMAGE_APNG:
+            m_type = ImageAPNG;
+            break;
+        case PLUM_IMAGE_JPEG:
+            m_type = ImageJPEG;
+            break;
+
+        case PLUM_IMAGE_PNM: // Not a valid MIME type
+        default:
+            goto error;
     }
 
     m_realWidth = image->width;
@@ -351,10 +367,6 @@ std::string Image::filename() const
   return m_filename;
 }
 
-void Image::setType(ImageType type)
-{
-  m_type = type;
-}
 Image::ImageType Image::type() const
 {
   return m_type;

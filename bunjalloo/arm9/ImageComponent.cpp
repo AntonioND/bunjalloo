@@ -97,10 +97,10 @@ void ImageComponent::reload()
   if (not m_image)
     return;
 
-  if (m_image->type() == nds::Image::ImageUNKNOWN)
-  {
-    m_image->setType((nds::Image::ImageType)m_document->htmlDocument()->mimeType());
-  }
+  //if (m_image->type() == nds::Image::ImageUNKNOWN)
+  //{
+  //  m_image->setType((nds::Image::ImageType)m_document->htmlDocument()->mimeType());
+  //}
   unsigned int w = m_image->width();
   unsigned int h = m_image->height();
   m_image->reload();

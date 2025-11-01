@@ -26,13 +26,17 @@ namespace nds
   class Image
   {
     public:
-      /** Types of image. TODO: Unused */
+      /** Types of image. */
       enum ImageType
       {
-        ImagePNG,
-        ImageGIF,
-        ImageJPEG,
-        ImageUNKNOWN
+        ImageNONE = 0,
+
+        // Make sure that HtmlParser::MimeType entries match the values here
+        ImagePNG  = 1,
+        ImageGIF  = 2,
+        ImageJPEG = 3,
+        ImageAPNG = 4,
+        ImageBMP  = 5,
       };
 
       /** Create an image from the given file name.
@@ -45,7 +49,6 @@ namespace nds
 
       std::string filename() const;
 
-      void setType(ImageType type);
       ImageType type() const;
 
       /** Free up the data.*/
@@ -113,7 +116,6 @@ namespace nds
       unsigned short * m_palette;
 
       void readFile();
-      static ImageType imageType(const char * filename);
 
       void calculateScale();
       void allocData();
