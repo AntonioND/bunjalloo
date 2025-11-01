@@ -243,6 +243,7 @@ void Image::readFile()
                     unsigned int src_index = realY * m_realWidth + realX;
                     unsigned int dst_index = y * m_width + x;
 
+                    // TODO: Should we check transparency?
                     uint8_t color = ((uint8_t*)image->data)[src_index];
                     ((uint16_t*)m_data)[dst_index] = ((uint16_t *)m_palette)[color];
                 }
@@ -278,7 +279,14 @@ void Image::readFile()
                     unsigned int realX = (x * m_realWidth) / m_width;
                     unsigned int src_index = realY * m_realWidth + realX;
                     unsigned int dst_index = y * m_width + x;
-                    ((uint16_t*)m_data)[dst_index] = ((uint16_t*)image->data)[src_index];
+
+                    // If the pixel is transparent set it to white because the
+                    // background of websites is always rendered as white.
+                    uint16_t color = ((uint16_t*)image->data)[src_index];
+                    if (BIT(15) & color)
+                        color = 0xFFFF;
+
+                    ((uint16_t*)m_data)[dst_index] = color;
                 }
             }
         }
