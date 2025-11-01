@@ -74,32 +74,6 @@ Image::ImageType Image::imageType(const char * filename)
   return Image::ImagePNG;
 }
 
-Image::Image(const char * filename, ImageType type, bool keepPalette):
-  m_valid(false),
-  m_keepPalette(keepPalette),
-  m_filename(filename),
-  m_width(0),
-  m_height(0),
-  m_currentLine(0),
-  m_paletteSize(0),
-  m_channels(3),
-  m_data(0),
-  m_palette(0)
-{
-  ImageType actualType(imageType(filename));
-  if (actualType != type)
-  {
-    // make your mind up
-    return;
-  }
-  if (type == ImageUNKNOWN)
-  {
-    return;
-  }
-  m_type = type;
-  reload();
-}
-
 Image::Image(const char * filename, bool keepPalette):
   m_valid(false),
   m_keepPalette(keepPalette),

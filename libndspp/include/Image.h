@@ -35,15 +35,6 @@ namespace nds
         ImageUNKNOWN
       };
 
-      /** Create an image from the given file name, using the given ImageType.
-       * @param filename the name of the file to open.
-       * @param type the type of the image - usually given by Mime Type, etc.
-       * @param keepPalette if the image is recognised as having palette data,
-       *   then if this flag is true the palette will be kept. Otherwise the
-       *   palette data will be lost (converted to RGB triplets vs indexed)
-       */
-      Image(const char * filename, ImageType type, bool keepPalette=false);
-
       /** Create an image from the given file name.
        * @param filename the name of the file to open.
        * @param keepPalette if the image is recognised as having palette data,
