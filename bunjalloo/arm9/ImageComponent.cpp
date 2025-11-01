@@ -122,9 +122,8 @@ void ImageComponent::notify()
     {
       // checks for probs
       HtmlDocument::MimeType mimeType = m_document->htmlDocument()->mimeType();
-      bool isImg = (mimeType == HtmlDocument::IMAGE_PNG
-          or mimeType == HtmlDocument::IMAGE_GIF
-          or mimeType == HtmlDocument::IMAGE_JPEG);
+      bool isImg = (mimeType >= HtmlDocument::IMAGE_START) &&
+                   (mimeType <= HtmlDocument::IMAGE_END);
       if (not isImg or m_document->headerParser().httpStatusCode() != 200)
       {
         setSize(12,12);

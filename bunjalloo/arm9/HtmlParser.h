@@ -97,6 +97,11 @@ class HtmlParser
       IMAGE_PNG     = 1,
       IMAGE_GIF     = 2,
       IMAGE_JPEG    = 3,
+      IMAGE_APNG    = 4,
+      IMAGE_BMP     = 5,
+
+      IMAGE_START   = IMAGE_PNG,
+      IMAGE_END     = IMAGE_BMP,
 
       TEXT_HTML     = 10,
       TEXT_PLAIN    = 11,

@@ -196,9 +196,8 @@ void ViewRender::renderImage()
 bool ViewRender::hasImage()
 {
   HtmlDocument::MimeType mimeType = m_self->m_document.htmlDocument()->mimeType();
-  return (mimeType == HtmlDocument::IMAGE_PNG
-      or mimeType == HtmlDocument::IMAGE_GIF
-      or mimeType == HtmlDocument::IMAGE_JPEG);
+  return (mimeType >= HtmlDocument::IMAGE_START) &&
+         (mimeType <= HtmlDocument::IMAGE_END);
 }
 
 void ViewRender::render()
