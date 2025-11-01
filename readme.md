@@ -12,6 +12,7 @@ protocols.
 
 - Bookmark support.
 - Cookie and image support.
+- Optional CA certificate checks.
 
 ## Controls
 
@@ -81,6 +82,15 @@ rmdir fs
 ```
 
 Then you can use this image in melonDS.
+
+## Using CA certificates
+
+Open file `data/bunjalloo/config.ini` and modify the following line
+`cafile=cert/cacert_none.pem` to `cafile=cert/cacert.pem`. Loading the
+certificates takes a bit of time at boot and it uses a few hundreds of KBs of
+RAM at runtime.
+
+If `config.ini` doesn't exist, boot Bunjalloo once so that it gets created.
 
 ## Credits
 
