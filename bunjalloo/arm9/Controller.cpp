@@ -262,7 +262,7 @@ void Controller::configureUrl(const std::string & fileName)
   // search for ? - if found, send the encoding to configure
   // otherwise localFile the fileName
 
-  unsigned int position = fileName.find_first_of("?");
+  size_t position = fileName.find_first_of("?");
   if (position != string::npos)
   {
     string postedUrl = fileName.substr(position+1, fileName.length() - position - 1);

@@ -52,7 +52,7 @@ const char * nds::File::base(const char * path)
 {
   static string str;
   str = path;
-  unsigned int pos = str.rfind("/");
+  size_t pos = str.rfind("/");
   if (pos == string::npos)
     return path;
   else
@@ -63,7 +63,7 @@ const char * nds::File::dirname(const char * path)
 {
   static string str;
   str = path;
-  unsigned int pos = str.rfind("/");
+  size_t pos = str.rfind("/");
   if (pos == string::npos)
   {
     return ".";
@@ -108,7 +108,7 @@ bool nds::File::mkdirCommon(const char * path)
   // Start at the top and make the path
   string str(path);
   string component(path);
-  unsigned int pos = str.find("/");
+  size_t pos = str.find("/");
   while (  pos != string::npos)
   {
     component = str.substr(0, pos+1);
