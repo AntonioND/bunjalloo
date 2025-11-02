@@ -30,7 +30,7 @@ INCLUDEDIRS	:= 3rdparty/libplum/ \
 			   libndspp/source/pc/
 
 GFXDIRS		:= bunjalloo/bwt/img/ \
-			   libndspp/source/common/
+			   libndspp/img/
 
 # Defines passed to all files
 # ---------------------------

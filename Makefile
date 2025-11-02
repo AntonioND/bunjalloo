@@ -46,7 +46,7 @@ INCLUDEDIRS	:= 3rdparty/libplum/ \
 			   libndspp/source/arm9/
 
 GFXDIRS		:= bunjalloo/bwt/img/ \
-			   libndspp/source/common/
+			   libndspp/img/
 
 BINDIRS		:=
 AUDIODIRS	:=
