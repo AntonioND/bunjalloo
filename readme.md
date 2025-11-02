@@ -4,15 +4,20 @@ This is Bunjalloo, the open source Nintendo DS web browser. It was originally
 developed by Richard Quirk until 2010. This repository contains a working fork
 that you can build with modern BlocksDS.
 
+Bunjalloo has been implemented from scratch [using the whatwg user agent design
+rules](http://www.whatwg.org/).
+
 This fork can take advantage of the additional RAM, CPU power, and WPA2 support
 of DSi. It also uses modern cryptographic libraries to support modern TLS
 protocols.
 
-## Features
+Bunjalloo can also be built using SDL so that it's easier to develop it and
+debug it.
 
-- Bookmark support.
-- Cookie and image support.
-- Optional CA certificate checks.
+## Setup
+
+In order to install it in your Nintendo DS or DSi, copy `bunjalloo.nds` to your
+SD card. The contents of `sdroot` must be copied to the root of your SD card.
 
 ## Controls
 
@@ -24,64 +29,39 @@ protocols.
 - Click stylus: Follow link, enter data in forms, press keys.
 - Hold stylus: Scroll.
 
-## Build (NDS)
+## Features
 
-Install [BlocksDS](https://blocksds.skylyrac.net/docs/).
+- Bookmark support.
+- Cookie and image support.
+- Optional CA certificate checks.
 
-Clone this repository and run:
+## Edit Bookmarks
 
-```sh
-make -j`nproc`
-```
+In order to edit a bookmark, open the bookmarks menu. Next, **hold the stylus
+down** on the bookmark you want to edit for a couple of seconds.
 
-Copy `bunjalloo.nds` to your flashcard and the folder `sdroot/` to the root of
-your SD card (either in your flashcard or your DSi). The `data` folder inside
-`sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
+This causes a secret menu to appear! Select `Edit` or `Delete` from the menu.
+`Delete` is irreversible so be careful.
 
-## Build (Linux)
+Editing the bookmark will lead you to the keyboard input screen. The first line
+is the URL of the bookmark, the other lines are the text shown for this marker.
 
-Install [BlocksDS](https://blocksds.skylyrac.net/docs/). You will need it for
-some tools.
+## Change settings
 
-Install SDL 1:
+Changing the settings is done via the settings menu. To open this menu, click on
+the icon that looks like a spanner and screwdriver.
 
-```sh
-sudo apt install libsdl-dev
-```
+The icons shown on this menu are, from left to right:
 
-Clone this repository and run:
+- Return to the browser menu
+- Edit the cookie permissions list
+- Add the current domain/server to the allowed cookie list
+- Edit the search list (unimplemented!)
+- Add to the search list (unimplemented!)
+- Edit the options
 
-```sh
-make -f Makefile.pc -j`nproc`
-```
-
-Then simply run:
-
-```sh
-./bunjalloo_sdl.elf
-```
-
-## melonDS
-
-If you want to run this in melonDS you will need a SD image. Unfortunately you
-will need to add some file to `sdroot` (preferably a few tens of megabytes) that
-you remove later. This is required because Bunjalloo will use the SD card to
-store some user settings, cookies, cached pages, etc.
-
-Run:
-
-```sh
-cp myfile sdroot/
-make sdimage
-
-mkdir fs
-sudo mount image.bin fs
-rm fs/myfile
-sudo umount fs
-rmdir fs
-```
-
-Then you can use this image in melonDS.
+Clicking on each active icon, apart from the return one of course, takes you to
+a new screen with more self-explanatory options.
 
 ## Using CA certificates
 
@@ -100,6 +80,14 @@ by your own, or you can add your own file to this folder. Then, open file
 `data/bunjalloo/config.ini` and modify the line `cafile=cert/cacert.pem` to
 point to the file with your certificates. If `config.ini` doesn't exist, boot
 Bunjalloo once so that it gets created.
+
+## User data
+
+The files in `sdroot/data/bunjalloo/user` contain some useful information:
+
+- `bookmarks.html`: List of bookmarks.
+- `ckallow.lst`: URLs of sites that allow cookies.
+- `search.cfg`: Search keyword shortcuts. `%s` is replaced by the search text.
 
 ## Credits
 
