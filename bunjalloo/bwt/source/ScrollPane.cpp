@@ -43,11 +43,13 @@ ScrollPane::ScrollPane()
   m_backgroundColour(nds::Color(31,31,31)),
   m_stretchChildren(false),
   m_touchedMe(false),
-  m_scrollAnywhereSprite(new nds::Sprite(0, 16, 16, 20*8, 256))
+  m_scrollAnywhereSprite(new nds::Sprite(0, 16, 16, 20*8, 256)),
+  m_scrollAnywherePalette(new nds::ObjectPalette(0))
 {
   m_scrollBar->setScrollable(this);
   m_preferredWidth = nds::Canvas::instance().width();
   m_scrollAnywhereSprite->loadTileData(scroll_imgTiles, scroll_imgTilesLen);
+  m_scrollAnywherePalette->load(scroll_imgPal, scroll_imgPalLen);
 }
 
 void ScrollPane::setStretchChildren(bool s)

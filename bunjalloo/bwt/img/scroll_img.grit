@@ -1,2 +1,1 @@
--pw 16 -gB 8 -m! -pe64
-
+-pw 16 -gB8 -m! -pe16 -gTFF5AFF

@@ -19,6 +19,7 @@
 
 #include "Component.h"
 #include "StylusListener.h"
+#include "Palette.h"
 
 class ScrollBar;
 namespace nds { class Sprite; }
@@ -134,6 +135,7 @@ class ScrollPane: public Component
     bool m_stretchChildren;
     bool m_touchedMe;
     nds::Sprite *m_scrollAnywhereSprite;
+    nds::ObjectPalette *m_scrollAnywherePalette;
 
     void layoutChildren();
     void calculateScrollBar();
