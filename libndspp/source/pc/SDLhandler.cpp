@@ -32,13 +32,15 @@
 using namespace std;
 const int SDLhandler::WIDTH(32*8);
 const int SDLhandler::HEIGHT(2*24*8);
+// TODO: The last value in SDLhandler::GAP is the height of the gap between
+// screens. We need to allow users to change it.
 SDL_Rect SDLhandler::GAP = { 0, 192, SDLhandler::WIDTH, 0};
 
 SDLhandler::SDLhandler():
     m_screen(0),
     m_alpha(255),
     m_vblank(0),
-    m_scale(1),
+    m_scale(1), // TODO: Allow the user to change this
     m_frames(0),
     m_isFullScreen(false),
     m_hasSound(true),
