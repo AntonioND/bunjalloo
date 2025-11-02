@@ -75,9 +75,19 @@ void Controller::initialise()
   string font;
   m_config->resource(Config::FONT_STR, font);
   TextAreaFactory::setFont(FontFactory::create(font.c_str()));
+
   bool useCache(false);
   if (m_config->resource(Config::USECACHE, useCache))
     m_cache->setUseCache(useCache);
+
+  bool clearCache(false);
+  if (m_config->resource(Config::CLEARCACHE, clearCache))
+  {
+    if (clearCache)
+    {
+      m_cache->clearCache();
+    }
+  }
 
   m_view = new View(*m_document, *this);
   m_config->resource("redirects", m_maxRedirects);

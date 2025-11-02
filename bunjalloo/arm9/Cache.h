@@ -55,6 +55,9 @@ class Cache
      */
     void remove(const URI & uri);
 
+    /** Removes all files from the cache in the disk. */
+    void clearCache(void);
+
     /** Given a URI, return the name of the file that it is stored in the cache.
      * @param uri A website address.
      * @return the cache file name that this website is stored as.

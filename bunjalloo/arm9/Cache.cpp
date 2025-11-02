@@ -120,6 +120,21 @@ void Cache::remove(const URI & uri)
   }
 }
 
+void Cache::clearCache(void)
+{
+  //fprintf(stderr, "Clearing cache...\n");
+
+  std::vector<std::string> entries;
+  nds::File::ls(CACHE_DIR, entries);
+
+  for(const std::string& entry : entries)
+  {
+    const std::string full_path = std::string(CACHE_DIR) + std::string("/") + entry;
+    //fprintf(stderr, "- '%s'\n", full_path.c_str());
+    nds::File::unlink(full_path.c_str());
+  }
+}
+
 bool Cache::load(const URI & uri)
 {
   if (m_useCache)
