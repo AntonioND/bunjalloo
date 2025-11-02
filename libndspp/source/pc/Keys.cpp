@@ -57,15 +57,15 @@ int Keys::touchY() const
   return m_touchY;
 }
 
-void Keys::handleMouseEvent(SDL_MouseButtonEvent & event)
+void Keys::handleMouseEvent(Uint32 type, int x, int y)
 {
-  if (event.type == SDL_MOUSEBUTTONDOWN)
+  if (type == SDL_MOUSEBUTTONDOWN)
   {
     m_keys[12] = true;
-    m_touchX = event.x;
-    m_touchY = event.y;
+    m_touchX = x;
+    m_touchY = y;
   }
-  else if (event.type == SDL_MOUSEBUTTONUP)
+  else if (type == SDL_MOUSEBUTTONUP)
   {
     m_keys[12] = false;
     m_touchX = 512;

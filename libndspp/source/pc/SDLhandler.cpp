@@ -122,7 +122,7 @@ void SDLhandler::initGL( )
     }
     h = 192;
   }
-  glViewport( 0, y, WIDTH, h );
+  glViewport( 0, m_scale*y, m_scale*WIDTH, m_scale*h );
   /*
   GLfloat ratio = ( GLfloat )256. / ( GLfloat )192.*2;
   gluPerspective( 70.0f, ratio, 0.1f, 100.0f );
@@ -176,8 +176,7 @@ int SDLhandler::init()
 
   for (int i = 0; i < 2; ++i)
   {
-    m_layer[i] = SDL_CreateRGBSurface(SDL_SWSURFACE, m_scale*WIDTH, m_scale*HEIGHT/2,
-        32,
+    m_layer[i] = SDL_CreateRGBSurface(SDL_SWSURFACE, WIDTH, HEIGHT/2, 32,
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
       0x000000FF,
       0x0000FF00,
@@ -457,10 +456,10 @@ void SDLhandler::drawPixel(int x, int y, unsigned int layer, unsigned int palett
 {
 
   SDL_Rect rect;
-  rect.w = 1*m_scale;
-  rect.h = 1*m_scale;
-  rect.x = x*m_scale;
-  rect.y = y*m_scale;
+  rect.w = 1;
+  rect.h = 1;
+  rect.x = x;
+  rect.y = y;
   Uint32 colour = 0;
 
   bool usePalette(true);
@@ -709,9 +708,9 @@ void SDLhandler::waitVsync()
             if (inGap(y)) {
               break;
             }
-            y -= GAP.h;
-            y -= 192;
-            Keys::instance().handleMouseMotion(x, y);
+            y -= m_scale * GAP.h;
+            y -= m_scale * 192;
+            Keys::instance().handleMouseMotion(x / m_scale, y / m_scale);
           }
         }
         break;
@@ -722,9 +721,11 @@ void SDLhandler::waitVsync()
           if (inGap(event.button.y)) {
             break;
           }
-          event.button.y -= GAP.h;
-          event.button.y -= 192;
-          Keys::instance().handleMouseEvent(event.button);
+          event.button.y -= m_scale * GAP.h;
+          event.button.y -= m_scale * 192;
+          Keys::instance().handleMouseEvent(event.button.type,
+                                            event.button.x / m_scale,
+                                            event.button.y / m_scale);
         }
         break;
 

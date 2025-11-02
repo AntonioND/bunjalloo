@@ -27,7 +27,7 @@ class Keys
   public:
     static Keys & instance();
     void handleKeyEvent(SDL_KeyboardEvent & event);
-    void handleMouseEvent(SDL_MouseButtonEvent & event);
+    void handleMouseEvent(Uint32 type, int x, int y);
     void handleMouseMotion(int x, int y);
     void scan();
     int  down() const;
