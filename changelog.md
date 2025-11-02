@@ -1,6 +1,6 @@
 # Bunjaloo Changelog
 
-## Version DEV
+## Version 0.10.0
 
 - Fixed SSL connections. Entropy is now gathered correctly and the main thread
   yields every now and then to let the SSL handshake finish.
