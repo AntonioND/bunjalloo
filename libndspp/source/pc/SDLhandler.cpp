@@ -198,7 +198,7 @@ int SDLhandler::init()
     }
   }
 
-  SDL_WM_SetCaption ("SDL Application", NULL);
+  SDL_WM_SetCaption ("Bunjalloo", NULL);
 
   /*
   if (m_hasSound) {
