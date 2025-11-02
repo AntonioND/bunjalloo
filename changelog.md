@@ -5,12 +5,17 @@
 - Fixed SSL connections. Entropy is now gathered correctly and the main thread
   yields every now and then to let the SSL handshake finish.
 - Support checking CA certificates when using SSL. This uses a lot of RAM and
-  it's a bit slow so it's disabled by default.
+  it's a bit slow so it's disabled by default, and there's a new option in the
+  settings menu to enable it or disable it. Also, users can provide their own
+  sets of CA certificates.
 - Fixed the type of position markers when searching strings. It was only valid
   in 32-bit platforms like the DS, so some code wasn't working on the SDL port.
   This prevented the configuration settings page from showing up.
 - The DS version now expects the `data/bunjalloo` folder to be in the root of
   the SD, not in the same folder as the NDS ROM.
+- The home page has been updated. The page with the licenses used by components
+  of Bunjalloo has been split into multiple pages. Also, the licenses of
+  BlocksDS libraries are now included as well.
 - Support BMP and APNG formats.
 - Fix scale down calculations for very big images. Sometimes they were left too
   big in one dimension.
