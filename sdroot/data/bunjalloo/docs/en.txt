@@ -25,6 +25,7 @@ alrdy_upd=You are already running the latest version!
 done=Upgrade Done! Restart required, press any button to keep browsing.
 fullref=Use Full Referrer:
 Download=Download directory:
+ca_file_enable=Verify CA certs (reboot required)
 Yes=Yes
 No=No
 add_ck_title=Allow cookies

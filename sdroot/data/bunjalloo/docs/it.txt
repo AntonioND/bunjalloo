@@ -25,6 +25,7 @@ alrdy_upd=Hai gia' l'ultima versione!
 done=Aggiornamento eseguito! Necessario riavviare, premi un tasto per continuare a navigare.
 fullref=Use Full Referrer:
 Download=Download directory:
+ca_file_enable=Verify CA certs (reboot required)
 Yes=Si
 No=No
 add_ck_title=Permetti le cookies

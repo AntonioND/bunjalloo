@@ -24,6 +24,7 @@ alrdy_upd=Vous utilisez déjà la dernière version disponible !
 done=Mise à jour effectuée ! Redémarrage nécessaire, appuyez sur une touche pour continuer à naviguer.
 fullref=Utiliser la référence complète:
 Download=Répertoire de téléchargement:
+ca_file_enable=Verify CA certs (reboot required)
 Yes=Oui
 No=Non
 add_ck_title=Autoriser les cookies

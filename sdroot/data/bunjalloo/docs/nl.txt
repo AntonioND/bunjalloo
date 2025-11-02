@@ -25,6 +25,7 @@ done=Upgrade Klaar! Opnieuw opstarten aanbevolen, Druk op een knop om
 verder te gaan.
 fullref=Geschiedenis onthouden:
 Download=Downloadmap:
+ca_file_enable=Verify CA certs (reboot required)
 Yes=Ja
 No=Nee
 add_ck_title=Sta cookies toe

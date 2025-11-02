@@ -33,6 +33,7 @@ const char Config::PROXY_STR[] = "proxy";
 const char Config::FONT_STR[] = "font";
 const char Config::COOKIE_STR[] = "cookiefile";
 const char Config::CERT_FILE[] = "cafile";
+const char Config::CERT_CHECK_ENABLE[] = "cafileenable";
 const char Config::SEARCHFILE_STR[] = "searchfile";
 const char Config::MAX_CONNECT[] = "timeout";
 const char Config::USECACHE[] = "usecache";

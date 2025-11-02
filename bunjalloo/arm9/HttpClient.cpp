@@ -101,10 +101,17 @@ void HttpClient::setController(Controller * c)
   m_controller->config().resource("logger", m_log);
 
   // Load CA certificates
-  string caFile;
-  if (m_controller->config().resource(Config::CERT_FILE, caFile))
+  bool caFileEnable = false;
+  if (m_controller->config().resource(Config::CERT_CHECK_ENABLE, caFileEnable))
   {
-    sslLoadCerts(caFile);
+    if (caFileEnable)
+    {
+      string caFile;
+      if (m_controller->config().resource(Config::CERT_FILE, caFile))
+      {
+        sslLoadCerts(caFile);
+      }
+    }
   }
 
   m_timeout = 0;

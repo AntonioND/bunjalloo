@@ -85,15 +85,24 @@ Then you can use this image in melonDS.
 
 ## Using CA certificates
 
-Open file `data/bunjalloo/config.ini` and modify the following line
-`cafile=cert/cacert_none.pem` to `cafile=cert/cacert.pem`. Loading the
-certificates takes a bit of time at boot and it uses a few hundreds of KBs of
-RAM at runtime.
+The CA certificates used by Bunjalloo are found in the SD card in
+`sdroot/data/bunjalloo/cert/cacert.pem`. The certificates in this file have been
+obtained from [here](https://curl.se/docs/caextract.html), and they originate
+from Firefox.
 
-If `config.ini` doesn't exist, boot Bunjalloo once so that it gets created.
+The settings menu lets you enable or disable the CA certificate check in HTTPS
+connections. They are disabled by default because they require a few hundred KBs
+of RAM (which is a lot for a DS). Note that changing this setting requires a
+reboot to take effect.
+
+If you want to use different certificates you can replace the `cacert.pem` file
+by your own, or you can add your own file to this folder. Then, open file
+`data/bunjalloo/config.ini` and modify the line `cafile=cert/cacert.pem` to
+point to the file with your certificates. If `config.ini` doesn't exist, boot
+Bunjalloo once so that it gets created.
 
 ## Credits
 
-Richard Quirk (quirkysoft): Author of Bunjalloo (http://code.google.com/p/quirkysoft)
+Richard Quirk (quirkysoft): Original author of Bunjalloo (http://code.google.com/p/quirkysoft)
 
 Antonio Niño Díaz: Port to BlocksDS.

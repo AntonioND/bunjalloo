@@ -30,6 +30,7 @@ class Config: public FileParser
     static const char FONT_STR[];
     static const char COOKIE_STR[];
     static const char CERT_FILE[];
+    static const char CERT_CHECK_ENABLE[];
     static const char SEARCHFILE_STR[];
     static const char MAX_CONNECT[];
     static const char USECACHE[];

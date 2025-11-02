@@ -15,9 +15,12 @@ cookiefile=user/ckallow.lst
 # File that contains search configuration.
 searchfile=user/search.cfg
 
-# Change this to "cert/cacert.pem" if you want to verify the
-# certificates of all websites you visit.
-cafile=cert/cacert_none.pem
+# This is the file that contains the Certificate Authority
+# certificates to use to verify your HTTPS connections. The
+# verification is disabled by default because loading
+# certificates takes quite a bit of RAM.
+cafile=cert/cacert.pem
+cafileenable=0
 
 # Uncomment the proxy line to enable proxy server.
 # The value is of the form server[:port]
