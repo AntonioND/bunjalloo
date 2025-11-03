@@ -173,7 +173,7 @@ int main(void) {
       s->setY(y);
       s->update();
     }
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
   }
 
   return 0;

@@ -4,7 +4,7 @@ startat=""
 if test $# -gt 0 ; then
   startat=$1
 fi
-BUNJALLOO=../_build_/sdl/bunjalloo/bunjalloo
+BUNJALLOO=../../bunjalloo/bunjalloo_sdl.elf
 while read line
 do
   if ! test -z $startat ; then

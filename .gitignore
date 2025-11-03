@@ -2,3 +2,5 @@ build/
 lib/
 *.nds
 *.elf
+**/data/bunjalloo/cache/
+**/data/bunjalloo/cookies/

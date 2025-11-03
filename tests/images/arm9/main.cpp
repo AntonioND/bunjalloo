@@ -61,6 +61,6 @@ int main(int argc, char * argv[])
   canvas.endPaint();
   while(true)
   {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
   }
 }
