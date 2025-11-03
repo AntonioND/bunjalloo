@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <fstream>
+#include "CacheControl.h"
+#include "CookieJar.h"
 #include "HeaderParser.h"
 #include "HtmlParserDriver.h"
 
@@ -27,20 +29,23 @@ class ParserTest : public testing::Test
   protected:
     HtmlParserDriver * m_htmlParser;
     HeaderParser * m_headerParser;
+    CookieJar * m_cookieJar;
     char * m_data;
     unsigned int m_length;
 
     void TearDown() {
-      delete m_headerParser;
-      delete m_htmlParser;
       delete [] m_data;
+      delete m_headerParser;
+      delete m_cookieJar;
+      delete m_htmlParser;
     }
 
     void SetUp() {
-      m_data = 0;
+      m_data = NULL;
       m_length = 0;
       m_htmlParser = new HtmlParserDriver();
-      m_headerParser = new HeaderParser(m_htmlParser, 0, 0);
+      m_cookieJar = new CookieJar();
+      m_headerParser = new HeaderParser(m_htmlParser, m_cookieJar, new CacheControl());
     }
 
     void readFile(const char * fileName);
@@ -65,7 +70,7 @@ void ParserTest::readFile(const char * fileName) {
   EXPECT_TRUE(m_length != 0);
 }
 
-TEST_F(ParserTest, 0)
+TEST_F(ParserTest, Test0)
 {
   readFile("test0.txt");
   m_headerParser->feed(m_data, m_length);
