@@ -254,25 +254,6 @@ int SDLhandler::init()
   return 0;
 }
 
-bool SDLhandler::sdlEvent() const
-{
-  SDL_Event event;
-  
-  /* Check for events */
-  while (SDL_PollEvent (&event))
-  {
-    switch (event.type)
-    {
-      case SDL_QUIT:
-        return 1;
-        break;
-      default:
-        break;
-    }
-  }
-  return 0;
-}
-
 int SDLhandler::initSound(int freq, int format)
 {
   if (not m_hasSound) {

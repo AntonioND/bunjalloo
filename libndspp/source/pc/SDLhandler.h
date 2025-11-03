@@ -27,11 +27,6 @@ class SDLhandler
     static const int HEIGHT;
     static SDLhandler & instance();
 
-    /** Check if there is an sdlEvent. 
-     * @return true if quit, false otherwise.
-     */
-    bool sdlEvent() const;
-
     /** Draw a pixel.
      * @param x pixel position.
      * @param y pixel position.
