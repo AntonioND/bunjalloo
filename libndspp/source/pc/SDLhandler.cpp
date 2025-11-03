@@ -29,18 +29,56 @@
 #include "Keys.h"
 #include "Video.h"
 
+// This function reads the value of an environment variable, makes sure that
+// it's a valid integer, and restricts it to the range [min, max]. If the
+// environment variable isn't set or it has an invalid value (not a valid
+// integer) it returns the default value passed to the function.
+//
+// We use environment variables instead of command line arguments because
+// SDLhandler is a singleton created before any code in main() has run.
+// with command line arguments. The SDLhandler
+static int getenv_int(const char *var_name, int default_value, int min, int max)
+{
+  const char *value = getenv(var_name);
+  if (value == NULL)
+    return default_value;
+
+  int user_value;
+
+  try
+  {
+    user_value = std::stoi(std::string(value));
+  }
+  catch (...)
+  {
+    return default_value;
+  }
+
+  if (user_value < min)
+    return min;
+  if (user_value > max)
+    return max;
+
+  return user_value;
+}
+
 using namespace std;
 const int SDLhandler::WIDTH(32*8);
 const int SDLhandler::HEIGHT(2*24*8);
-// TODO: The last value in SDLhandler::GAP is the height of the gap between
-// screens. We need to allow users to change it.
-SDL_Rect SDLhandler::GAP = { 0, 192, SDLhandler::WIDTH, 0};
+
+// The last value in SDLhandler::GAP is the height of the gap between
+// screens. Users can change it by setting the BUNJALLOO_SCREEN_GAP environment
+// variable.
+SDL_Rect SDLhandler::GAP = {
+    0, 192,
+    SDLhandler::WIDTH, Uint16(getenv_int("BUNJALLOO_SCREEN_GAP", 0, 0, 100))
+};
 
 SDLhandler::SDLhandler():
     m_screen(0),
     m_alpha(255),
     m_vblank(0),
-    m_scale(1), // TODO: Allow the user to change this
+    m_scale(getenv_int("BUNJALLOO_SCREEN_SCALE", 1, 1, 5)), // The user can change this
     m_frames(0),
     m_isFullScreen(false),
     m_hasSound(true),

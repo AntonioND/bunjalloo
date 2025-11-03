@@ -81,6 +81,24 @@ by your own, or you can add your own file to this folder. Then, open file
 point to the file with your certificates. If `config.ini` doesn't exist, boot
 Bunjalloo once so that it gets created.
 
+## SDL screen settings
+
+When using the SDL build of Bunjalloo you can adjust some settings using
+environment variables:
+
+- `BUNJALLOO_SCREEN_GAP`: Distance in pixels between the two screens. If this
+  isn't zero a black rectangle of this height will be drawn between the screens
+  to simulate the gap in a real console. A distance of about 20-40 looks ok.
+- `BUNJALLOO_SCREEN_SCALE`: The size of the screens (and the gap between
+  screens) is scaled by this value. It can only be an integer number without
+  decimals.
+
+You can adjust the settings on Linux, for example, like this:
+
+```sh
+BUNJALLOO_SCREEN_GAP=40 BUNJALLOO_SCREEN_SCALE=2 ./bunjalloo_sdl.elf
+```
+
 ## User data
 
 The files in `sdroot/data/bunjalloo/user` contain some useful information:
