@@ -2,7 +2,7 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2025
 
-.PHONY: all clean nds sdl
+.PHONY: all nds sdl
 
 all: nds sdl
 
@@ -44,9 +44,15 @@ libbwt-sdl: 3rdparty-sdl libndspp-sdl
 libndspp-sdl: 3rdparty-sdl
 	PLAT=SDL make -C libndspp -j`nproc`
 
+.PHONY: clean tests
+
 clean:
 	PLAT=NDS make -C 3rdparty -j`nproc` clean
 	PLAT=NDS make -C bunjalloo -j`nproc` clean
 	PLAT=NDS make -C libbunjalloo -j`nproc` clean
 	PLAT=NDS make -C libbwt -j`nproc` clean
 	PLAT=NDS make -C libndspp -j`nproc` clean
+	make -C tests -j`nproc` clean
+
+tests: libbunjalloo-sdl
+	make -C tests -j`nproc`
