@@ -501,8 +501,17 @@ bool Keyboard::tick()
     if (press_delay == 0)
     {
       press_delay = 30;
-      char sdlKeyPress[2] = { char(cur_pressed), 0};
-      appendText(std::string(sdlKeyPress));
+
+      if (cur_pressed == '\b') // SDLK_BACKSPACE
+      {
+        m_textArea->deleteChar();
+      }
+      else
+      {
+        char sdlKeyPress[2] = { char(cur_pressed), 0};
+        appendText(std::string(sdlKeyPress));
+      }
+
       m_dirty = true;
     }
     else
