@@ -7,12 +7,12 @@ Install [BlocksDS](https://blocksds.skylyrac.net/docs/).
 Clone this repository and run:
 
 ```sh
-make -j`nproc`
+make nds -j`nproc`
 ```
 
-Copy `bunjalloo.nds` to your flashcard and the folder `sdroot/` to the root of
-your SD card (either in your flashcard or your DSi). The `data` folder inside
-`sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
+Copy `bunjalloo/bunjalloo.nds` to your flashcard and the folder `sdroot/` to the
+root of your SD card (either in your flashcard or your DSi). The `data` folder
+inside `sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
 
 ## Linux
 
@@ -28,13 +28,13 @@ sudo apt install libsdl-dev
 Clone this repository and run:
 
 ```sh
-make -f Makefile.pc -j`nproc`
+make sdl -j`nproc`
 ```
 
-Then simply run:
+Then simply run the following command from the root of the repository:
 
 ```sh
-./bunjalloo_sdl.elf
+./bunjalloo/bunjalloo_sdl.elf
 ```
 
 ## melonDS
@@ -48,7 +48,7 @@ Run:
 
 ```sh
 cp myfile sdroot/
-make sdimage
+make -f bunjalloo/Makefile sdimage
 
 mkdir fs
 sudo mount image.bin fs
