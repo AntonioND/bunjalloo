@@ -480,18 +480,43 @@ bool Keyboard::tick()
   }
 
 #ifndef ARM9
-  static int pressed = 0;
-  char sdlKeyPress[2] = { char(keysRealKeyboard()), 0};
-  if ((not pressed) and sdlKeyPress[0])
+  // This code is used by the SDL port so that you can use the keyboard to use
+  // the keyboard of your PC instead of using the on-screen keyboard. Note that
+  // this only works for regular symbols. Modifier keys, backspace, etc, don't
+  // work.
+
+  static int press_delay = 0;
+  static int last_pressed = -1;
+
+  int cur_pressed = keysRealKeyboard();
+
+  if (cur_pressed)
   {
-    pressed = 30;
-    appendText(std::string(sdlKeyPress));
-    m_dirty = true;
-    return true;
+    if (cur_pressed != last_pressed)
+    {
+      last_pressed = cur_pressed;
+      press_delay = 0;
+    }
+
+    if (press_delay == 0)
+    {
+      press_delay = 30;
+      char sdlKeyPress[2] = { char(cur_pressed), 0};
+      appendText(std::string(sdlKeyPress));
+      m_dirty = true;
+    }
+    else
+    {
+      press_delay--;
+    }
   }
-  if (pressed)
-    pressed--;
+  else
+  {
+    press_delay = 0;
+    last_pressed = -1;
+  }
 #endif
+
   return m_dirty;
 }
 

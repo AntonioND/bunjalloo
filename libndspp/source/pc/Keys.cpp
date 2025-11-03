@@ -99,7 +99,8 @@ void Keys::handleKeyEvent(SDL_KeyboardEvent & event)
         m_keys[i] = false;
       }
     }
-    m_keypress = 0;
+    if (m_keypress == event.keysym.sym)
+      m_keypress = 0;
   }
 }
 
