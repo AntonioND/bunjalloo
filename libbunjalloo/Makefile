@@ -12,6 +12,11 @@ INCLUDEDIRS := include \
                ../libbwt/include/ \
                ../libndspp/include/ \
 
+# Declare timegm() in <time.h>
+DEFINES     += -D_GNU_SOURCE=1
+# Declare strptime() in <time.h>
+DEFINES     += -D_XOPEN_SOURCE=1
+
 WARNFLAGS_CPP := -Wall -Wno-deprecated-declarations
 
 include ../make/lib_template.make
