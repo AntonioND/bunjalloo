@@ -58,3 +58,12 @@ rmdir fs
 ```
 
 Then you can use this image in melonDS.
+
+## Build tools
+
+If you want to build all tools of the repository you will need to install the
+following packages:
+
+```sh
+sudo apt install libfreetype-dev
+```

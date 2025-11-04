@@ -44,7 +44,7 @@ libbwt-sdl: 3rdparty-sdl libndspp-sdl
 libndspp-sdl: 3rdparty-sdl
 	PLAT=SDL make -C libndspp -j`nproc`
 
-.PHONY: clean tests
+.PHONY: clean tests tools
 
 clean:
 	PLAT=NDS make -C 3rdparty -j`nproc` clean
@@ -53,6 +53,10 @@ clean:
 	PLAT=NDS make -C libbwt -j`nproc` clean
 	PLAT=NDS make -C libndspp -j`nproc` clean
 	make -C tests -j`nproc` clean
+	make -C tools -j`nproc` clean
 
 tests: libbunjalloo-sdl
 	make -C tests -j`nproc`
+
+tools:
+	make -C tools -j`nproc`
