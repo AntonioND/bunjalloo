@@ -34,21 +34,64 @@ class ImageTest : public testing::Test
     }
 };
 
-TEST_F(ImageTest, Wide)
+// ----------------------------------------------
+
+TEST_F(ImageTest, SmallJpg)
+{
+  m_image = new Image("inputs/small.jpg");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 200;
+  int result = m_image->width();
+  EXPECT_EQ(expected, result);
+  expected = 170;
+  result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(ImageTest, SmallPng)
+{
+  m_image = new Image("inputs/small.png");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 200;
+  int result = m_image->width();
+  EXPECT_EQ(expected, result);
+  expected = 170;
+  result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(ImageTest, SmallGif)
+{
+  m_image = new Image("inputs/small.gif");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 200;
+  int result = m_image->width();
+  EXPECT_EQ(expected, result);
+  expected = 170;
+  result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(ImageTest, SmallBmp)
+{
+  m_image = new Image("inputs/small.bmp");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 200;
+  int result = m_image->width();
+  EXPECT_EQ(expected, result);
+  expected = 170;
+  result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+// ----------------------------------------------
+
+TEST_F(ImageTest, WideJpg)
 {
   m_image = new Image("inputs/wide.jpg");
   EXPECT_TRUE(m_image->isValid());
   int expected = 249;
   int result = m_image->width();
-  EXPECT_EQ(expected, result);
-}
-
-TEST_F(ImageTest, Tall)
-{
-  m_image = new Image("inputs/tall.jpg");
-  EXPECT_TRUE(m_image->isValid());
-  int expected = 382;
-  int result = m_image->height();
   EXPECT_EQ(expected, result);
 }
 
@@ -61,15 +104,6 @@ TEST_F(ImageTest, WidePng)
   EXPECT_EQ(expected, result);
 }
 
-TEST_F(ImageTest, TallPng)
-{
-  m_image = new Image("inputs/tall.png");
-  EXPECT_TRUE(m_image->isValid());
-  int expected = 382;
-  int result = m_image->height();
-  EXPECT_EQ(expected, result);
-}
-
 TEST_F(ImageTest, WideGif)
 {
   m_image = new Image("inputs/wide.gif");
@@ -79,9 +113,47 @@ TEST_F(ImageTest, WideGif)
   EXPECT_EQ(expected, result);
 }
 
+TEST_F(ImageTest, WideBmp)
+{
+  m_image = new Image("inputs/wide.bmp");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 249;
+  int result = m_image->width();
+  EXPECT_EQ(expected, result);
+}
+
+// ----------------------------------------------
+
+TEST_F(ImageTest, TallJpg)
+{
+  m_image = new Image("inputs/tall.jpg");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 382;
+  int result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(ImageTest, TallPng)
+{
+  m_image = new Image("inputs/tall.png");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 382;
+  int result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
 TEST_F(ImageTest, TallGif)
 {
   m_image = new Image("inputs/tall.gif");
+  EXPECT_TRUE(m_image->isValid());
+  int expected = 382;
+  int result = m_image->height();
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(ImageTest, TallBmp)
+{
+  m_image = new Image("inputs/tall.bmp");
   EXPECT_TRUE(m_image->isValid());
   int expected = 382;
   int result = m_image->height();
