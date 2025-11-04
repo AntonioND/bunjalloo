@@ -44,6 +44,11 @@ libbwt-sdl: 3rdparty-sdl libndspp-sdl
 libndspp-sdl: 3rdparty-sdl
 	PLAT=SDL make -C libndspp -j`nproc`
 
+.PHONY: libvera-sdl
+
+libvera-sdl:
+	make -C libvera -j`nproc`
+
 .PHONY: clean tests tools
 
 clean:
@@ -55,7 +60,7 @@ clean:
 	make -C tests -j`nproc` clean
 	make -C tools -j`nproc` clean
 
-tests: libbunjalloo-sdl
+tests: libbunjalloo-sdl libvera-sdl
 	make -C tests -j`nproc`
 
 tools:
