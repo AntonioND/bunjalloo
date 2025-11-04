@@ -1,13 +1,15 @@
 #include <gtest/gtest.h>
 #include "DateUtils.h"
 
+// The following website is very useful: https://www.epochconverter.com/
+
 TEST(DateUtils, parse_date)
 {
   /*
      from time import strftime, strptime
      strftime('%s', strptime("Sun, 05 Jul 2009 19:11:28 GMT", "%a, %d %b %Y %H:%M:%S GMT"))
   */
-  time_t expected(1246817488);
+  time_t expected(1246821088);
   time_t result = DateUtils::parseDate("Sun, 05 Jul 2009 19:11:28 GMT");
 
   EXPECT_EQ(expected, result);
@@ -15,10 +17,9 @@ TEST(DateUtils, parse_date)
 
 TEST(DateUtils, parse_date_with_dashes)
 {
-  // with dashes should work too!
-  time_t expected(1246817488);
+  // With dashes it works too: parseDate() converts dashes to spaces.
+  time_t expected(1246821088);
   time_t result = DateUtils::parseDate("Sun, 05-Jul-2009 19:11:28 GMT");
-
   EXPECT_EQ(expected, result);
 }
 
@@ -28,7 +29,6 @@ TEST(DateUtils, zero_time)
   EXPECT_EQ(timezone, result);
 }
 
-
 TEST(DateUtils, parse_bogus)
 {
   time_t expected(0);
@@ -37,11 +37,18 @@ TEST(DateUtils, parse_bogus)
   EXPECT_EQ(expected, result);
 }
 
-TEST(DateUtils, format_time)
+TEST(DateUtils, format_zero_time)
 {
-  time_t tzero(0 + timezone);
+  time_t tzero(0);
   std::string result = DateUtils::formatTime(tzero);
   EXPECT_EQ("Thu, 01 Jan 1970 00:00:00 GMT", result);
+}
+
+TEST(DateUtils, format_time)
+{
+  time_t tzero(1589722886);
+  std::string result = DateUtils::formatTime(tzero);
+  EXPECT_EQ("Sun, 17 May 2020 13:41:26 GMT", result);
 }
 
 TEST(DateUtils, parse_time)
