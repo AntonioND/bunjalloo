@@ -233,14 +233,14 @@ TEST(UriTest, Port2)
 
   // try breaking things
   URI uri2("123.56.78.90:");
-  expectedPort = 80;
+  expectedPort = 443; // SSL is used by default if protocol isn't specified
   expectedServer = "123.56.78.90";
   EXPECT_EQ( expectedServer, uri2.server());
   EXPECT_EQ( expectedPort, uri2.port());
 
   // try breaking things
   URI uri3("123.56.78.90/wherevr");
-  expectedPort = 80;
+  expectedPort = 443; // SSL is used by default if protocol isn't specified
   expectedServer = "123.56.78.90";
   EXPECT_EQ( expectedServer, uri3.server());
   EXPECT_EQ( expectedPort, uri3.port());
@@ -285,7 +285,7 @@ TEST(UriTest, CRC)
 {
   URI uri("http://server.com/");
   unsigned int crc = uri.crc32int();
-  unsigned int expected(0x7fec9bc0);
+  unsigned int expected(0x1E170BD5); // CRC-32/ISO-HDLC of "http://server.com/"
   EXPECT_EQ(expected, crc);
 }
 
