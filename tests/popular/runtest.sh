@@ -4,7 +4,6 @@ startat=""
 if test $# -gt 0 ; then
   startat=$1
 fi
-BUNJALLOO=../../bunjalloo/bunjalloo_sdl.elf
 while read line
 do
   if ! test -z $startat ; then
@@ -17,7 +16,9 @@ do
   fi
   cd ../.. >/dev/null
   echo $line...
-  $BUNJALLOO $line 0 &> /dev/null
+  pushd ../..
+  ./bunjalloo/bunjalloo_sdl.elf $line 0 &> /dev/null
+  popd
   if test  $? -ne 0; then
     echo $line caused a crash
     exit 1
