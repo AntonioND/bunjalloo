@@ -1,5 +1,9 @@
 #!/usr/bin/awk -f
 
+# Script to convert unit tests written for CppUnit to google-test syntax. It is
+# not exhaustive and only covered the parts of CppUnit I used in the tests
+# written for Bunjalloo.
+
 /#include <cppunit\/extensions\/HelperMacros.h>/ {
   print $1" <gtest/gtest.h>"
   next
