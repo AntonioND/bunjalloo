@@ -40,8 +40,8 @@ using namespace nds;
 int main(int argc, char * argv[])
 {
   Font *font(FontFactory::create(
-        (unsigned char*)_binary_sans_set_bin_start,
-        (unsigned char*)_binary_sans_map_bin_start));
+        (unsigned char*)_binary_sans_set_start,
+        (unsigned char*)_binary_sans_map_start));
   TextAreaFactory::setFont(font);
   //TextAreaFactory::usePaletteData((const char*)_binary_vera_pal_bin_start, 32);
   Keyboard * keyBoard = new Keyboard();
@@ -196,7 +196,7 @@ int main(int argc, char * argv[])
   bool needsPainting = true;
   while(true)
   {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
     scanKeys();
     u16 keys = keysDownRepeat();
     //u16 keys = keysHeld();

@@ -33,11 +33,11 @@ int main(int argc, char * argv[])
 {
   // wait for arm7 to read settings.
   for (int i = 0; i < 120; ++i)
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
 
   TextAreaFactory::setFont(FontFactory::create(
-        (unsigned char*)_binary_sans_set_bin_start,
-        (unsigned char*)_binary_sans_map_bin_start));
+        (unsigned char*)_binary_sans_set_start,
+        (unsigned char*)_binary_sans_map_start));
   ScrollPane scrollPane;
   Language::instance().setDirectory("data/docs");
   TextField * tf = new TextField(T("text"));
@@ -62,7 +62,7 @@ int main(int argc, char * argv[])
   bool needsPainting = true;
   while(true)
   {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
     scanKeys();
     u16 keys = keysDownRepeat();
     //u16 keys = keysHeld();
