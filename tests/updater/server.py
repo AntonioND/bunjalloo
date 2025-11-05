@@ -2,7 +2,8 @@
 """
 Basic HTTP server that will server files N times before exiting
 """
-import BaseHTTPServer
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 import sys
 import os
@@ -13,7 +14,7 @@ ext2type = {
         '.html': 'text/html',
 }
 
-class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         here = os.getcwd()
         p = here + self.path
@@ -22,7 +23,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', ext2type[ext])
             self.end_headers()
-            data = open(p).read()
+            data = open(p, 'rb').read()
             self.wfile.write(data)
             self.wfile.flush()
         else:
@@ -33,7 +34,7 @@ class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 class ServerThread(Thread):
     def __init__(self, times,
-            server_class=BaseHTTPServer.HTTPServer,
+            server_class=HTTPServer,
             handler_class=RequestHandler):
         Thread.__init__(self)
         self.times = times

@@ -24,7 +24,7 @@
 void runServer(int times)
 {
   std::stringstream dbg;
-  dbg << "python server.py " << times << " &";
+  dbg << "python3 server.py " << times << " &";
   system(dbg.str().c_str());
   // sleep until the server starts. ugh.
   // this is 0.1 secs
@@ -57,8 +57,8 @@ TEST(UpdaterTest, test_can_read_server)
 TEST(UpdaterTest, test_updates)
 {
   TextAreaFactory::setFont(FontFactory::create(
-        (unsigned char*)_binary_sans_set_bin_start,
-        (unsigned char*)_binary_sans_map_bin_start));
+        (unsigned char*)_binary_sans_set_start,
+        (unsigned char*)_binary_sans_map_start));
   std::auto_ptr<Controller> c(createController());
   c->m_document->setUri("http://localhost:8000/data/version.txt");
   View v(*c->m_document, *c.get());
@@ -87,5 +87,5 @@ TEST(UpdaterTest, test_updates)
   EXPECT_EQ(Updater::DO_UPDATE, updater.m_state);
   EXPECT_EQ(nds::File::F_REG, nds::File::exists("newversion.txt"));
   nds::File::rmrf("newversion.txt");
-  nds::File::rmrf("data/bunjalloo");
+  nds::File::rmrf("sdroot/data/bunjalloo");
 }
