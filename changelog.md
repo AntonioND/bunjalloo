@@ -1,5 +1,40 @@
 # Bunjaloo Changelog
 
+## Version DEV
+
+- User changes:
+
+  - Add missing credits and licenses to the homepage of the browser.
+  - Implement option that allows user to decide to clear the cache at boot or
+    not. The setting was there, but it was unused.
+  - Transparency has been fixed in images that don't need to be scaled down to
+    fit on the screen.
+  - The palette of the scroll touch screen icon is now loaded correctly so that
+    it doesn't overlap with the colors used by the toolbar.
+  - In the SDL version, allow the user to set the gap between screens and the
+    zoom factor with the environment variables `BUNJALLOO_SCREEN_GAP` and
+    `BUNJALLOO_SCREEN_SCALE`.
+  - The SDL window now displays "Bunjalloo" as title instead of "SDL
+    Application".
+  - In the SDL version, keyboard input with the PC input now works in a fluid
+    way rather than having to wait for a second or so between each key press.
+    Backspace is also supported now.
+
+- Dev changes:
+
+  - Codebase reorganized. Different libraries are now in different folders and
+    can be built independently as static archives. This makes it possible to
+    build tests without rebuilding all the codebase for each tests.
+  - Fully replace the old build system by a new one. Tools and tests can now be
+    built with the new build system.
+  - GoogleTest v1.17.0 has been added to the repository. It is used by the test
+    binaries.
+  - The instructions to change the TTF font used by Bunjalloo have been updated
+    to work with `convertftf`.
+  - The crashes in the HtmlParser tests have been fixed.
+  - Some tests have been fixed. Some of them were broken during the development
+    of versions 0.9.0 and 0.10.0 because the behaviour of some things changed..
+
 ## Version 0.10.0
 
 - Fixed SSL connections. Entropy is now gathered correctly and the main thread
