@@ -619,19 +619,39 @@ void Sprite::draw8x8Tile(int xPos, int yPos, int xi, int yi, const unsigned char
     for (int i = 0; i < 8; i++) {
       int x = i + xi*8;
       int y = j + yi*8;
-      unsigned char pixelPair = *gfx++;
-      int pix = pixelPair&0xf;
-      if (colors() == 256)
-      {
-        pix = pixelPair;
-      }
 
       if (hflip()) {
-	// horizontal tiles start at the end and work back
+        // horizontal tiles start at the end and work back
         x = 7-i + xi*8;
       }
-      if (pix) {
-        SDLhandler::instance().drawPixel(xPos+x, yPos+y, 2+m_screen, pix);
+
+      if (colors() == 256)
+      {
+        unsigned char pix = *gfx++;
+
+        if (pix)
+            SDLhandler::instance().drawPixel(xPos+x, yPos+y, 2+m_screen, pix);
+      }
+      else
+      {
+        unsigned char pixelPair = *gfx;
+        unsigned char pix;
+
+        if (x & 1)
+        {
+          pix = pixelPair >> 4;
+          gfx++;
+        }
+        else
+        {
+          pix = pixelPair & 0xf;
+        }
+
+        if (pix)
+        {
+          SDLhandler::instance().drawPixel(xPos+x, yPos+y, 2+m_screen,
+                                           pix + palette() * 16);
+        }
       }
     }
   }
@@ -670,7 +690,7 @@ void Sprite::render()
         i = (w/8) - 1 - x;
       }
       draw8x8Tile(xPos, yPos, i, y, (unsigned char*)&oamRam[position]);
-      position += 32;
+      position += (colors() == 256) ? 32 : 16;
     }
   }
 }
