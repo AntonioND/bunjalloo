@@ -2,10 +2,25 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2025
 
-ARCHIVE	:= lib/libvera_sdl.a
+export WONDERFUL_TOOLCHAIN	?= /opt/wonderful
+ARM_NONE_EABI_PATH	?= $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/bin/
 
-AR		:= ar
-LD		:= ld
+ifeq ($(PLAT),NDS)
+    ARCHIVE  := lib/libvera_nds.a
+    BUILDDIR := build/nds
+else ifeq ($(PLAT),SDL)
+    ARCHIVE	:= lib/libvera_sdl.a
+    BUILDDIR := build/sdl
+endif
+
+ifeq ($(PLAT),SDL)
+    PREFIX		:=
+else ifeq ($(PLAT),NDS)
+    PREFIX		:= $(ARM_NONE_EABI_PATH)arm-none-eabi-
+endif
+
+AR		:= $(PREFIX)ar
+LD		:= $(PREFIX)ld
 RM		:= rm -rf
 MKDIR	:= mkdir
 
@@ -19,17 +34,17 @@ endif
 
 all: $(ARCHIVE)
 
-build/sans.map.o: fonts/sans.map
+$(BUILDDIR)/sans.map.o: fonts/sans.map
 	@$(MKDIR) -p $(@D)
 	@echo "  LD      $<"
 	$(V)cd fonts && $(LD) -r -z noexecstack -b binary -o ../$@ sans.map
 
-build/sans.set.o: fonts/sans.set
+$(BUILDDIR)/sans.set.o: fonts/sans.set
 	@$(MKDIR) -p $(@D)
 	@echo "  LD      $<"
 	$(V)cd fonts && $(LD) -r -z noexecstack -b binary -o ../$@ sans.set
 
-$(ARCHIVE): build/sans.map.o build/sans.set.o
+$(ARCHIVE): $(BUILDDIR)/sans.map.o $(BUILDDIR)/sans.set.o
 	@$(MKDIR) -p $(@D)
 	@echo "  AR      $@"
 	$(V)$(AR) rcs $@ $^
