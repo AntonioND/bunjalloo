@@ -486,6 +486,7 @@ std::string URI::internalLink() const
 
 unsigned int URI::crc32int() const
 {
+  // Calculate the CRC-32/ISO-HDLC of the full URL (e.g. "https://example.com")
   uLong crc = ::crc32(0, Z_NULL, 0);
   std::string full = asString();
   crc = ::crc32(crc, (const Bytef*)full.c_str(), full.length());
