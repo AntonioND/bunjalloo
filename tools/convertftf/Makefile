@@ -52,7 +52,7 @@ SOURCES_CPP	:= $(shell find -L $(SOURCEDIRS) -name "*.cc")
 # Compiler and linker flags
 # -------------------------
 
-WARNFLAGS_CXX	:= -Wall -Wextra -Wpedantic -Wstrict-prototypes -Wshadow
+WARNFLAGS_CXX	:= -Wall -Wextra -Wpedantic -Wshadow
 
 INCLUDEFLAGS	:= $(foreach path,$(INCLUDEDIRS),-I$(path)) \
 		   $(foreach path,$(LIBDIRS),-I$(path)/include) \

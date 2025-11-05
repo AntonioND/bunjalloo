@@ -88,7 +88,7 @@ struct t_prerenderedSet {
 
 void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitmap)
 {
-  int x, y;
+  unsigned int x, y;
 
   // Initialize pointers to both bitmaps
   uint8 *gfxbm = gfxBitmap->bitmap;
@@ -168,7 +168,7 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   prerenderedSet->maxDescender  = -ftFace->bbox.yMin * prerenderedSet->size / ftFace->units_per_EM;
   prerenderedSet->minAscender   = -ftFace->bbox.yMax * prerenderedSet->size / ftFace->units_per_EM;
 
-  printf("Size of glyph data: %d bytes\n", prerenderedSet->numGlyphs * sizeof(t_prerenderedGlyph));
+  printf("Size of glyph data: %zd bytes\n", prerenderedSet->numGlyphs * sizeof(t_prerenderedGlyph));
   // Allocate memory for glyph vector
   if ((prerenderedSet->glyphs =
         static_cast<t_prerenderedGlyph*>(malloc(prerenderedSet->numGlyphs *
@@ -209,7 +209,7 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
 
     t_glyphBitmap *image = &prerenderedGlyph->image;
 
-    assert(bitmapGlyph->bitmap.width >= 0);
+    //assert(bitmapGlyph->bitmap.width >= 0);
     assert(bitmapGlyph->bitmap.width < 256);
     image->width  = bitmapGlyph->bitmap.width;
 
@@ -218,7 +218,7 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
       image->width += 4 - (image->width & 0x3);
     }
 
-    assert(bitmapGlyph->bitmap.rows >= 0);
+    //assert(bitmapGlyph->bitmap.rows >= 0);
     assert(bitmapGlyph->bitmap.rows < 256);
     image->height = bitmapGlyph->bitmap.rows;
 
@@ -242,7 +242,7 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
     assert(bitmapGlyph->top < 128);
     prerenderedGlyph->deltaX	= bitmapGlyph->left;
     prerenderedGlyph->deltaY	= -bitmapGlyph->top;
-    assert(from_fix8_round(ftFace->glyph->linearHoriAdvance) >= 0);
+    //assert(from_fix8_round(ftFace->glyph->linearHoriAdvance) >= 0);
     assert(from_fix8_round(ftFace->glyph->linearHoriAdvance) <= 0xffff);
     prerenderedGlyph->advanceX	= from_fix8_round(ftFace->glyph->linearHoriAdvance);
 
