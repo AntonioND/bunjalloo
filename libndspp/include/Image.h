@@ -69,6 +69,12 @@ namespace nds
        */
       unsigned int height() const;
 
+      /** Max height allowed for an image. */
+      static unsigned int MAX_HEIGHT;
+
+      /** Max width allowed for an image. */
+      static unsigned int MAX_WIDTH;
+
       /** Get the size of the palette, if this is a palettized image and the
        * keepPalette flag was used.
        * @return the number of colours in the palette.

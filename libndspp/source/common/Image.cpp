@@ -27,8 +27,8 @@
 using nds::Image;
 using std::auto_ptr;
 
-static const unsigned int MAX_IMAGE_WIDTH(SCREEN_WIDTH-7);
-static const unsigned int MAX_IMAGE_HEIGHT(SCREEN_HEIGHT*2);
+unsigned int Image::MAX_HEIGHT(SCREEN_HEIGHT * 2);
+unsigned int Image::MAX_WIDTH(SCREEN_WIDTH - 7);
 
 class Array
 {
@@ -308,10 +308,10 @@ error:
 
 void Image::calculateScale()
 {
-  if ((m_realWidth > MAX_IMAGE_WIDTH) && (m_realHeight > MAX_IMAGE_HEIGHT))
+  if ((m_realWidth > MAX_WIDTH) && (m_realHeight > MAX_HEIGHT))
   {
-    int factor_for_height = (MAX_IMAGE_HEIGHT * 256) / m_realHeight;
-    int factor_for_width = (MAX_IMAGE_WIDTH * 256) / m_realWidth;
+    int factor_for_height = (MAX_HEIGHT * 256) / m_realHeight;
+    int factor_for_width = (MAX_WIDTH * 256) / m_realWidth;
 
     int factor;
 
@@ -325,14 +325,14 @@ void Image::calculateScale()
     m_width = (m_realWidth * factor) / 256;
     m_height = (m_realHeight * factor) / 256;
   }
-  else if (m_realWidth > MAX_IMAGE_WIDTH)
+  else if (m_realWidth > MAX_WIDTH)
   {
-    m_width = MAX_IMAGE_WIDTH;
+    m_width = MAX_WIDTH;
     m_height = (m_realHeight * m_width) / m_realWidth;
   }
-  else if (m_realHeight > MAX_IMAGE_HEIGHT)
+  else if (m_realHeight > MAX_HEIGHT)
   {
-    m_height = MAX_IMAGE_HEIGHT;
+    m_height = MAX_HEIGHT;
     m_width = (m_realWidth * m_height) / m_realHeight;
   }
   else
