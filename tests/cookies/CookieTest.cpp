@@ -33,7 +33,7 @@ class CookieTest : public testing::Test
     void SetUp() {
       m_cookieJar = new CookieJar();
       m_cookieJar->setAcceptCookies("example.com");
-      nds::File::mkdir("data/bunjalloo/cookies");
+      nds::File::mkdir("sdroot/data/bunjalloo/cookies");
     }
 
     void TearDown() {
@@ -44,7 +44,7 @@ class CookieTest : public testing::Test
     void TestCookieFile(const std::string &domain, const ResultList &expected)
     {
       nds::File f;
-      std::string name("data/bunjalloo/cookies/");
+      std::string name("sdroot/data/bunjalloo/cookies/");
       name += domain;
       f.open(name.c_str(), "r");
       EXPECT_TRUE(f.is_open());
@@ -60,7 +60,7 @@ class CookieTest : public testing::Test
     void CreateFakePersistentCookie(const std::string &domain, const ResultList &setcookie)
     {
       ofstream testFile;
-      std::string name("data/bunjalloo/cookies/");
+      std::string name("sdroot/data/bunjalloo/cookies/");
       name += domain;
       testFile.open(name.c_str(), ios::out);
       for (ResultList::const_iterator it(setcookie.begin());
@@ -424,7 +424,7 @@ TEST_F(CookieTest, writes_to_file)
   nds::File file;
   CookieWriter cw(0);
   cw(&c);
-  EXPECT_TRUE(nds::File::exists("data/bunjalloo/cookies/example.com"));
+  EXPECT_TRUE(nds::File::exists("sdroot/data/bunjalloo/cookies/example.com"));
 }
 
 TEST_F(CookieTest, loads_cookies)
@@ -545,7 +545,7 @@ TEST_F(CookieTest, doesnt_save_session_cookies)
   string requestHeader = "mycookie=foo\r\n";
   m_cookieJar->addCookieHeader(uri, requestHeader);
   nds::File f;
-  f.open("data/bunjalloo/cookies/example.com", "r");
+  f.open("sdroot/data/bunjalloo/cookies/example.com", "r");
   EXPECT_FALSE(f.is_open());
 }
 
