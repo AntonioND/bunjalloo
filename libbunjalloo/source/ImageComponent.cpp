@@ -64,7 +64,9 @@ static void drawImage(Canvas & canvas, const nds::Image & image, int startx, int
     const unsigned short * row = &data[y*image.width()];
     for (unsigned int x = 0; x < image.width(); ++x, row++)
     {
-      canvas.drawPixel(startx+x, starty+y, *row);
+      const unsigned short color = *row;
+      if (color & BIT(15))
+        canvas.drawPixel(startx+x, starty+y, color);
     }
   }
 }
