@@ -19,7 +19,7 @@ inside `sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
 Install [BlocksDS](https://blocksds.skylyrac.net/docs/). You will need it for
 some tools.
 
-Install SDL 1:
+Install the dependencies:
 
 ```sh
 sudo apt install libsdl-dev
@@ -55,15 +55,4 @@ sudo mount image.bin fs
 rm fs/myfile
 sudo umount fs
 rmdir fs
-```
-
-Then you can use this image in melonDS.
-
-## Build tools
-
-If you want to build all tools of the repository you will need to install the
-following packages:
-
-```sh
-sudo apt install libfreetype-dev
 ```
