@@ -28,6 +28,7 @@ Component * ScrollPane::s_popup(0);
 const static int SCROLLER_WIDTH(6);
 const static int MIN_PADDING(2);
 const static int TOP_LEVEL_SIZE(192);
+const static int SCROLLER_PALETTE(15);
 using std::min;
 using std::max;
 using nds::Rectangle;
@@ -43,12 +44,20 @@ ScrollPane::ScrollPane()
   m_backgroundColour(nds::Color(31,31,31)),
   m_stretchChildren(false),
   m_touchedMe(false),
-  m_scrollAnywhereSprite(new nds::Sprite(0, 16, 16, 20*8, 256)),
-  m_scrollAnywherePalette(new nds::ObjectPalette(0))
+  // We need to use a 16 color sprite for the scroller because the toolbar.png
+  // file is a 256 color image that may use several palettes (but it won't use
+  // all 256 colors, so the last palette is safe).
+  m_scrollAnywhereSprite(new nds::Sprite(0,      // Screen
+                                         16, 16, // Size
+                                         20 * 8, // Tile
+                                         16)),   // Colors
+  m_scrollAnywherePalette(new nds::ObjectPalette(0, // Screen
+                                                 SCROLLER_PALETTE))
 {
   m_scrollBar->setScrollable(this);
   m_preferredWidth = nds::Canvas::instance().width();
   m_scrollAnywhereSprite->loadTileData(scroll_imgTiles, scroll_imgTilesLen);
+  m_scrollAnywhereSprite->setPalette(SCROLLER_PALETTE);
   m_scrollAnywherePalette->load(scroll_imgPal, scroll_imgPalLen);
 }
 
