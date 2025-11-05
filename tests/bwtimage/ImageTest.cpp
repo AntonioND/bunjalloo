@@ -159,3 +159,33 @@ TEST_F(ImageTest, TallBmp)
   int result = m_image->height();
   EXPECT_EQ(expected, result);
 }
+
+// ----------------------------------------------
+
+// Images that are too wide and too tall with different aspect ratios
+
+TEST_F(ImageTest, BigTallPng)
+{
+  m_image = new Image("inputs/big_tall.png");
+  EXPECT_TRUE(m_image->isValid());
+  EXPECT_LE(m_image->height(), Image::MAX_HEIGHT);
+  EXPECT_LE(m_image->width(), Image::MAX_WIDTH);
+
+  // Check ratio
+  int margin_w = Image::MAX_WIDTH - m_image->width();
+  int margin_h = Image::MAX_HEIGHT - m_image->height();
+  EXPECT_LE(margin_h, margin_w);
+}
+
+TEST_F(ImageTest, BigWidePng)
+{
+  m_image = new Image("inputs/big_wide.png");
+  EXPECT_TRUE(m_image->isValid());
+  EXPECT_LE(m_image->height(), Image::MAX_HEIGHT);
+  EXPECT_LE(m_image->width(), Image::MAX_WIDTH);
+
+  // Check ratio
+  int margin_w = Image::MAX_WIDTH - m_image->width();
+  int margin_h = Image::MAX_HEIGHT - m_image->height();
+  EXPECT_LE(margin_w, margin_h);
+}
