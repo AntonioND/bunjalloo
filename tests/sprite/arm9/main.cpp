@@ -32,8 +32,9 @@ static void loadImage(Image & image, unsigned short * oamData)
   nds::ObjectPalette p(screen);
   p.load(image.palette(), image.paletteSize()*2);
 
-  const unsigned short * data = image.data();
-  // need to load in 16x16 tile order
+  const unsigned char * data = (const unsigned char *)image.data();
+  if (data == NULL)
+    return;
 
   // 0  1  2  3  4  5  6  7
   // 8  9  10 11
@@ -42,13 +43,11 @@ static void loadImage(Image & image, unsigned short * oamData)
   // tileIndex = tileX + tileY*tilesX
   //
   // for (metaTile = 0; metaTile < metaTileCound; metaTile++)
-  //   for (y = 0; y < 2; y++)  
-  //     for (x = 0; x < 2; x++)  
+  //   for (y = 0; y < 2; y++)
+  //     for (x = 0; x < 2; x++)
   //       tileIndex = metaTile*2 +  y*tilesX + x;
   //
-  //
-  //int tilesX = image.width() / 8;
-  //int tilesY = image.height() / 8;
+  // need to load in 16x16 tile order
   int bytesPerRow = image.width();
   int tiles16x = image.width() / 16;
   int tiles16y = image.height() / 16;
@@ -69,12 +68,9 @@ static void loadImage(Image & image, unsigned short * oamData)
           int tileY = y + metay*2;
           int tileX = x + metax*2;
           // index into oam:
-          //int tileIndex = y*tilesX + meta*2 + x;
-          // int tileIndex = tileY*tilesX + tileX;
           unsigned short * oamSlot = &oamData[oamIndex*8*8/2];
           oamIndex++;
-          // const unsigned char * src = data + (tileIndex*8*bytesPerRow);
-          const unsigned short * src = data + (tileY*8*bytesPerRow) + (tileX*8);
+          const unsigned char * src = data + (tileY*8*bytesPerRow) + (tileX*8);
           for (int row = 0; row < 8; row++)
           {
             for (int col = 0; col < 4; col++, src+=2)
@@ -94,13 +90,19 @@ static void loadImage(Image & image, unsigned short * oamData)
 
 int main(void) {
 
-  Image image("open.png", true);
+  // Set backdrop color (index 0 of the BG palette)
   nds::Palette p(0);
   p[0] = nds::Color(31, 31, 31);
+
   nds::Canvas & canvas = nds::Canvas::instance();
-  nds::Sprite bigSprite(screen, 64, 32, 0, 256);
-  bigSprite.setX(32);
-  bigSprite.setY(128);
+
+  nds::Sprite bigSpriteTop(screen, 32, 64, 0, 256);
+  nds::Sprite bigSpriteBottom(screen, 32, 64, (32 * 64) / (8 * 8), 256);
+  bigSpriteTop.setX(224);
+  bigSpriteTop.setY(0);
+  bigSpriteBottom.setX(224);
+  bigSpriteBottom.setY(64);
+
   std::vector<nds::Sprite*> sprites;
   for (int i = 0; i < 12; i++)
   {
@@ -110,8 +112,10 @@ int main(void) {
     sprite->setX(i*16);
     sprite->setY(i*16);
     sprites.push_back(sprite);
-
   }
+
+  // Load image with palette
+  Image image("open.png", true);
   if (image.isValid())
   {
     const unsigned short * data = image.data();
@@ -130,8 +134,10 @@ int main(void) {
         sprite->setEnabled();
         sprite->update();
       }
-      bigSprite.setEnabled();
-      bigSprite.update();
+      bigSpriteTop.setEnabled();
+      bigSpriteTop.update();
+      bigSpriteBottom.setEnabled();
+      bigSpriteBottom.update();
     }
   }
   nds::Sprite * white(sprites[0]);
