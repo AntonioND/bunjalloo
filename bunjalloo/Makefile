@@ -85,8 +85,6 @@ ifeq ($(PLAT),SDL)
 
     BUILDDIR	:= build/sdl/$(NAME)
     ELF		:= $(NAME).elf
-    DUMP		:= build/sdl/$(NAME).dump
-    MAP		:= build/sdl/$(NAME).map
 
 else ifeq ($(PLAT),NDS)
 
@@ -192,8 +190,12 @@ ifeq ($(PLAT),NDS)
 CXXFLAGS	+= -fno-exceptions -fno-rtti
 endif
 
-LDFLAGS		+= $(ARCH) $(LIBDIRSFLAGS) -Wl,-Map,$(MAP) $(DEFINES) \
+LDFLAGS		+= $(ARCH) $(LIBDIRSFLAGS)  $(DEFINES) \
 		   -Wl,--start-group $(LIBS) -Wl,--end-group $(SPECS)
+
+ifeq ($(PLAT),NDS)
+LDFLAGS		+= -Wl,-Map,$(MAP)
+endif
 
 # Intermediate build files
 # ------------------------
@@ -258,30 +260,30 @@ $(ROM): $(ELF)
 		-b $(GAME_ICON) "$(GAME_FULL_TITLE)" \
 		$(NDSTOOL_ARGS)
 
-endif # PLAT
-
-$(ELF): $(OBJS)
-	@echo "  LD      $@"
-	$(V)$(LD) -o $@ $(OBJS) $(LDFLAGS)
-
 $(DUMP): $(ELF)
 	@echo "  OBJDUMP   $@"
 	$(V)$(OBJDUMP) -h -C -S $< > $@
 
 dump: $(DUMP)
 
-clean:
-	@echo "  CLEAN"
-	$(V)$(RM) $(ROM) $(DUMP) build $(SDIMAGE)
-
-sdimage:
-	@echo "  MKFATIMG $(SDIMAGE) $(SDROOT)"
-	$(V)$(BLOCKSDS)/tools/mkfatimg/mkfatimg -t $(SDROOT) $(SDIMAGE)
-
 dldipatch: $(ROM)
 	@echo "  DLDIPATCH $(ROM)"
 	$(V)$(BLOCKSDS)/tools/dldipatch/dldipatch patch \
 		$(BLOCKSDS)/sys/dldi_r4/r4tf.dldi $(ROM)
+
+endif # PLAT
+
+$(ELF): $(OBJS)
+	@echo "  LD      $@"
+	$(V)$(LD) -o $@ $(OBJS) $(LDFLAGS)
+
+clean:
+	@echo "  CLEAN"
+	$(V)$(RM) $(ROM) build $(SDIMAGE)
+
+sdimage:
+	@echo "  MKFATIMG $(SDIMAGE) $(SDROOT)"
+	$(V)$(BLOCKSDS)/tools/mkfatimg/mkfatimg -t $(SDROOT) $(SDIMAGE)
 
 # Rules
 # -----
