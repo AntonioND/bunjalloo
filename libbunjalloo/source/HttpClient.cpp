@@ -151,6 +151,7 @@ bool HttpClient::finished() const
 
 void HttpClient::finish() {
   //printf("%d\n",m_total);
+  debug("HttpClient::finish()");
   if (m_total == 0)
   {
     if (m_controller)
@@ -158,7 +159,8 @@ void HttpClient::finish() {
   }
   else
   {
-    m_controller->m_document->setStatus(Document::LOADED_HTML);
+    if (m_controller)
+      m_controller->m_document->setStatus(Document::LOADED_HTML);
   }
 }
 
@@ -389,10 +391,12 @@ void HttpClient::handleNextState()
       break;
 
     case FINISHED:
+      debug("FINISHED");
       m_finished = true;
       break;
 
     case FAILED:
+      debug("FAILED");
       m_total = 0;
       m_finished = true;
       finish();
@@ -413,6 +417,8 @@ void HttpClient::readAll()
   switch (read)
   {
     case READ_ERROR:
+      // Don't set the state as failed right away, let it retry
+      debug("readAll(): RETRY_ERROR");
       //m_state = FINISHED;
       break;
     case CONNECTION_CLOSED:
@@ -434,6 +440,7 @@ void HttpClient::readAll()
 #endif
       if (time(NULL) > (m_startTime + m_timeout)) {
         debug("Timeout!");
+        // Finish and render what we have
         m_state = FINISHED;
       }
       break;
