@@ -423,6 +423,10 @@ void HttpClient::readAll()
       break;
     case CONNECTION_CLOSED:
       debug("readAll(): CONNECTION_CLOSED");
+      // We have received the full payload, flush Flush m_controller->m_document
+      // to display the results.
+      if (m_controller)
+        m_controller->m_document->flush();
       m_state = FINISHED;
       break;
 

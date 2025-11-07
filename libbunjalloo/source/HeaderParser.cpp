@@ -41,6 +41,8 @@ HeaderParser::HeaderParser(HtmlParser * htmlParser,
     )
 :
   m_uri(*(new URI())),
+  m_bufferData(NULL),
+  m_bufferSize(0),
   m_value(0),
   m_position(0),
   m_end(0),
@@ -60,6 +62,9 @@ HeaderParser::HeaderParser(HtmlParser * htmlParser,
 HeaderParser::~HeaderParser()
 {
   delete m_cacheControl;
+
+  if (m_bufferData)
+    free(m_bufferData);
 }
 
 void HeaderParser::setListener(HeaderListener * listener)
@@ -81,6 +86,10 @@ void HeaderParser::reset()
   m_chunkLength = 0;
   m_chunkLengthString = "";
   m_htmlParser->setToStart();
+
+  m_bufferSize = 0;
+  free(m_bufferData);
+  m_bufferData = NULL;
 }
 
 void HeaderParser::setUri(const std::string & uri)
@@ -102,9 +111,21 @@ void HeaderParser::next()
 
 void HeaderParser::feed(const char * data, unsigned int length)
 {
+  if (length) {
+    m_bufferData = (char *)realloc(m_bufferData, m_bufferSize + length);
+    char * dst = m_bufferData + m_bufferSize;
+    memcpy(dst, data, length);
+    m_bufferSize += length;
+  }
+}
+
+void HeaderParser::flush()
+{
   //cout << "\nFeed " << length << " bytes." << endl;
-  m_position = data;
-  m_end = data+length;
+
+  m_position = m_bufferData;
+  m_end = m_bufferData + m_bufferSize;
+
   while (m_position < m_end)
   {
     next();
@@ -142,6 +163,10 @@ void HeaderParser::feed(const char * data, unsigned int length)
         break;
     }
   }
+
+  m_bufferSize = 0;
+  free(m_bufferData);
+  m_bufferData = NULL;
 }
 
 const std::string HeaderParser::redirect() const

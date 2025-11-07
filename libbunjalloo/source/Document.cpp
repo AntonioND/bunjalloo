@@ -187,6 +187,12 @@ void Document::appendLocalData(const char * data, int size)
 void Document::appendData(const char * data, int size)
 {
   m_status = INPROGRESS;
+  if (size)
+    m_headerParser->feed(data,size);
+
+#if 0
+  // We could use this code if we wanted to handle data as we receive it.
+  // However, that isn't supported by the HTML parser.
   if (size) {
     m_headerParser->feed(data,size);
     unsigned int expected(dataExpected());
@@ -205,6 +211,30 @@ void Document::appendData(const char * data, int size)
       setStatus(REDIRECTED);
     }
   }
+  notifyAll();
+#endif
+}
+
+void Document::flush()
+{
+  m_headerParser->flush();
+
+  unsigned int expected(dataExpected());
+  unsigned int dataGot(m_htmlDocument->dataGot());
+  if (expected < dataGot)
+  {
+    m_htmlDocument->setDataGot(0);
+  }
+  if (not m_headerParser->redirect().empty())
+  {
+    if (m_historyEnabled)
+    {
+      URI tmp(currentHistoryUri());
+      currentHistoryUri() = tmp.navigateTo(m_headerParser->redirect()).asString();
+    }
+    setStatus(REDIRECTED);
+  }
+
   notifyAll();
 }
 

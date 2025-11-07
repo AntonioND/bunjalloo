@@ -54,6 +54,11 @@ class HeaderParser
      */
     void feed(const char * data, unsigned int length);
 
+    /** Use all data previously fed to the parser. This must be called after all
+     * data has been fed.
+     */
+    void flush();
+
     void setDataState();
 
     /** Fetch how much HTML is expected. From Content-Length header or chunks.
@@ -107,6 +112,12 @@ class HeaderParser
 
     HeaderState m_state;
     URI & m_uri;
+
+    // Buffer that contains all data fed to the HeaderParser instance
+    char * m_bufferData;
+    size_t m_bufferSize;
+
+    // Current position and value read from the buffer
     unsigned int m_value;
     const char * m_position;
     const char * m_end;

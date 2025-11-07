@@ -106,6 +106,7 @@ void Controller::showLicence()
   m_document->reset();
   m_document->setUri(LICENCE_URL);
   m_document->appendLocalData(s_licenceText, strlen(s_licenceText));
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
 }
 
@@ -263,6 +264,7 @@ void Controller::loadError()
   href += m_document->uri();
   href += "</a>";
   m_document->appendLocalData(href.c_str(), href.length());
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
 }
 
@@ -322,6 +324,7 @@ void Controller::localConfigFile(const std::string & fileName)
       string & line(*it);
       configParser.replaceMarkers(line);
       m_document->appendLocalData(line.c_str(), line.length());
+      m_document->flush();
     }
     m_document->setStatus(Document::LOADED_HTML);
   }
@@ -346,6 +349,7 @@ void Controller::localFile(const std::string & fileName)
     data[size] = 0;
     m_document->reset();
     m_document->appendLocalData(data, size);
+    m_document->flush();
     m_document->setStatus(Document::LOADED_HTML);
     delete [] data;
     uriFile.close();

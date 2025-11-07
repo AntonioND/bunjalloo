@@ -93,6 +93,7 @@ void Cache::feed(const std::string & filename)
     {
       m_document.appendData(buffer, read);
     }
+    m_document.flush();
   }
 }
 
@@ -148,6 +149,8 @@ bool Cache::load(const URI & uri)
         m_document.reset();
       feed(cacheFile+".hdr");
       m_document.appendData("\r\n", 2);
+      m_document.flush();
+
       // now check the cache control header
       CacheControl control(m_document.headerParser().cacheControl());
       time_t then(nds::File::mtime(cacheFile.c_str()));

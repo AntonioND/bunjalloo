@@ -76,6 +76,7 @@ void DocumentTest::loadHtml(const char *filename)
 {
   readFile(filename);
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
 }
 
@@ -83,6 +84,7 @@ void DocumentTest::loadData(const char *filename)
 {
   readFile(filename);
   m_document->appendData(m_data, m_length);
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
 }
 
@@ -105,6 +107,7 @@ TEST_F(DocumentTest, HtmlAttributes)
 {
   readFile("html-attrs.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * result = m_document->rootNode();
   string expected("en");
   string attribResult = result->attribute("lang");
@@ -115,6 +118,7 @@ TEST_F(DocumentTest, Head)
 {
   readFile("head.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * result = m_document->rootNode();
   EXPECT_TRUE(result->hasChildren());
   const HtmlElement * child = result->firstChild();
@@ -126,6 +130,7 @@ TEST_F(DocumentTest, Empty)
 {
   readFile("empty.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * result = m_document->rootNode();
   EXPECT_TRUE(result == 0);
 }
@@ -134,6 +139,7 @@ TEST_F(DocumentTest, Head2)
 {
   readFile("head2.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * result = m_document->rootNode();
   EXPECT_TRUE(result->hasChildren());
   const HtmlElement * child = result->firstChild();
@@ -145,6 +151,7 @@ TEST_F(DocumentTest, Head3)
 {
   readFile("head3.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * result = m_document->rootNode();
   EXPECT_TRUE(result->hasChildren());
   const HtmlElement * child = result->firstChild();
@@ -199,6 +206,7 @@ TEST_F(DocumentTest, Google)
 {
   readFile("google.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * root = m_document->rootNode();
   EXPECT_TRUE(root != 0);
 }
@@ -208,6 +216,7 @@ TEST_F(DocumentTest, Anchor)
 {
   readFile("anchor.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * root = m_document->rootNode();
   EXPECT_TRUE(root != 0);
 
@@ -239,6 +248,7 @@ TEST_F(DocumentTest, BrokenAnchor)
 {
   readFile("anchor-broken.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   const HtmlElement * root = m_document->rootNode();
   EXPECT_TRUE(root != 0);
 
@@ -438,6 +448,7 @@ TEST_F(DocumentTest, Clarin)
   data += length;
   length = 2252;
   m_document->appendData(data, 2252);
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
   const HtmlElement * root = m_document->rootNode();
   EXPECT_TRUE(root != 0);
@@ -577,6 +588,7 @@ TEST_F(DocumentTest, History)
   readFile("attrib.html");
   m_document->setUri("attrib.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   m_document->setPosition(10);
   m_document->setStatus(Document::LOADED_HTML);
   const HtmlElement * root = m_document->rootNode();
@@ -587,6 +599,7 @@ TEST_F(DocumentTest, History)
   readFile("anchor.html");
   m_document->setUri("anchor.html");
   m_document->appendLocalData(m_data, m_length);
+  m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
   root = m_document->rootNode();
   EXPECT_TRUE(root != 0);
@@ -669,6 +682,7 @@ TEST_F(DocumentTest, redirect)
   const string initial("http://www.example.com/foo/bar");
   m_document->setUri(initial);
   m_document->appendData(data.c_str(), data.length());
+  m_document->flush();
   string result = m_document->uri();
   EXPECT_EQ(Document::REDIRECTED, m_document->status());
   EXPECT_EQ("http://www.example.com/new/location/", result);

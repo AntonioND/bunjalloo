@@ -63,6 +63,11 @@ class Document
      */
     void appendLocalData(const char * data, int size);
 
+    /** Use all data previously appended. This must be called when all data has
+     * been passed to the document with appendData() or appendLocalData().
+     */
+    void flush();
+
     /** Fetch the current URI.
      * @return the URI.
      */
