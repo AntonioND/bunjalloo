@@ -506,6 +506,11 @@ bool Keyboard::tick()
       {
         m_textArea->deleteChar();
       }
+      else if (cur_pressed == '\r') // SDLK_RETURN
+      {
+        m_selectedStatus = OK;
+        applyResult();
+      }
       else
       {
         char sdlKeyPress[2] = { char(cur_pressed), 0};
