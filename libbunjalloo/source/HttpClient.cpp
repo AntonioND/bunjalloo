@@ -70,7 +70,7 @@ HttpClient::HttpClient():
   m_startTime(0),
   m_timeout(DEFAULT_TIMEOUT),
   m_state(WIFI_OFF),
-  m_controller(0),
+  m_controller(NULL),
   m_log(false)
 {
 }
@@ -131,10 +131,12 @@ void HttpClient::handle(void * bufferIn, int amountRead)
 void HttpClient::handleRaw(void * bufferIn, int amountRead)
 {
   char * buffer = (char*)bufferIn;
-  buffer[amountRead] = 0;
-  // printf("%s", buffer);
-  if (m_controller) m_controller->m_document->appendData(buffer, amountRead);
+
+  if (m_controller)
+    m_controller->m_document->appendData(buffer, amountRead);
+
   m_total += amountRead;
+
   // FIXME: cache this?
   if (m_uri.method() == "HEAD")
   {
