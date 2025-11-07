@@ -4,6 +4,13 @@
 
 - User changes:
 
+  - The HTML parser doesn't support partial parsing of data. The code is
+    organized to fed it partial data, but the parser has several loops that
+    assume that there is more data to be used, and they hang if there isn't more
+    data. Instead of modifying the whole parser, a partial fix has been added:
+    the HTML parser is now only called when the full website has been
+    downloaded. This only fixes well-formed websites, and it will still hang on
+    malformed websites.
   - Add missing credits and licenses to the homepage of the browser.
   - Implement option that allows user to decide to clear the cache at boot or
     not. The setting was there, but it was unused.
@@ -18,7 +25,7 @@
     Application".
   - In the SDL version, keyboard input with the PC input now works in a fluid
     way rather than having to wait for a second or so between each key press.
-    Backspace is also supported now.
+    Backspace and return keys are also supported now.
 
 - Dev changes:
 
