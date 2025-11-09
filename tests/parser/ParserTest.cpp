@@ -74,6 +74,7 @@ TEST_F(ParserTest, Test0)
 {
   readFile("test0.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 2 , size);
 }
@@ -82,6 +83,7 @@ TEST_F(ParserTest, Redirect)
 {
   readFile("redirect.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   string result = m_headerParser->redirect();
   string expected("http://code.google.com/");
   EXPECT_EQ( expected , result);
@@ -92,6 +94,7 @@ TEST_F(ParserTest, NotFound)
 {
   readFile("404.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   unsigned int result = m_headerParser->httpStatusCode();
   unsigned int expected = 404;
   EXPECT_EQ( expected , result);
@@ -101,6 +104,7 @@ TEST_F(ParserTest, NotHtml)
 {
   readFile("not-html.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int result = m_htmlParser->m_tags.size();
   int expected = 0;
   EXPECT_EQ( expected , result);
@@ -113,6 +117,7 @@ TEST_F(ParserTest, Iso)
 {
   readFile("iso.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   HtmlParser::Encoding result = m_htmlParser->encoding();
   HtmlParser::Encoding expected = HtmlParser::ISO_ENCODING;
   EXPECT_EQ( expected , result);
@@ -125,6 +130,7 @@ TEST_F(ParserTest, Utf8)
 {
   readFile("utf8.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   HtmlParser::Encoding result = m_htmlParser->encoding();
   HtmlParser::Encoding expected = HtmlParser::UTF8_ENCODING;
   EXPECT_EQ( expected , result);
@@ -137,6 +143,7 @@ TEST_F(ParserTest, Refresh)
 {
   readFile("refresh.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   std::string refresh;
   int refreshTime;
   m_htmlParser->refresh(refresh, refreshTime);
@@ -150,6 +157,7 @@ TEST_F(ParserTest, BogusDoctype)
 {
   readFile("bogus-doctype.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int result = m_htmlParser->m_data.size();
   EXPECT_EQ( 0 , result);
 }
@@ -158,6 +166,7 @@ TEST_F(ParserTest, MetaIso)
 {
   readFile("metaiso.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   HtmlParser::Encoding result = m_htmlParser->encoding();
   HtmlParser::Encoding expected = HtmlParser::ISO_ENCODING;
   EXPECT_EQ( expected , result);
@@ -166,6 +175,7 @@ TEST_F(ParserTest, Slashdot)
 {
   readFile("slashdot.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 3 , size);
 }
@@ -174,6 +184,7 @@ TEST_F(ParserTest, Numbers)
 {
   readFile("numbers.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 1 , size);
 }
@@ -184,6 +195,7 @@ TEST_F(ParserTest, Gzip)
   // feed data in steps, to make sure we are initialising things correctly.
   m_headerParser->feed(m_data, m_length-20);
   m_headerParser->feed(m_data+m_length-20, 20);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 4 , size);
 }
@@ -193,6 +205,7 @@ TEST_F(ParserTest, Newline)
   readFile("newline.txt");
   // feed data in steps, to make sure we are initialising things correctly.
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 1 , size);
 }
@@ -202,6 +215,7 @@ TEST_F(ParserTest, BogusComment)
   readFile("boguscomment.txt");
   // feed data in steps, to make sure we are initialising things correctly.
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_tags.size();
   EXPECT_EQ( 2 , size);
 }
@@ -210,6 +224,7 @@ TEST_F(ParserTest, bogus_input_select)
 {
   readFile("bogus_select.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_attributes.size();
   EXPECT_EQ(3 , size);
 
@@ -225,6 +240,7 @@ TEST_F(ParserTest, iso_entity_mix)
   // regression test for the above code - shouldn't double encode utf8
   readFile("iso_entity.txt");
   m_headerParser->feed(m_data, m_length);
+  m_headerParser->flush();
   int size = m_htmlParser->m_attributes.size();
   EXPECT_EQ(1 , size);
 
@@ -241,6 +257,7 @@ TEST_F(ParserTest, utf_value)
       "<html><form><input value='señal'/></form>"
   );
   m_headerParser->feed(data.c_str(), data.size());
+  m_headerParser->flush();
   int size = m_htmlParser->m_attributes.size();
   ASSERT_EQ(3, size);
 
