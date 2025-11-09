@@ -48,6 +48,44 @@ Rectangle Canvas::clip() const
 
 void Canvas::verticalLine(int x, int y, int length, int colour)
 {
+  if (length < 0)
+    return;
+
+  // TODO: This should use m_clip.w and m_clip.h instead of width() and height()
+  // but some code that draws things doesn't seem to set the clipping rectangles
+  // correctly so some things aren't drawn.
+#if 1
+  if ((x < m_clip.x) or (x > width()))
+    return;
+
+  int yend = y + length;
+
+  if ((y > height()) or (yend < m_clip.y))
+    return;
+
+  if (y < m_clip.y)
+    y = m_clip.y;
+
+  if (yend > height())
+    yend = height();
+#else
+  if ((x < m_clip.x) or (x > m_clip.w))
+    return;
+
+  int yend = y + length;
+
+  if ((y > m_clip.h) or (yend < m_clip.y))
+    return;
+
+  if (y < m_clip.y)
+    y = m_clip.y;
+
+  if (yend > m_clip.h)
+    yend = m_clip.h;
+#endif
+
+  length = yend - y;
+
   for (int i = 0 ; i < length; ++i)
   {
     drawPixel(x, y+i, colour);
@@ -69,17 +107,44 @@ void Canvas::unsafeDrawPixel(int x, int y, int color)
 
 void Canvas::horizontalLine(int x, int y, int length, int colour)
 {
-
-  if ((y < m_clip.y) or (y > m_clip.bottom()))
+  if (length < 0)
     return;
 
-  if ( (x < m_clip.x) and (x+length) > m_clip.x) 
-  {
+  // TODO: This should use m_clip.w and m_clip.h instead of width() and height()
+  // but some code that draws things doesn't seem to set the clipping rectangles
+  // correctly so some things aren't drawn.
+#if 1
+  if ((y < m_clip.y) or (y > height()))
+    return;
+
+  int xend = x + length;
+
+  if ((x > width()) or (xend < m_clip.x))
+    return;
+
+  if (x < m_clip.x)
     x = m_clip.x;
-  }
-  if ((x+length) > (m_clip.x + m_clip.w)) {
-    length = m_clip.w - x;
-  }
+
+  if (xend > width())
+    xend = width();
+#else
+  if ((y < m_clip.y) or (y > m_clip.h)) // m_clip.bottom() ??
+    return;
+
+  int xend = x + length;
+
+  if ((x > m_clip.w) or (xend < m_clip.x))
+    return;
+
+  if (x < m_clip.x)
+    x = m_clip.x;
+
+  if (xend > m_clip.w)
+    xend = m_clip.w;
+#endif
+
+  length = xend - x;
+
   unsigned short * gfx(vram(y));
   if (y >= 192)
     y -= 192;
