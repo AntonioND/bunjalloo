@@ -23,10 +23,10 @@
 #include "util/classhelper.h"
 
 struct utimbuf;
-namespace nds   // tolua_export
-{               // tolua_export
+namespace nds
+{
   class FileImplementation;
-  // tolua_begin
+
   class File
   {
     public:
@@ -136,7 +136,7 @@ namespace nds   // tolua_export
       /** Hack to get underlying FILE* object
        * */
       void * file() const;
-      // tolua_end
+
     private:
       FileImplementation * m_details;
 
@@ -147,7 +147,7 @@ namespace nds   // tolua_export
       static void lsCommon(const char * path, std::vector<std::string> & entries);
 
       DISALLOW_COPY_AND_ASSIGN(File);
-  }; // tolua_export
-} // tolua_export
+  };
+}
 
 #endif

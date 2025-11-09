@@ -18,7 +18,7 @@
 #define Background_h_seen
 
 #include <stdint.h>
-// tolua_begin
+
 namespace nds {
 
   //! Tile flipping.
@@ -72,26 +72,6 @@ namespace nds {
         SIZE_3  //!< Map size 512x512, 64x64 tiles, 128x128 in rot mode
       } SIZE;
 
-#ifdef TOLUA
-      tolua_property__qt bool enabled;
-      tolua_property__qt unsigned short flags;
-      tolua_property__qt unsigned char color;
-      tolua_property__qt unsigned char number;
-      tolua_property__qt unsigned char charBaseBlock;
-      tolua_property__qt unsigned char screenBaseBlock;
-      tolua_property__qt bool wraparound;
-      tolua_property__qt bool mosaic;
-      tolua_property__qt SIZE size;
-      tolua_property__qt signed short xScroll;
-      tolua_property__qt signed short yScroll;
-      tolua_property__qt signed int DX;
-      tolua_property__qt signed int DY;
-      tolua_property__qt signed short PA;
-      tolua_property__qt signed short PB;
-      tolua_property__qt signed short PC;
-      tolua_property__qt signed short PD;
-#endif
-// tolua_end
       /*!@brief enable the background layer on the hardware
        * @param enabled true to enable false to disable
        */
@@ -224,8 +204,8 @@ namespace nds {
       void setRotateFlags(volatile unsigned short * BG_REG);
       void updateTileMapData(void);
       void draw8x8Tile(int x, int y, unsigned char * gfx, int flags);
-  }; //tolua_export
+  };
 
-}; //tolua_export
+};
 
 #endif

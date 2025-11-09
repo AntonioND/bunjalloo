@@ -17,7 +17,6 @@
 #ifndef Rectangle_h_seen
 #define Rectangle_h_seen
 
-// tolua_begin
 namespace nds
 {
   struct Rectangle
@@ -70,5 +69,5 @@ namespace nds
     Rectangle& operator=(const Rectangle &rhs);
   };
 }
-// tolua_end
+
 #endif

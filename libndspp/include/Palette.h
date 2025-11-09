@@ -16,7 +16,7 @@
 */
 #ifndef Palette_h_seen
 #define Palette_h_seen
-// tolua_begin
+
 namespace nds
 {
   //! Representation of color
@@ -54,12 +54,7 @@ namespace nds
       {
         return this->operator unsigned short ();
       }
-#ifdef TOLUA
-      tolua_property__overload unsigned int red;
-      tolua_property__overload unsigned int green;
-      tolua_property__overload unsigned int blue;
-#endif
-// tolua_end
+
       //! get the red component of the color
       inline unsigned int red() const;
       //! set the red component of the color
@@ -76,8 +71,8 @@ namespace nds
     private:
       //! NDS format color
       unsigned short m_c;
-// tolua_begin
   };
+
   /*! @brief Wraps the Background palette memory 
    */
   class Palette
@@ -88,14 +83,12 @@ namespace nds
        */
       Palette(int screen);
 
-// tolua_end
       /*! @brief 16 color palette.
        * @param screen the screen for the palette. 0 for main screen, 1 for sub screen
        * @param palette index of the 16 color palette (0-15)
        */
       Palette(int screen, int palette);
 
-// tolua_begin
       /*! @brief get reference to color at an index
        * @param i color index
        * @returns unsigned short representation of the NDS color.
@@ -110,7 +103,6 @@ namespace nds
       /*! @brief Sets all the colors in the palette to black (0,0,0)
        */
       void clear();
-// tolua_end
 
       /*! @brief Load palette data.
        * @param palette pointer to palette data
@@ -126,7 +118,6 @@ namespace nds
     private:
       //! is 16 color palette or not
       bool m_16;
-// tolua_begin
   };
 
   //! Object (sprite) palette
@@ -138,13 +129,12 @@ namespace nds
        */
       ObjectPalette(int screen);
 
-// tolua_end
       /*! @brief 16 color object/sprite palette.
        * @param screen the screen for the palette. 0 for main screen, 1 for sub screen.
        * @param palette index of the 16 color palette (0-15).
        */
       ObjectPalette(int screen, int palette);
-  }; //tolua_export
+  };
   #include "Palette-inl.h"
-}; //tolua_export
+};
 #endif

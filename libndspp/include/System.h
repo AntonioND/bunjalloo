@@ -17,7 +17,6 @@
 #ifndef System_h_seen
 #define System_h_seen
 
-// tolua_begin
 namespace nds
 {
   class System
@@ -30,5 +29,5 @@ namespace nds
       static int language();
   };
 }
-// tolua_end
+
 #endif

@@ -18,7 +18,7 @@
 #define Video_h_seen
 #include <stdint.h>
 #include "util/classhelper.h"
-// tolua_begin
+
 namespace nds
 {
   /*! @brief Controls the video hardware */
@@ -106,13 +106,6 @@ namespace nds
        */
       bool onTop() const;
 
-#ifdef TOLUA
-      tolua_property__qt bool threeD;
-      tolua_property__qt int mode;
-      tolua_property__qt bool objectsEnabled;
-      tolua_property__qt int objectMapDimensions;
-#endif
-// tolua_end
       /*! @brief Set 3D mode
        * @param td if true sets 3D mode, if false does not
        */
@@ -165,7 +158,7 @@ namespace nds
       void setBanks();
 
       DISALLOW_COPY_AND_ASSIGN(Video);
-  }; // tolua_export
+  };
 
-} // tolua_export
+}
 #endif

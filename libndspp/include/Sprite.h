@@ -18,7 +18,6 @@
 #define Sprite_h_seen
 #include "util/classhelper.h"
 
-// tolua_begin
 namespace nds {
 
   /*! @brief Object to represent hardware sprite.
@@ -148,29 +147,6 @@ namespace nds {
        * @param sync if set to true will copy state to hardware
        */
       void initialise(bool sync=false);
-#ifdef TOLUA
-      tolua_property__qt int y;
-      tolua_property__qt bool rotateScale;
-      tolua_property__qt bool doubleSize;
-      tolua_property__qt bool enabled;
-      tolua_property__qt unsigned int mode;
-      tolua_property__qt bool mosaic;
-      tolua_property__qt unsigned int colors;
-      tolua_property__qt unsigned int x;
-      tolua_property__qt SPRITE_SHAPE shape;
-      tolua_property__qt unsigned int rotate;
-      tolua_property__qt bool hflip;
-      tolua_property__qt bool vflip;
-      tolua_property__qt unsigned int width;
-      tolua_property__qt unsigned int height;
-      tolua_property__qt unsigned int tile;
-      tolua_property__qt unsigned int priority;
-      tolua_property__qt unsigned int palette;
-      tolua_property__qt bool translucent;
-      tolua_property__qt bool window;
-#endif
-      // tolua_end
-      // everything after this is not exported to lua
 
       //! get the current y position.
       int y() const;
@@ -340,7 +316,7 @@ namespace nds {
       void draw8x8Tile(int xPos, int yPos, int xi, int yi, const unsigned char * gfx);
 
       DISALLOW_COPY_AND_ASSIGN(Sprite);
-  }; // tolua_export
-}; // tolua_export
+  };
+};
 #endif
 

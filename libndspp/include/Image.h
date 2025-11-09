@@ -20,7 +20,6 @@
 #include <string>
 #include "util/classhelper.h"
 
-// tolua_begin
 namespace nds
 {
   class Image
@@ -98,7 +97,7 @@ namespace nds
       const uint16_t * data() const;
 
       void reload();
-      //tolua_end
+
     private:
 
       bool m_valid;
@@ -128,6 +127,6 @@ namespace nds
       void allocPalette(size_t size);
 
       DISALLOW_COPY_AND_ASSIGN(Image);
-  }; //tolua_export
+  };
 }
 #endif

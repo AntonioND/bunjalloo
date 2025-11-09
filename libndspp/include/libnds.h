@@ -23,7 +23,7 @@
 // wrapper functions and defines to emulate NDS calls.
 typedef unsigned char           u8;
 typedef unsigned short int      u16;
-typedef unsigned int            u32; // tolua_export
+typedef unsigned int            u32;
 typedef unsigned long long int  u64;
 
 typedef signed char             s8;
@@ -137,7 +137,7 @@ void cothread_yield_irq(uint32_t flag);
 #define COPY_MODE_COPY  (0)
 #define COPY_MODE_FILL  (1<<24)
 void swiCopy(const void * source, void * dest, int flags);
-// tolua_begin
+
 //!	Bit values for the keypad buttons.
 typedef enum KEYPAD_BITS {
   KEY_A      = BIT(0),  //!< Keypad A button.
@@ -170,7 +170,7 @@ typedef struct {
 } touchPosition;
 
 void touchRead(touchPosition *data);
-// tolua_end
+
 u32 keysRealKeyboard();
 
 void irqSet(int irq, VoidFunctionPointer fp);

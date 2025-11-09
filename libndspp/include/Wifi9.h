@@ -21,7 +21,7 @@
 #error Wifi9 is only available on the ARM9
 #endif
 #include "util/classhelper.h"
-//tolua_begin
+
 namespace nds
 {
   /*! @brief Wifi9 is a helper class for the arm9 dswifi code.
@@ -72,7 +72,6 @@ namespace nds
        */
       int signalStrength() const;
 
-//tolua_end
     private:
       bool m_connected;
       //! construct the class, calls initialise
@@ -81,6 +80,6 @@ namespace nds
       void initialise();
 
       DISALLOW_COPY_AND_ASSIGN(Wifi9);
-  }; // tolua_export
-}; // tolua_export
+  };
+};
 #endif

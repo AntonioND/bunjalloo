@@ -20,11 +20,10 @@
 #include "Rectangle.h"
 #include "util/classhelper.h"
 
-namespace nds   // tolua_export
-{               // tolua_export
+namespace nds
+{
   class Background;
 
-// tolua_begin
   class Canvas
   {
     public:
@@ -97,7 +96,6 @@ namespace nds   // tolua_export
        * @return the area clipped to.
        */
       nds::Rectangle clip() const;
-// tolua_end
 
     private:
       Background * m_bgMain;
@@ -117,6 +115,6 @@ namespace nds   // tolua_export
       void init();
 
       DISALLOW_COPY_AND_ASSIGN(Canvas);
-  }; //tolua_export
-} //tolua_export
+  };
+}
 #endif
