@@ -9,6 +9,7 @@ NAME        := bunjalloo
 SOURCEDIRS  := source
 INCLUDEDIRS := include \
                ../3rdparty/mbedtls-3.6.4/include/ \
+               ../3rdparty/zlib-1.3.1/ \
                ../libbwt/include/ \
                ../libndspp/include/ \
 
