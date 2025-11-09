@@ -75,45 +75,9 @@ SDL_Rect SDLhandler::GAP = {
 };
 
 SDLhandler::SDLhandler():
-    m_screen(0),
-    m_alpha(255),
-    m_vblank(0),
-    m_scale(getenv_int("BUNJALLOO_SCREEN_SCALE", 1, 1, 5)), // The user can change this
-    m_frames(0),
-    m_isFullScreen(false),
-    m_hasSound(true),
-    m_vramMain(0),
-    m_vramSub(0),
-    m_vramMainBack(0),
-    m_vramMainIsShown(true),
-    m_mainOnTop(true),
-    m_fn(0),
-    m_fadeLevel(0),
-    m_fadeLevelMain(0),
-    m_fadeLevelSub(0),
-    m_whiteLevel(0),
-    m_whiteLevelMain(0),
-    m_whiteLevelSub(0),
-    m_threeD(false)
+    m_scale(getenv_int("BUNJALLOO_SCREEN_SCALE", 1, 1, 5)) // The user can change this
 {
   init();
-  m_vramMain = new unsigned short[0x16000];
-  m_vramSub = new unsigned short[0x16000];
-  m_vramMainBack = new unsigned short[0x16000];
-  m_spriteGfx = new unsigned short[0x2000];
-  m_subSpriteGfx = new unsigned short[0x2000];
-  for (int i = 0; i < 256; ++i)
-  {
-    m_backgroundPalette[i] = 0;
-    m_subBackgroundPalette[i] = 0;
-    m_spritePalette[i] = 0;
-    m_subSpritePalette[i] = 0;
-  }
-  ::memset(m_vramMain, 0, 0x16000*2);
-  ::memset(m_vramSub, 0, 0x16000*2);
-  ::memset(m_vramMainBack, 0, 0x16000*2);
-  ::memset(m_spriteGfx, 0, sizeof(*m_spriteGfx));
-  ::memset(m_subSpriteGfx, 0, sizeof(*m_subSpriteGfx));
   enableVblank(0);
 }
 

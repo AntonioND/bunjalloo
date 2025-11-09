@@ -87,42 +87,45 @@ class SDLhandler
     static void mixaudio(void *unused, Uint8 *stream, int len);
     static int totalHeight();
 
-    SDL_Surface *m_screen;
-    SDL_Surface *m_layer[4];
-    int m_alpha;
-    SDL_TimerID m_vblank;
+    SDL_Surface *m_screen { NULL };
+    SDL_Surface *m_layer[4] { NULL };
+    int m_alpha { 255 };
+    SDL_TimerID m_vblank { 0 };
     int m_scale;
-    int m_frames;
-    bool m_isFullScreen;
-    bool m_hasSound;
-    unsigned short m_backgroundPalette[256];
-    unsigned short m_subBackgroundPalette[256];
-    unsigned short m_spritePalette[256];
-    unsigned short m_subSpritePalette[256];
-    Uint32 m_backgroundPaletteSDL[256];
-    Uint32 m_subBackgroundPaletteSDL[256];
-    Uint32 m_spritePaletteSDL[256];
-    Uint32 m_subSpritePaletteSDL[256];
-    unsigned short * m_vramMain;
-    unsigned short * m_vramSub;
+    int m_frames { 0 };
+    bool m_isFullScreen { false };
+    bool m_hasSound { true };
+    unsigned short m_backgroundPalette[256] { 0 };
+    unsigned short m_subBackgroundPalette[256] { 0 };
+    unsigned short m_spritePalette[256] { 0 };
+    unsigned short m_subSpritePalette[256] { 0 };
+    Uint32 m_backgroundPaletteSDL[256] { 0 };
+    Uint32 m_subBackgroundPaletteSDL[256] { 0 };
+    Uint32 m_spritePaletteSDL[256] { 0 };
+    Uint32 m_subSpritePaletteSDL[256] { 0 };
+
+    unsigned short m_vramMain[0x16000] { 0 };
+    unsigned short m_vramSub[0x16000] { 0 };
     // back buffer for main
-    unsigned short * m_vramMainBack;
-    bool m_vramMainIsShown;
-    unsigned short * m_spriteGfx;
-    unsigned short * m_subSpriteGfx;
+    unsigned short m_vramMainBack[0x16000] { 0 };
 
-    bool m_mainOnTop;
-    VoidFunctionPointer m_fn;
+    bool m_vramMainIsShown { true };
 
-    int m_fadeLevel;
-    int m_fadeLevelMain;
-    int m_fadeLevelSub;
-    int m_whiteLevel;
-    int m_whiteLevelMain;
-    int m_whiteLevelSub;
+    unsigned short m_spriteGfx[0x2000] { 0 };
+    unsigned short m_subSpriteGfx[0x2000] { 0 };
+
+    bool m_mainOnTop { true };
+    VoidFunctionPointer m_fn { NULL };
+
+    int m_fadeLevel { 0 };
+    int m_fadeLevelMain { 0 };
+    int m_fadeLevelSub { 0 };
+    int m_whiteLevel { 0 };
+    int m_whiteLevelMain { 0 };
+    int m_whiteLevelSub { 0 };
 
     bool m_dirty;
-    bool m_threeD;
+    bool m_threeD { false };
 
     SDLhandler();
     ~SDLhandler();
