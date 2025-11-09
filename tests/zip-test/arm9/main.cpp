@@ -35,8 +35,8 @@ int main(int argc, char * argv[])
 {
   nds::File::exists("test.zip");
   TextAreaFactory::setFont(FontFactory::create(
-        (unsigned char*)_binary_sans_set_bin_start,
-        (unsigned char*)_binary_sans_map_bin_start));
+        (unsigned char*)_binary_sans_set_start,
+        (unsigned char*)_binary_sans_map_start));
   ScrollPane scrollPane;
   Canvas &canvas(Canvas::instance());
   RichTextArea * rich = (RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH);
@@ -67,7 +67,7 @@ int main(int argc, char * argv[])
   bool needsPainting = true;
   while(true)
   {
-    swiWaitForVBlank();
+    cothread_yield_irq(IRQ_VBLANK);
     if (needsPainting)
     {
       scrollPane.paint(scrollPane.preferredSize());
