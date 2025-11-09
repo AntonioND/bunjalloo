@@ -74,9 +74,11 @@ SDL_Rect SDLhandler::GAP = {
     SDLhandler::WIDTH, Uint16(getenv_int("BUNJALLOO_SCREEN_GAP", 0, 0, 100))
 };
 
-SDLhandler::SDLhandler():
-    m_scale(getenv_int("BUNJALLOO_SCREEN_SCALE", 1, 1, 5)) // The user can change this
+SDLhandler::SDLhandler()
 {
+  // The user can change this
+  m_scale = getenv_int("BUNJALLOO_SCREEN_SCALE", 1, 1, 5);
+
   init();
   enableVblank(0);
 }

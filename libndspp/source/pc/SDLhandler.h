@@ -91,7 +91,7 @@ class SDLhandler
     SDL_Surface *m_layer[4] { NULL };
     int m_alpha { 255 };
     SDL_TimerID m_vblank { 0 };
-    int m_scale;
+    int m_scale { 1 };
     int m_frames { 0 };
     bool m_isFullScreen { false };
     bool m_hasSound { true };
@@ -124,7 +124,7 @@ class SDLhandler
     int m_whiteLevelMain { 0 };
     int m_whiteLevelSub { 0 };
 
-    bool m_dirty;
+    bool m_dirty { false };
     bool m_threeD { false };
 
     SDLhandler();
