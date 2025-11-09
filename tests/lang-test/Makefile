@@ -2,4 +2,6 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2025
 
+AUTO := 0
+
 include ../../make/test_template.make

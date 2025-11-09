@@ -60,7 +60,7 @@ clean:
 	PLAT=NDS make -C libbunjalloo -j`nproc` clean
 	PLAT=NDS make -C libbwt -j`nproc` clean
 	PLAT=NDS make -C libndspp -j`nproc` clean
-	make -C tests -j`nproc` clean
+	PLAT=NDS make -C tests -j`nproc` clean
 	make -C tools -j`nproc` clean
 
 tests: libbunjalloo-sdl libbunjalloo-nds libvera-sdl libvera-nds
@@ -68,3 +68,6 @@ tests: libbunjalloo-sdl libbunjalloo-nds libvera-sdl libvera-nds
 
 tools:
 	make -C tools -j`nproc`
+
+run-tests: tests
+	PLAT=SDL make -C tests run

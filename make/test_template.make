@@ -53,6 +53,8 @@ ifeq ($(PLAT),SDL)
     PREFIX		:=
 else ifeq ($(PLAT),NDS)
     PREFIX		:= $(ARM_NONE_EABI_PATH)arm-none-eabi-
+else
+    $(error "Define a platform with PLAT=SDL or PLAT=NDS")
 endif
 
 CC		:= $(PREFIX)gcc
@@ -165,6 +167,21 @@ $(ELF): $(OBJS)
 clean:
 	@echo "  CLEAN"
 	$(V)$(RM) $(ELF) build
+
+# Only define the "run" target if PLAT=SDL so that "make run" exits with an
+# error in all other cases. For PLAT=SDL, only make the target do something if
+# AUTO=1.
+ifeq ($(PLAT),SDL)
+
+.PHONY: run
+ifeq ($(AUTO),1)
+run: $(ELF)
+	./$(ELF)
+else
+run:
+endif
+
+endif
 
 # Rules
 # -----

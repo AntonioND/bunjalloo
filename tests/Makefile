@@ -4,11 +4,13 @@
 
 SUBDIRS := $(shell find * -mindepth 1 -maxdepth 1 -name Makefile -printf '%h\n')
 
-.PHONY: all clean $(SUBDIRS)
+.PHONY: all clean run $(SUBDIRS)
 
 all: $(SUBDIRS)
 
 clean: $(SUBDIRS)
+
+run: $(SUBDIRS)
 
 $(SUBDIRS):
 	@$(MAKE) -C $@ $(MAKECMDGOALS)
