@@ -14,6 +14,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "ndspp.h"
 #include "libnds.h"
 #include "URI.h"
@@ -24,6 +25,9 @@ using namespace nds;
 int main(int argc, char * argv[])
 {
   Controller * c = new Controller();
+  if (c == NULL)
+    libndsCrash("main: OOM");
+
   c->initialise();
   if (argc > 1) {
     std::string fileName(argv[1]);
