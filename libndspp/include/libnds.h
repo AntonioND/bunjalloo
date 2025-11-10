@@ -181,6 +181,8 @@ void playGenericSound(const void* data, u32 length);
 short cosLerp(short angle);
 short sinLerp(short angle);
 
+__attribute__((noreturn)) void libndsCrash(const char *message);
+
 // ARM9, ARM7
 #else
 #ifdef __cplusplus

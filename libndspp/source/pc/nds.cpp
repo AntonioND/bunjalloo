@@ -49,6 +49,12 @@ void cothread_yield_irq(uint32_t flag)
   SDLhandler::instance().waitVsync();
 }
 
+void libndsCrash(const char *message)
+{
+  fprintf(stderr, "%s\n", message);
+  exit(1);
+}
+
 #if 0
 void glReset(void)
 {
