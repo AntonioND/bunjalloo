@@ -100,25 +100,25 @@ namespace nds
 
     private:
 
-      bool m_valid;
+      bool m_valid { false };
       bool m_keepPalette;
-      ImageType m_type;
+      ImageType m_type { ImageNONE };
       std::string m_filename;
 
       // scaled w, h
-      unsigned int m_width;
-      unsigned int m_height;
+      unsigned int m_width { 0 };
+      unsigned int m_height { 0 };
 
       // actual w, h of image
-      unsigned int m_realWidth;
-      unsigned int m_realHeight;
+      unsigned int m_realWidth { 0 };
+      unsigned int m_realHeight { 0 };
       // bits per pixel when decoding the line
       unsigned int m_bpp;
 
-      unsigned int m_paletteSize;
-      unsigned int m_channels;
-      unsigned short * m_data;
-      unsigned short * m_palette;
+      unsigned int m_paletteSize { 0 };
+      unsigned int m_channels { 3 };
+      unsigned short * m_data { NULL };
+      unsigned short * m_palette { NULL };
 
       void readFile();
 

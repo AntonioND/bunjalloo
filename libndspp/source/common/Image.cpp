@@ -31,16 +31,8 @@ unsigned int Image::MAX_HEIGHT(SCREEN_HEIGHT * 2);
 unsigned int Image::MAX_WIDTH(SCREEN_WIDTH - 7);
 
 Image::Image(const char * filename, bool keepPalette):
-  m_valid(false),
   m_keepPalette(keepPalette),
-  m_type(ImageNONE),
-  m_filename(filename),
-  m_width(0),
-  m_height(0),
-  m_paletteSize(0),
-  m_channels(3),
-  m_data(NULL),
-  m_palette(NULL)
+  m_filename(filename)
 {
   reload();
 }
