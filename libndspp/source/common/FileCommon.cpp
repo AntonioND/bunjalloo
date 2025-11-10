@@ -30,7 +30,11 @@ void nds::File::readlines(std::vector<std::string> & lines)
   if (is_open())
   {
     int size = this->size();
+
     char * data = new char[size+2];
+    if (data == NULL)
+      return;
+
     read(data);
     int startOfLine = 0;
     for (int i = 0; i < size; ++i)
@@ -44,6 +48,7 @@ void nds::File::readlines(std::vector<std::string> & lines)
     if (startOfLine < size) {
       lines.push_back(string(&data[startOfLine], size - startOfLine));
     }
+
     delete [] data;
   }
 }

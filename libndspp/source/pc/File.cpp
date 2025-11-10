@@ -18,6 +18,7 @@
 #include "File.h"
 #include "MiniMessage.h"
 #include <errno.h>
+#include <cassert>
 #include <cstring>
 #include <cstdlib>
 #include <string>
@@ -160,9 +161,18 @@ bool FileImplementation::eof() const
 {
   return feof(m_stream) != 0;
 }
+
 // File proxy as follows:
-File::File():m_details(new FileImplementation())
-{}
+File::File()
+{
+  m_details = new FileImplementation();
+  assert(m_details);
+}
+
+File::~File()
+{
+  delete m_details;
+}
 
 static std::string toFat(const char * path)
 {
@@ -181,11 +191,6 @@ void File::open(const char * name, const char * mode)
   // append name to cwd to emulate FAT behaviour.
   std::string fullpath(toFat(name));
   m_details->open(fullpath.c_str(), mode);
-}
-
-File::~File()
-{
-  delete m_details;
 }
 
 int File::read(char * buffer, int amount)

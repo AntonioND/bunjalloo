@@ -167,17 +167,20 @@ bool FileImplementation::eof() const
 }
 
 // File proxy as follows:
-File::File():m_details(new FileImplementation())
-{}
-
-void File::open(const char * name, const char * mode)
+File::File()
 {
-  m_details->open(name, mode);
+  m_details = new FileImplementation();
+  assert(m_details);
 }
 
 File::~File()
 {
   delete m_details;
+}
+
+void File::open(const char * name, const char * mode)
+{
+  m_details->open(name, mode);
 }
 
 int File::read(char * buffer, int amount)
