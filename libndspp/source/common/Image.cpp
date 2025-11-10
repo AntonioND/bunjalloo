@@ -30,44 +30,6 @@ using std::auto_ptr;
 unsigned int Image::MAX_HEIGHT(SCREEN_HEIGHT * 2);
 unsigned int Image::MAX_WIDTH(SCREEN_WIDTH - 7);
 
-class Array
-{
-  public:
-    Array(int size)
-      : m_array(new unsigned char[size]),
-      m_size(size)
-    {}
-
-    ~Array()
-    {
-      delete [] m_array;
-    }
-
-    inline operator unsigned char* () const
-    {
-      return m_array;
-    }
-
-    inline operator char* () const
-    {
-      return (char*)m_array;
-    }
-
-    inline unsigned char & operator[] (int i)
-    {
-      return m_array[i];
-    }
-
-    unsigned int length() const
-    {
-      return m_size;
-    }
-
-  private:
-    unsigned char * m_array;
-    unsigned int m_size;
-};
-
 Image::Image(const char * filename, bool keepPalette):
   m_valid(false),
   m_keepPalette(keepPalette),
