@@ -26,13 +26,20 @@ Canvas & Canvas::instance()
   return s_canvas;
 }
 
-Canvas::~Canvas(){}
-
-Canvas::Canvas():m_frontSub(0), m_backSub(0)
+Canvas::Canvas()
 {
   m_frontSub = SDLhandler::instance().vramSub(0);
+
   m_backSub = new unsigned short[0x16000];
+  if (m_backSub == NULL)
+    libndsCrash("Canvas: OOM");
+
   init();
+}
+
+Canvas::~Canvas()
+{
+  delete [] m_backSub;
 }
 
 void Canvas::init()

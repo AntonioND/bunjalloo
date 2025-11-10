@@ -34,15 +34,14 @@ Canvas::~Canvas(){}
 
 // static unsigned short BG_MEM_BUFFER[192*256];
 
-Canvas::Canvas():
-  m_bgMain(new Background(0,3,0,31)),
-  m_bgSub(new Background(1,3,0,31)),
-  m_frontMain((unsigned short*)BG_BMP_RAM(0)),
-  m_backMain( m_frontMain + BUFFER_SIZE ),
-  m_frontSub((unsigned short*)BG_BMP_RAM_SUB(0)),
-  //m_backSub((unsigned short*)BG_MEM_BUFFER)
-  m_backSub((unsigned short*)BG_BMP_RAM(16))
+Canvas::Canvas()
 {
+  m_frontMain = (unsigned short*)BG_BMP_RAM(0);
+  m_backMain = m_frontMain + BUFFER_SIZE;
+  m_frontSub = (unsigned short*)BG_BMP_RAM_SUB(0);
+  //m_backSub = (unsigned short*)BG_MEM_BUFFER;
+  m_backSub = (unsigned short*)BG_BMP_RAM(16);
+
   init();
 }
 
@@ -70,11 +69,11 @@ void Canvas::init()
   vramSetBankI(VRAM_I_SUB_SPRITE);
   vramSetBankE(VRAM_E_MAIN_SPRITE);
 
-  m_bgMain->setEnabled();
-  m_bgSub->setEnabled();
+  m_bgMain.setEnabled();
+  m_bgSub.setEnabled();
 
-  m_bgMain->update();
-  m_bgSub->update();
+  m_bgMain.update();
+  m_bgSub.update();
 
   main.setToBottom();
   m_clip.x = m_clip.y = 0;

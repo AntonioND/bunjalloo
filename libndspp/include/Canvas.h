@@ -17,6 +17,9 @@
 #ifndef Canvas_h_seen
 #define Canvas_h_seen
 
+#include <cstddef>
+
+#include "Background.h"
 #include "Rectangle.h"
 #include "util/classhelper.h"
 
@@ -98,12 +101,13 @@ namespace nds
       nds::Rectangle clip() const;
 
     private:
-      Background * m_bgMain;
-      Background * m_bgSub;
-      unsigned short * m_frontMain;
-      unsigned short * m_backMain;
-      unsigned short * m_frontSub;
-      unsigned short * m_backSub;
+      Background m_bgMain { 0, 3, 0, 31 };
+      Background m_bgSub { 1, 3, 0, 31 };
+
+      unsigned short * m_frontMain { NULL };
+      unsigned short * m_backMain { NULL };
+      unsigned short * m_frontSub { NULL };
+      unsigned short * m_backSub { NULL };
       Rectangle m_clip;
 
       Canvas();
