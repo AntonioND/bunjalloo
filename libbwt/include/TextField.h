@@ -50,7 +50,7 @@ class TextField: public TextContainer, public TextEntryI
     virtual bool stylusDownRepeat(const Stylus * stylus);
     virtual bool stylusDown(const Stylus * stylus);
   private:
-    bool m_touched;
+    bool m_touched { false };
     DISALLOW_COPY_AND_ASSIGN(TextField);
 };
 #endif

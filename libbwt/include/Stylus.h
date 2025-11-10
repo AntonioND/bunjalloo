@@ -144,12 +144,12 @@ class Stylus
 
   private:
     static Stylus * s_stylus;
-    int m_startX;
-    int m_startY;
-    int m_lastX;
-    int m_lastY;
-    bool m_repeat;
-    TouchType m_state;
+    int m_startX { 0 };
+    int m_startY { 0 };
+    int m_lastX { 0 };
+    int m_lastY { 0 };
+    bool m_repeat { false };
+    TouchType m_state { NOTHING };
     typedef std::vector<StylusListener*> StylusListenerVector;
     StylusListenerVector m_listeners;
 

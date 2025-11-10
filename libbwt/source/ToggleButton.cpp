@@ -22,7 +22,7 @@
 #include "Stylus.h"
 
 ToggleButton::ToggleButton():
-  Component(), m_touched(false)
+  Component()
 {}
 
 void ToggleButton::paint(const nds::Rectangle & clip)

@@ -33,9 +33,7 @@ const static unsigned char NEWLINE('\n');
 static int INITIAL_POSITION(2<<8);
 
 TextArea::TextArea(Font * font) :
-  m_font(0),
-  m_appendPosition(INITIAL_POSITION),
-  m_parseNewline(true)
+  m_appendPosition(INITIAL_POSITION)
 {
   setFont(font);
   setDefaultColor();

@@ -19,15 +19,9 @@
 #include "Stylus.h"
 #include "StylusListener.h"
 
-Stylus * Stylus::s_stylus(0);
+Stylus * Stylus::s_stylus(NULL);
 
-Stylus::Stylus() :
-  m_startX(0),
-  m_startY(0),
-  m_lastX(0),
-  m_lastY(0),
-  m_repeat(false),
-  m_state(NOTHING)
+Stylus::Stylus()
 {
 }
 

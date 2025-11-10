@@ -26,7 +26,7 @@
 #include "password_mask.h"
 
 TextField::TextField(const std::string & text) :
-  TextContainer(text), m_touched(false)
+  TextContainer(text)
 {
 }
 

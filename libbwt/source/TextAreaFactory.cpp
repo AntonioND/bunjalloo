@@ -22,7 +22,7 @@
 #include "RichTextArea.h"
 // #include "vera.h"
 
-Font * TextAreaFactory::s_font(0);
+Font * TextAreaFactory::s_font(NULL);
 
 TextArea * TextAreaFactory::create(TextType type)
 {

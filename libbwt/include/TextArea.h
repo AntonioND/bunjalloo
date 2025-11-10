@@ -141,10 +141,10 @@ class TextArea : public Component
     void setCursor(int x, int y);
 
   private:
-    Font * m_font;
+    Font * m_font { NULL };
     int m_appendPosition;
     unsigned int m_preferredWidthFixed;
-    bool m_parseNewline;
+    bool m_parseNewline { true };
     unsigned short m_bgCol;
     unsigned short m_fgCol;
 

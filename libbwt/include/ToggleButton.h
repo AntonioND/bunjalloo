@@ -52,7 +52,7 @@ class ToggleButton: public Component, public ButtonI
     virtual const unsigned short *getPaletteData() = 0;
 
   private:
-    bool m_touched;
+    bool m_touched { false };
     DISALLOW_COPY_AND_ASSIGN(ToggleButton);
 };
 #endif
