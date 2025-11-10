@@ -24,44 +24,7 @@
 using namespace std;
 using namespace nds;
 
-struct t_prerenderedSet {
-  // Set identification
-  uint8_t face;
-  uint8_t size;
-
-  // Vertical metrics
-  int32_t minAscender, maxDescender;
-
-  // Prerendered images
-  t_prerenderedGlyph *glyphs;
-  uint32_t numGlyphs;
-};
-
-struct t_charMapEntry {
-  uint32_t charCode;
-  uint32_t glyphIndex;
-};
-
-struct t_charMap {
-  t_charMapEntry *entries;
-  uint16_t size;
-};
-
-struct t_glyphBitmap {
-  uint8_t width, height;
-  uint8_t *bitmap;
-};
-
-struct t_prerenderedGlyph {
-  t_glyphBitmap image;
-  int8_t deltaX, deltaY;
-  uint16_t advanceX;
-};
-
-Font::Font():
-  m_width(8),
-  m_prerenderedSet(0),
-  m_charMap(0)
+Font::Font()
 {
 }
 
@@ -70,22 +33,19 @@ Font::Font():
 #define READ_U32(value, from) { value = (from[index]<<24) |(from[index+1]<<16)|(from[index+2]<<8)|(from[index+3]); index+=4;}
 void Font::init(const unsigned char * setData, const unsigned char * mapData)
 {
-  m_prerenderedSet = new t_prerenderedSet;
-  m_charMap = new t_charMap;
-
   int index = 0;
-  READ_U8(m_prerenderedSet->face, setData);
-  READ_U8(m_prerenderedSet->size, setData);
-  READ_U32(m_prerenderedSet->minAscender, setData);
-  READ_U32(m_prerenderedSet->maxDescender, setData);
-  READ_U32(m_prerenderedSet->numGlyphs, setData);
+  READ_U8(m_prerenderedSet.face, setData);
+  READ_U8(m_prerenderedSet.size, setData);
+  READ_U32(m_prerenderedSet.minAscender, setData);
+  READ_U32(m_prerenderedSet.maxDescender, setData);
+  READ_U32(m_prerenderedSet.numGlyphs, setData);
 
-  m_prerenderedSet->glyphs =
-    static_cast<t_prerenderedGlyph*>(malloc(m_prerenderedSet->numGlyphs *
+  m_prerenderedSet.glyphs =
+    static_cast<t_prerenderedGlyph*>(malloc(m_prerenderedSet.numGlyphs *
           sizeof(t_prerenderedGlyph)));
 
-  t_prerenderedGlyph *glyph(m_prerenderedSet->glyphs);
-  for (uint32_t i = 0; i < m_prerenderedSet->numGlyphs; ++i, ++glyph) {
+  t_prerenderedGlyph *glyph(m_prerenderedSet.glyphs);
+  for (uint32_t i = 0; i < m_prerenderedSet.numGlyphs; ++i, ++glyph) {
     // read t_prerenderedGlyph
     READ_U8(glyph->deltaX, setData);
     READ_U8(glyph->deltaY, setData);
@@ -105,13 +65,13 @@ void Font::init(const unsigned char * setData, const unsigned char * mapData)
 
   // now read the glyph to code point map
   index = 0;
-  READ_U16(m_charMap->size, mapData);
+  READ_U16(m_charMap.size, mapData);
 
-  m_charMap->entries = static_cast<t_charMapEntry*>(malloc(m_charMap->size *
+  m_charMap.entries = static_cast<t_charMapEntry*>(malloc(m_charMap.size *
         sizeof(t_charMapEntry)));
   // read data
-  t_charMapEntry *entry(m_charMap->entries);
-  for (int i = 0; i < m_charMap->size; ++i, ++entry) {
+  t_charMapEntry *entry(m_charMap.entries);
+  for (int i = 0; i < m_charMap.size; ++i, ++entry) {
     READ_U32(entry->charCode, mapData);
     READ_U32(entry->glyphIndex, mapData);
   }
@@ -125,15 +85,15 @@ Font::~Font()
 int Font::minGlyph() const
 {
   // get the minimum glyph number
-  return m_charMap->entries[0].glyphIndex;
+  return m_charMap.entries[0].glyphIndex;
 }
 
 int Font::valueToIndex(unsigned int codepoint) const
 {
   //  use a binary search as charCode is ordered
-  t_charMapEntry *entry(m_charMap->entries);
+  t_charMapEntry *entry(m_charMap.entries);
   uint32_t lower = 0;
-  uint32_t upper = m_charMap->size;
+  uint32_t upper = m_charMap.size;
   while (true) {
     uint32_t key = (upper + lower) / 2;
     if (entry[key].charCode > codepoint) {
@@ -162,11 +122,11 @@ t_prerenderedGlyph *Font::glyph(unsigned int value) const
   {
     int min = minGlyph();
     if (min == -1) {
-      return &m_prerenderedSet->glyphs[0];
+      return &m_prerenderedSet.glyphs[0];
     }
     glyphIndex = min;
   }
-  return &m_prerenderedSet->glyphs[glyphIndex];
+  return &m_prerenderedSet.glyphs[glyphIndex];
 }
 
 void Font::textSize(const char * text, int amount, int & width, int & height, const std::string & encoding) const
@@ -370,7 +330,7 @@ int Font::doSingleChar(unsigned int value, int cursorx, int cursory, int right, 
 
 int Font::height() const
 {
-  return m_prerenderedSet->maxDescender - m_prerenderedSet->minAscender;
+  return m_prerenderedSet.maxDescender - m_prerenderedSet.minAscender;
 }
 
 int Font::base() const

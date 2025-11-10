@@ -23,9 +23,44 @@
 #include "util/classhelper.h"
 
 class Range;
-struct t_prerenderedSet;
-struct t_charMap;
-struct t_prerenderedGlyph;
+
+// Start of private structs
+
+struct t_charMapEntry {
+  uint32_t charCode;
+  uint32_t glyphIndex;
+};
+
+struct t_charMap {
+  t_charMapEntry *entries;
+  uint16_t size;
+};
+
+struct t_glyphBitmap {
+  uint8_t width, height;
+  uint8_t *bitmap;
+};
+
+struct t_prerenderedGlyph {
+  t_glyphBitmap image;
+  int8_t deltaX, deltaY;
+  uint16_t advanceX;
+};
+
+struct t_prerenderedSet {
+  // Set identification
+  uint8_t face;
+  uint8_t size;
+
+  // Vertical metrics
+  int32_t minAscender, maxDescender;
+
+  // Prerendered images
+  t_prerenderedGlyph *glyphs;
+  uint32_t numGlyphs;
+};
+
+// End of private structs
 
 /** Encapsulates the Font handling. */
 class Font
@@ -119,9 +154,9 @@ class Font
   private:
 
     //! Total width of the image.
-    unsigned int m_width;
-    t_prerenderedSet *m_prerenderedSet;
-    t_charMap *m_charMap;
+    unsigned int m_width { 8 };
+    t_prerenderedSet m_prerenderedSet { 0 };
+    t_charMap m_charMap { 0 };
 
     /** For a given character code, get the equivalent glyph data.
      * @param charCode the character code
