@@ -112,8 +112,6 @@ namespace nds
       // actual w, h of image
       unsigned int m_realWidth { 0 };
       unsigned int m_realHeight { 0 };
-      // bits per pixel when decoding the line
-      unsigned int m_bpp;
 
       unsigned int m_paletteSize { 0 };
       unsigned int m_channels { 3 };

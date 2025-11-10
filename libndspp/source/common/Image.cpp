@@ -176,8 +176,6 @@ void Image::readFile()
                     }
                 }
             }
-
-            m_bpp = 8;
         }
         else
         {
@@ -207,7 +205,6 @@ void Image::readFile()
             m_palette = NULL;
 
             m_paletteSize = 0;
-            m_bpp = 16;
         }
     }
     else
@@ -239,8 +236,6 @@ void Image::readFile()
                 }
             }
         }
-
-        m_bpp = 16;
     }
 
     plum_destroy_image(image);
