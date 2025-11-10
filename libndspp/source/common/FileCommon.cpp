@@ -31,7 +31,7 @@ void nds::File::readlines(std::vector<std::string> & lines)
   {
     int size = this->size();
 
-    char * data = new char[size+2];
+    char * data = new (std::nothrow) char[size+2];
     if (data == NULL)
       return;
 

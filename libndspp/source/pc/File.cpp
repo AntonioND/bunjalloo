@@ -164,9 +164,9 @@ bool FileImplementation::eof() const
 // File proxy as follows:
 File::File()
 {
-  m_details = new FileImplementation();
-  if (m_details == NULL)
-    libndsCrash("File: OOM");
+  // If we can't create this instance keep running but fail all operations on
+  // the File() instance.
+  m_details = new (std::nothrow) FileImplementation();
 }
 
 File::~File()
@@ -188,6 +188,7 @@ static std::string toFat(const char * path)
 
 void File::open(const char * name, const char * mode)
 {
+  if (m_details == NULL) return;
   // append name to cwd to emulate FAT behaviour.
   std::string fullpath(toFat(name));
   m_details->open(fullpath.c_str(), mode);
@@ -195,31 +196,37 @@ void File::open(const char * name, const char * mode)
 
 int File::read(char * buffer, int amount)
 {
+  if (m_details == NULL) return 0;
   return m_details->read(buffer, amount);
 }
 
 int File::write(const char * buffer, int amount)
 {
+  if (m_details == NULL) return 0;
   return m_details->write(buffer, amount);
 }
 
 bool File::eof() const
 {
+  if (m_details == NULL) return true;
   return m_details->eof();
 }
 
 int File::size()
 {
+  if (m_details == NULL) return 0;
   return m_details->size();
 }
 
 bool File::is_open() const
 {
+  if (m_details == NULL) return false;
   return m_details->is_open();
 }
 
 void File::close()
 {
+  if (m_details == NULL) return;
   m_details->close();
 }
 
@@ -299,6 +306,7 @@ bool nds::File::cp(const char *src, const char *dst)
 
 void * File::file() const
 {
+  if (m_details == NULL) return NULL;
   return m_details->file();
 }
 

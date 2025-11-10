@@ -30,7 +30,7 @@ Canvas::Canvas()
 {
   m_frontSub = SDLhandler::instance().vramSub(0);
 
-  m_backSub = new unsigned short[0x16000];
+  m_backSub = new (std::nothrow) unsigned short[0x16000];
   if (m_backSub == NULL)
     libndsCrash("Canvas: OOM");
 
