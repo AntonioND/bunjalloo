@@ -66,7 +66,7 @@ class ZipFile
 
     void setListener(ExtractListener * listener);
   private:
-    ZipFileImpl * m_impl;
+    ZipFileImpl * m_impl { NULL };
     DISALLOW_COPY_AND_ASSIGN(ZipFile);
 };
 #endif

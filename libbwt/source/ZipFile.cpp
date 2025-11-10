@@ -40,6 +40,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include "unzip.h"
+#include "libnds.h"
 #include "ZipFile.h"
 #include "File.h"
 #include "scoped_ptr.h"
@@ -365,12 +366,16 @@ class ZipFileImpl
 };
 
 
-ZipFile::ZipFile(ExtractListener * listener) :
-  m_impl(new ZipFileImpl(listener))
+ZipFile::ZipFile(ExtractListener * listener)
 {
+  m_impl = new ZipFileImpl(listener);
+  if (m_impl == NULL)
+    libndsCrash("ZipFile: OOM");
 }
+
 ZipFile::~ZipFile()
 {
+  delete m_impl;
 }
 
 void ZipFile::open(const char * filename)
