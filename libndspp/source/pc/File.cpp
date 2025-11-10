@@ -18,7 +18,6 @@
 #include "File.h"
 #include "MiniMessage.h"
 #include <errno.h>
-#include <cassert>
 #include <cstring>
 #include <cstdlib>
 #include <string>
@@ -166,7 +165,8 @@ bool FileImplementation::eof() const
 File::File()
 {
   m_details = new FileImplementation();
-  assert(m_details);
+  if (m_details == NULL)
+    libndsCrash("File: OOM");
 }
 
 File::~File()

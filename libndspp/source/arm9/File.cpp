@@ -170,7 +170,8 @@ bool FileImplementation::eof() const
 File::File()
 {
   m_details = new FileImplementation();
-  assert(m_details);
+  if (m_details == NULL)
+    libndsCrash("File: OOM");
 }
 
 File::~File()
