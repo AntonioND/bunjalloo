@@ -116,7 +116,7 @@ CXXFLAGS	+= -g -std=gnu++17 $(WARNFLAGS_CPP) $(DEFINES) $(INCLUDEFLAGS) \
 		   $(ARCH) -Os -ffunction-sections -fdata-sections $(SPECS)
 
 ifeq ($(PLAT),NDS)
-    CXXFLAGS	+= -fno-exceptions -fno-rtti
+    CXXFLAGS	+= -fno-rtti
 endif
 
 # Intermediate build files

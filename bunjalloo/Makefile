@@ -187,7 +187,7 @@ CXXFLAGS	+= -std=gnu++17 $(WARNFLAGS_CPP) $(INCLUDEFLAGS) $(DEFINES) \
 		   $(ARCH) -Os -ffunction-sections -fdata-sections $(SPECS)
 
 ifeq ($(PLAT),NDS)
-CXXFLAGS	+= -fno-exceptions -fno-rtti
+CXXFLAGS	+= -fno-rtti
 endif
 
 LDFLAGS		+= $(ARCH) $(LIBDIRSFLAGS)  $(DEFINES) \
