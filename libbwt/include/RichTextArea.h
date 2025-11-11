@@ -84,27 +84,27 @@ class RichTextArea: public TextArea
 
   private:
     /** Keep track of the current document size. */
-    unsigned int m_documentSize;
+    unsigned int m_documentSize { 0 };
     unsigned int m_nextEvent;
     Link::EventType m_nextEventType;
     unsigned int m_paintPosition;
-    Link::EventType m_state;
+    Link::EventType m_state { Link::STATE_PLAIN };
     typedef std::list<Link*> LinkList;
     LinkList m_links;
     // for painting:
     LinkList::const_iterator m_currentLink;
-    LinkListener * m_linkListener;
+    LinkListener * m_linkListener { 0 };
     // current line number being painted
     int m_lineNumber;
 
-    bool m_centred;
-    bool m_outlined;
+    bool m_centred { false };
+    bool m_outlined { false };
     int m_startUnderlineX;
     int m_startUnderlineY;
-    bool m_underLine;
+    bool m_underLine { false };
 
-    Link * m_linkTouched;
-    int m_downCount;
+    Link * m_linkTouched { 0 };
+    int m_downCount { 0 };
 
     /** Delete the links */
     void removeClickables();

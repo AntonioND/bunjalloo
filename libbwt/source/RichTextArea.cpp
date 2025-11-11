@@ -32,15 +32,7 @@ static const int NO_INDEX(-1);
 static const int POPUP_MENU_COUNT(20);
 
 RichTextArea::RichTextArea(Font * font) :
-  TextArea(font),
-  m_documentSize(0),
-  m_state(Link::STATE_PLAIN),
-  m_linkListener(0),
-  m_centred(false),
-  m_outlined(false),
-  m_underLine(false),
-  m_linkTouched(0),
-  m_downCount(0)
+  TextArea(font)
 {
 }
 
