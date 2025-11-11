@@ -22,7 +22,60 @@
 #include "util/classhelper.h"
 
 typedef std::map<std::string, std::string> KeyValueMap;
-class PSImpl;
+
+// Private class
+class PSImpl
+{
+  friend class ParameterSet;
+  public:
+    PSImpl(const std::string & kvs, char sep):
+      m_state(BEFORE_NAME),
+      m_position(kvs.begin()),
+      m_end(kvs.end()),
+      m_sep(sep)
+    {
+      if (m_position != m_end) {
+        next();
+        doParse();
+      }
+    }
+
+  private:
+    enum ParseState {
+      BEFORE_NAME,
+      IN_NAME,
+      AFTER_NAME,
+      BEFORE_VALUE,
+      VALUE_DOUBLE_QUOTE,
+      VALUE_SINGLE_QUOTE,
+      VALUE_UNQUOTED
+    };
+    ParseState m_state;
+    std::string::const_iterator m_position;
+    std::string::const_iterator m_end;
+    char m_sep;
+    char m_value;
+    KeyValueMap m_keyValueMap;
+    std::string m_paramName;
+    std::string m_paramValue;
+
+    inline void next()
+    {
+      m_value = *m_position++;
+    }
+    void doParse();
+    void cleanup();
+    void addCurrentParam();
+
+    void beforeName();
+    void inName();
+    void afterName();
+    void beforeValue();
+    void inValue();
+    void handleState();
+
+};
+
 class ParameterSet
 {
   public:
@@ -52,7 +105,7 @@ class ParameterSet
     const KeyValueMap & keyValueMap() const;
 
   private:
-    PSImpl * m_psImpl;
+    PSImpl m_psImpl;
 
     DISALLOW_COPY_AND_ASSIGN(ParameterSet);
 };

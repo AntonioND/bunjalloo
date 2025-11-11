@@ -19,58 +19,6 @@
 
 using namespace std;
 
-class PSImpl
-{
-  friend class ParameterSet;
-  public:
-    PSImpl(const string & kvs, char sep):
-      m_state(BEFORE_NAME),
-      m_position(kvs.begin()),
-      m_end(kvs.end()),
-      m_sep(sep)
-    {
-      if (m_position != m_end) {
-        next();
-        doParse();
-      }
-    }
-
-  private:
-    enum ParseState {
-      BEFORE_NAME,
-      IN_NAME,
-      AFTER_NAME,
-      BEFORE_VALUE,
-      VALUE_DOUBLE_QUOTE,
-      VALUE_SINGLE_QUOTE,
-      VALUE_UNQUOTED
-    };
-    ParseState m_state;
-    string::const_iterator m_position;
-    string::const_iterator m_end;
-    char m_sep;
-    char m_value;
-    KeyValueMap m_keyValueMap;
-    string m_paramName;
-    string m_paramValue;
-
-    inline void next()
-    {
-      m_value = *m_position++;
-    }
-    void doParse();
-    void cleanup();
-    void addCurrentParam();
-
-    void beforeName();
-    void inName();
-    void afterName();
-    void beforeValue();
-    void inValue();
-    void handleState();
-
-};
-
 void PSImpl::beforeName()
 {
   if (m_value != m_sep and not isWhitespace(m_value))
@@ -227,26 +175,25 @@ void PSImpl::cleanup()
 }
 
 ParameterSet::ParameterSet(const std::string & keyValueString, char sep):
-  m_psImpl(new PSImpl(keyValueString, sep))
+  m_psImpl(keyValueString, sep)
 {
 }
 
 ParameterSet::~ParameterSet()
 {
-  delete m_psImpl;
 }
 
 bool ParameterSet::hasParameter(const std::string & key) const
 {
-  KeyValueMap::const_iterator it(m_psImpl->m_keyValueMap.find(key));
-  KeyValueMap::const_iterator end(m_psImpl->m_keyValueMap.end());
+  KeyValueMap::const_iterator it(m_psImpl.m_keyValueMap.find(key));
+  KeyValueMap::const_iterator end(m_psImpl.m_keyValueMap.end());
   return (it != end);
 }
 
 bool ParameterSet::parameter(const std::string & key, std::string & value) const
 {
-  KeyValueMap::const_iterator it(m_psImpl->m_keyValueMap.find(key));
-  KeyValueMap::const_iterator end(m_psImpl->m_keyValueMap.end());
+  KeyValueMap::const_iterator it(m_psImpl.m_keyValueMap.find(key));
+  KeyValueMap::const_iterator end(m_psImpl.m_keyValueMap.end());
   if (it != end)
   {
     value = it->second;
@@ -256,5 +203,5 @@ bool ParameterSet::parameter(const std::string & key, std::string & value) const
 
 const KeyValueMap & ParameterSet::keyValueMap() const
 {
-  return m_psImpl->m_keyValueMap;
+  return m_psImpl.m_keyValueMap;
 }
