@@ -17,23 +17,18 @@
 #include "Palette.h"
 #include "Canvas.h"
 #include "ComboBox.h"
-#include "ScrollPane.h"
 #include "ScrollBar.h"
 #include "Stylus.h"
-#include "Button.h"
 #include "WidgetColors.h"
 
 // An offset for the drop down bar.
 static const int COMBO_DD_BAR_WIDTH(8);
 
-ComboBox::ComboBox():
-  m_items(0),
-  m_selectedIndex(0),
-  m_open(false)
+ComboBox::ComboBox()
 {
-  // implemented as a scroll bar + buttons.
-  add(new ScrollPane);
-  add(new Button);
+  add(&m_scrollPane, false);
+  add(&m_button, false);
+
   scrollPane()->setBackgroundColor(WidgetColors::COMBOBOX_DROP_DOWN);
   scrollPane()->setStretchChildren();
   button()->setDecoration(false);
@@ -52,7 +47,12 @@ void ComboBox::addItem(const std::string & item)
       m_bounds.h = button()->height();
     }
   }
-  Button * b = new Button(item);
+
+  // Try to allocate a new button
+  Button * b = new (std::nothrow) Button(item);
+  if (b == NULL)
+    return;
+
   // add callback to button so that the combobox is updated.
   if (b->preferredSize().w > m_bounds.w)
   {
@@ -62,7 +62,7 @@ void ComboBox::addItem(const std::string & item)
   b->setDecoration(false);
   b->setBackgroundColor(WidgetColors::COMBOBOX_DROP_DOWN);
   m_items++;
-  scrollPane()->add(b);
+  scrollPane()->add(b); // It will be freed by the destructor of Component()
   int idealHeight = (m_bounds.h+2)*m_items;
   if (idealHeight > (192/2))
   {
@@ -173,10 +173,6 @@ void ComboBox::pressed(ButtonI * pressed)
   button->setSelected(false);
   m_open = false;
   this->button()->setBackgroundColor(WidgetColors::COMBOBOX_FOREGROUND);
-}
-
-Button * ComboBox::button() {
-  return (Button*)m_children.back();
 }
 
 const std::string & ComboBox::selectedItem() const

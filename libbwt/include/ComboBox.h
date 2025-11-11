@@ -16,9 +16,11 @@
 */
 #ifndef ComboBox_h_seen
 #define ComboBox_h_seen
-#include "Component.h"
-#include "ButtonListener.h"
 #include <string>
+#include "Component.h"
+#include "Button.h"
+#include "ButtonListener.h"
+#include "ScrollPane.h"
 
 class ScrollPane;
 class Button;
@@ -62,24 +64,28 @@ class ComboBox: public Component,
     virtual bool stylusDown(const Stylus * stylus);
 
   protected:
-    inline ScrollPane * scrollPane();
-    inline const ScrollPane * scrollPane() const;
-    inline Button * button();
+    inline ScrollPane * scrollPane() {
+      return &m_scrollPane;
+    }
+
+    inline const ScrollPane * scrollPane() const {
+      return (const ScrollPane*)&m_scrollPane;
+    }
+
+    inline Button * button() {
+      return &m_button;
+    }
 
   private:
-    int m_items;
-    int m_selectedIndex;
-    bool m_open;
+    int m_items { 0 };
+    int m_selectedIndex { 0 };
+    bool m_open { false };
+
+  // Implemented as a scroll bar + buttons.
+    Button m_button { };
+    ScrollPane m_scrollPane { };
+
     DISALLOW_COPY_AND_ASSIGN(ComboBox);
-
 };
-
-ScrollPane * ComboBox::scrollPane() {
-  return (ScrollPane*)m_children.front();
-}
-
-const ScrollPane * ComboBox::scrollPane() const {
-  return (const ScrollPane*)m_children.front();
-}
 
 #endif
