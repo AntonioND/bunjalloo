@@ -368,9 +368,7 @@ class ZipFileImpl
 
 ZipFile::ZipFile(ExtractListener * listener)
 {
-  m_impl = new ZipFileImpl(listener);
-  if (m_impl == NULL)
-    libndsCrash("ZipFile: OOM");
+  m_impl = new (std::nothrow) ZipFileImpl(listener);
 }
 
 ZipFile::~ZipFile()
@@ -380,11 +378,13 @@ ZipFile::~ZipFile()
 
 void ZipFile::open(const char * filename)
 {
+  if (m_impl == NULL) return;
   m_impl->open(filename);
 }
 
 void ZipFile::list(std::vector<std::string> & ls)
 {
+  if (m_impl == NULL) return;
   m_impl->list(ls);
 }
 
@@ -394,15 +394,18 @@ void ZipFile::close()
 
 bool ZipFile::is_open() const
 {
+  if (m_impl == NULL) return false;
   return m_impl->is_open();
 }
 
 void ZipFile::extract()
 {
+  if (m_impl == NULL) return;
   m_impl->extract();
 }
 
 void ZipFile::setListener(ExtractListener * listener)
 {
+  if (m_impl == NULL) return;
   m_impl->setListener(listener);
 }
