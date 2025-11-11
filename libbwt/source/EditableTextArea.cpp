@@ -29,14 +29,7 @@ using nds::Canvas;
 using nds::Color;
 
 EditableTextArea::EditableTextArea(Font * font) :
-  TextArea(font),
-  m_caretLine(-1),
-  m_caretChar(-1),
-  m_caretPixelX(-1),
-  m_appendedNewLine(false),
-  m_echoText(true),
-  //m_layingOut(false),
-  m_scrollPane(0)
+  TextArea(font)
 {
 }
 

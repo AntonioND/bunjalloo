@@ -74,14 +74,14 @@ class EditableTextArea: public TextArea, public TextEntryI
     virtual void printu(const std::string &unicodeString);
 
   private:
-    int m_caretLine;
+    int m_caretLine { -1 };
     // the character in the current line (not the byte)
-    int m_caretChar;
-    int m_caretPixelX;
-    bool m_appendedNewLine;
-    bool m_echoText;
-//    bool m_layingOut;
-    ScrollPane * m_scrollPane;
+    int m_caretChar { -1 };
+    int m_caretPixelX { -1 };
+    bool m_appendedNewLine { false };
+    bool m_echoText { true };
+//    bool m_layingOut { false };
+    ScrollPane * m_scrollPane { 0 };
 
     void setCaret(int x, int y);
     void recalculateCaret();
