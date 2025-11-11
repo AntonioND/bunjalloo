@@ -22,7 +22,7 @@ class TextListener;
 class TextEntryI
 {
   public:
-    TextEntryI():m_listener(0) {}
+    TextEntryI() {}
 
     virtual ~TextEntryI() {}
 
@@ -64,7 +64,7 @@ class TextEntryI
      */
     inline void removeListener(TextListener * listener)
     {
-      m_listener = 0;
+      m_listener = NULL;
     }
 
     /** See if this widget is allowed to hold multi-line text. Multi-line
@@ -73,6 +73,6 @@ class TextEntryI
      */
     virtual bool isMultiLine() const = 0;
   private:
-    TextListener * m_listener;
+    TextListener * m_listener { NULL };
 };
 #endif
