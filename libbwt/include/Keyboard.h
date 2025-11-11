@@ -132,6 +132,9 @@ class Keyboard : public Component, public TextListener, public ButtonListener
     EditableTextArea * m_textArea;
     RichTextArea * m_richTextArea;
 
+    Button m_numberKeys[ROW_NUM_LENGTH] {};
+    Button m_rowKeys[ROW_1_LENGTH + ROW_2_LENGTH + ROW_3_LENGTH + ROW_4_LENGTH] {};
+
     Button m_shiftKey {};
     Button m_capsLockKey {};
     //Button m_tabKey {};
@@ -165,7 +168,7 @@ class Keyboard : public Component, public TextListener, public ButtonListener
 
     void initUI();
 
-    void createRow(int x, int y, const char * text, int keys);
+    void createRow(int x, int y, const char * text, Button * buttons, int keys);
     void createSpecialKey(int x, int y, int w, int h,
                           const std::string & text, Button * button);
     void updateRow(const char * newText, int keys, int offset);

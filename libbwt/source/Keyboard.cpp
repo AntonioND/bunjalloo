@@ -35,37 +35,45 @@ Keyboard::Keyboard():
   m_richTextArea((RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH))
 {
   initUI();
+
   int x = INITIAL_X;
   int y = INITIAL_Y;
-  const char * text(NUMBERS);
-  createRow(x-KEY_WIDTH/2, y, text, ROW_NUM_LENGTH);
 
-  // QWERTY
-  text = LETTERS;
-  y += KEY_HEIGHT;
-  createRow(x, y, text, ROW_1_LENGTH);
+  createRow(x-KEY_WIDTH/2, y, NUMBERS, &m_numberKeys[0], ROW_NUM_LENGTH);
 
-  // ASDFG
-  x += KEY_WIDTH/2;
-  y += KEY_HEIGHT;
-  text += ROW_1_LENGTH;
-  createRow(x, y, text, ROW_2_LENGTH);
+  {
+    const char * text = LETTERS;
+    Button * buttons = &m_rowKeys[0];
 
-  // ZXCVB
-  x += KEY_WIDTH/2;
-  y += KEY_HEIGHT;
-  text += ROW_2_LENGTH;
-  createRow(x, y, text, ROW_3_LENGTH);
+    // QWERTY
+    y += KEY_HEIGHT;
+    createRow(x, y, text, buttons, ROW_1_LENGTH);
 
+    // ASDFG
+    x += KEY_WIDTH/2;
+    y += KEY_HEIGHT;
+    text += ROW_1_LENGTH;
+    buttons += ROW_1_LENGTH;
+    createRow(x, y, text, buttons, ROW_2_LENGTH);
 
-  // special, end of chars. [] and /"
-  x += KEY_WIDTH/2;
-  y += KEY_HEIGHT;
-  text += ROW_3_LENGTH;
-  createRow(x, y, text, 2);
-  x += (KEY_WIDTH)*(ROW_3_LENGTH-3);
-  text += 2;
-  createRow(x, y, text, 2);
+    // ZXCVB
+    x += KEY_WIDTH/2;
+    y += KEY_HEIGHT;
+    text += ROW_2_LENGTH;
+    buttons += ROW_2_LENGTH;
+    createRow(x, y, text, buttons, ROW_3_LENGTH);
+
+    // special, end of chars. [] and /"
+    x += KEY_WIDTH/2;
+    y += KEY_HEIGHT;
+    text += ROW_3_LENGTH;
+    buttons += ROW_3_LENGTH;
+    createRow(x, y, text, buttons, 2); // ROW_4_LENGTH
+    x += (KEY_WIDTH)*(ROW_3_LENGTH-3);
+    text += 2;
+    buttons += 2;
+    createRow(x, y, text, buttons, 2);
+  }
 
   // shift, capsLock, tab, enter, backspace, delete, altkeys, space
   // backspace - at the end of the Q-P row, 2 keys wide
@@ -172,18 +180,18 @@ void Keyboard::updateRow(const char * newText, int keys, int offset)
   }
 }
 
-void Keyboard::createRow(int x, int y, const char * text, int keys)
+void Keyboard::createRow(int x, int y, const char * text, Button * buttons, int keys)
 {
   for (int i = 0; i < keys; ++i)
   {
-    Button * key = new Button();
+    Button * key = &buttons[i];
     // TODO: fix this for utf-8
     char uchar[] = {text[i], 0};
     key->setSize(KEY_WIDTH, KEY_HEIGHT);
     key->setText(std::string(uchar));
     //key->setLocation(x+i*(KEY_WIDTH+1), y);
     key->setLocation(x+i*(KEY_WIDTH), y);
-    add(key);
+    add(key, false);
     key->setListener(this);
   }
 }
