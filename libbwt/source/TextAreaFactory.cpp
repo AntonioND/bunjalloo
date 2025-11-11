@@ -30,13 +30,13 @@ TextArea * TextAreaFactory::create(TextType type)
   switch (type)
   {
     case TXT_NORMAL:
-      t = new TextArea(s_font);
+      t = new (std::nothrow) TextArea(s_font);
       break;
     case TXT_EDIT:
-      t = new EditableTextArea(s_font);
+      t = new (std::nothrow) EditableTextArea(s_font);
       break;
     case TXT_RICH:
-      t = new RichTextArea(s_font);
+      t = new (std::nothrow) RichTextArea(s_font);
       break;
   }
   return t;

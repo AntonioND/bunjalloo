@@ -33,6 +33,9 @@ Keyboard::Keyboard():
   m_textArea((EditableTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_EDIT)),
   m_richTextArea((RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH))
 {
+  if (m_textArea == NULL or m_richTextArea == NULL)
+    libndsCrash("Keyboard: OOM");
+
   initUI();
 
   int x = INITIAL_X;
@@ -130,7 +133,7 @@ Keyboard::Keyboard():
       &m_extraKey);
 
   add(&m_scrollPane, false);
-  add(m_richTextArea);
+  add(m_richTextArea, false);
   setVisible(false);
   Stylus::instance()->registerListener(this);
 }
@@ -139,9 +142,8 @@ Keyboard::~Keyboard()
 {
   Stylus::instance()->unregisterListener(this);
 
-  // TODO: They are deleted by the destructor of Component
-  //delete m_textArea;
-  //delete m_richTextArea;
+  delete m_textArea;
+  delete m_richTextArea;
 }
 
 void Keyboard::initUI()
@@ -149,7 +151,7 @@ void Keyboard::initUI()
   m_richTextArea->setCentred();
   m_richTextArea->setOutlined();
   m_textArea->setParentScroller(&m_scrollPane);
-  m_scrollPane.add(m_textArea);
+  m_scrollPane.add(m_textArea, false);
   m_scrollPane.setTopLevel(false);
   m_scrollPane.setSize(nds::Canvas::instance().width(),SCROLLPANE_SIZE);
   m_scrollPane.setLocation(0, SCREEN_HEIGHT+SCROLLPANE_POS_Y);
