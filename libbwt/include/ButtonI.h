@@ -17,6 +17,8 @@
 #ifndef ButtonI_h_seen
 #define ButtonI_h_seen
 
+#include <cstddef>
+
 class ButtonListener;
 /** An abstract button class that handles selection and setting callback
  * listeners.*/
@@ -25,7 +27,7 @@ class ButtonI
   public:
 
     /** Set the initial state of the class.*/
-    ButtonI(): m_selected(false),m_listener(0){}
+    ButtonI() {}
 
     /** End of lifetime.*/
     virtual ~ButtonI() {}
@@ -66,12 +68,12 @@ class ButtonI
      */
     inline void removeListener(ButtonListener * listener)
     {
-      m_listener = 0;
+      m_listener = NULL;
     }
 
   private:
-    bool m_selected;
-    ButtonListener * m_listener;
+    bool m_selected { false };
+    ButtonListener * m_listener { NULL };
 
 };
 #endif
