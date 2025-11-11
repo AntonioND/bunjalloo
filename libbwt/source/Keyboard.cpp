@@ -65,24 +65,9 @@ const static int TICK_COUNT = 20;
 const static int SCROLLBAR_DECOR = 7;
 
 Keyboard::Keyboard():
-  m_extra(false),
-  m_shift(false),
-  m_capsLock(false),
-  m_selectedStatus(OK),
   m_scrollPane(new ScrollPane),
   m_textArea((EditableTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_EDIT)),
-  m_richTextArea((RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH)),
-  m_shiftKey(new Button),
-  m_capsLockKey(new Button),
-  // m_tabKey(new Button),
-  m_enterKey(new Button),
-  m_backspaceKey(new Button),
-  //m_deleteKey(new Button),
-  m_spaceKey(new Button),
-  m_extraKey(new Button),
-  m_ok(new Button),
-  m_cancel(new Button),
-  m_clearKey(new Button)
+  m_richTextArea((RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH))
 {
   initUI();
   int x = INITIAL_X;
@@ -122,55 +107,55 @@ Keyboard::Keyboard():
   createSpecialKey(INITIAL_X+(ROW1_LENGTH)*(KEY_WIDTH), INITIAL_Y+KEY_HEIGHT,
       KEY_WIDTH*2, KEY_HEIGHT,
       BACKSPACE_STR,
-      m_backspaceKey);
+      &m_backspaceKey);
 
   // enter - at the end of the A-L row, 2.5 keys wide.
   createSpecialKey(INITIAL_X+(ROW2_LENGTH)*(KEY_WIDTH)+KEY_WIDTH/2, INITIAL_Y+(KEY_HEIGHT*2),
       KEY_WIDTH*5/2, KEY_HEIGHT,
       ENTER_STR,
-      m_enterKey);
+      &m_enterKey);
 
   // m_clearKey - at the end of the space and final row
   createSpecialKey(INITIAL_X+KEY_WIDTH/2+(KEY_WIDTH)*ROW3_LENGTH-1, INITIAL_Y+(KEY_HEIGHT*4),
       (KEY_WIDTH*3/2), KEY_HEIGHT,
       CLEAR_STR,
-      m_clearKey);
+      &m_clearKey);
 
   // spaceKey - in between the final 4 chars on the final row
   createSpecialKey(INITIAL_X+(KEY_WIDTH*3/2)+(KEY_WIDTH)*2-1, INITIAL_Y+(KEY_HEIGHT*4),
       (KEY_WIDTH)*5, KEY_HEIGHT,
       SPACE_STR,
-      m_spaceKey);
+      &m_spaceKey);
 
   // ok key - floating after the keyboard
   createSpecialKey(INITIAL_X+KEY_WIDTH, INITIAL_Y+(KEY_HEIGHT*5)+KEY_HEIGHT/3,
       (KEY_WIDTH)*3, KEY_HEIGHT,
       T("ok"),
-      m_ok);
+      &m_ok);
 
   // cancel key - floating after the keyboard
   createSpecialKey(INITIAL_X+KEY_WIDTH*8, INITIAL_Y+(KEY_HEIGHT*5)+KEY_HEIGHT/3,
       (KEY_WIDTH)*3, KEY_HEIGHT,
       T("cancel"),
-      m_cancel);
+      &m_cancel);
 
   // caps - at the start of the a-l row. 1.5 keys wide
   createSpecialKey(INITIAL_X-KEY_WIDTH, INITIAL_Y+(KEY_HEIGHT*2),
       (KEY_WIDTH*3/2), KEY_HEIGHT,
       CAPS_STR,
-      m_capsLockKey);
+      &m_capsLockKey);
 
   // shift - at the start of the z-m row, 2 keys wide.
   createSpecialKey(INITIAL_X-KEY_WIDTH, INITIAL_Y+(KEY_HEIGHT*3),
       KEY_WIDTH*2-1, KEY_HEIGHT,
       SHIFT_STR,
-      m_shiftKey);
+      &m_shiftKey);
 
   // m_extraKey
   createSpecialKey(INITIAL_X-(KEY_WIDTH/2)-2, INITIAL_Y+(KEY_HEIGHT*4),
       (KEY_WIDTH*2), KEY_HEIGHT,
       EXTRA_STR,
-      m_extraKey);
+      &m_extraKey);
 
   // By adding the m_scrollPane to the Component::m_children it gets deleted
   // in the destructor.
@@ -204,7 +189,7 @@ void Keyboard::createSpecialKey(int x, int y, int w, int h, const std::string & 
   button->setSize(w, h);
   button->setLocation(x, y);
   button->setText(text);
-  add(button);
+  add(button, false);
   button->setListener(this);
 }
 
@@ -301,20 +286,20 @@ void Keyboard::editText(TextEntryI * entry)
 
 Keyboard::SpecialKey Keyboard::buttonToSpecialKey(const ButtonI * button)
 {
-  if (button == m_shiftKey) return SPKY_SHIFT;
-  if (button == m_capsLockKey) return SPKY_CAPS;
-  if (button == m_enterKey) {
+  if (button == &m_shiftKey) return SPKY_SHIFT;
+  if (button == &m_capsLockKey) return SPKY_CAPS;
+  if (button == &m_enterKey) {
     if (multiLine()) {
       return SPKY_ENTER;
     }
     return SPKY_OK;
   }
-  if (button == m_backspaceKey) return SPKY_BACKSPACE;
-  if (button == m_spaceKey) return SPKY_SPACE;
-  if (button == m_extraKey) return SPKY_EXTRA;
-  if (button == m_ok) return SPKY_OK;
-  if (button == m_cancel) return SPKY_CANCEL;
-  if (button == m_clearKey) return SPKY_CLEAR;
+  if (button == &m_backspaceKey) return SPKY_BACKSPACE;
+  if (button == &m_spaceKey) return SPKY_SPACE;
+  if (button == &m_extraKey) return SPKY_EXTRA;
+  if (button == &m_ok) return SPKY_OK;
+  if (button == &m_cancel) return SPKY_CANCEL;
+  if (button == &m_clearKey) return SPKY_CLEAR;
   return SPKY_UNKNOWN;
 }
 
@@ -385,9 +370,9 @@ void Keyboard::layoutViewer()
 
 void Keyboard::updateModifierKeys()
 {
-  m_extraKey->setSelected(m_extra);
-  m_shiftKey->setSelected(m_shift);
-  m_capsLockKey->setSelected(m_capsLock);
+  m_extraKey.setSelected(m_extra);
+  m_shiftKey.setSelected(m_shift);
+  m_capsLockKey.setSelected(m_capsLock);
 
   bool caps = (m_shift and not m_capsLock) or (m_capsLock and not m_shift);
   const char * text;

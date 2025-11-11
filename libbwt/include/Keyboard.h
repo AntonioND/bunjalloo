@@ -82,23 +82,26 @@ class Keyboard : public Component, public TextListener, public ButtonListener
     void forceRedraw();
 
   private:
-    bool m_extra;
-    bool m_shift;
-    bool m_capsLock;
-    KeyboardSelection m_selectedStatus;
+    bool m_extra { false };
+    bool m_shift { false };
+    bool m_capsLock { false };
+    KeyboardSelection m_selectedStatus { OK };
 
     ScrollPane * m_scrollPane;
     EditableTextArea * m_textArea;
     RichTextArea * m_richTextArea;
-    Button * m_shiftKey;
-    Button * m_capsLockKey;
-    Button * m_enterKey;
-    Button * m_backspaceKey;
-    Button * m_spaceKey;
-    Button * m_extraKey;
-    Button * m_ok;
-    Button * m_cancel;
-    Button * m_clearKey;
+
+    Button m_shiftKey {};
+    Button m_capsLockKey {};
+    //Button m_tabKey {};
+    Button m_enterKey {};
+    Button m_backspaceKey {};
+    //Button m_deleteKey {};
+    Button m_spaceKey {};
+    Button m_extraKey {};
+    Button m_ok {};
+    Button m_cancel {};
+    Button m_clearKey {};
 
     enum SpecialKey
     {
