@@ -16,6 +16,7 @@
 */
 #include <functional>
 #include <algorithm>
+#include "libnds.h"
 #include "Stylus.h"
 #include "StylusListener.h"
 
@@ -180,7 +181,10 @@ Stylus * Stylus::instance()
 {
   if (s_stylus == 0)
   {
-    registerStylus(new Stylus);
+    Stylus * newStylus = new (std::nothrow) Stylus;
+    if (newStylus == NULL)
+      libndsCrash("Stylus: OOM");
+    registerStylus(newStylus);
   }
   return s_stylus;
 }
