@@ -15,24 +15,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Link.h"
-#include "WidgetColors.h"
 
 Link::Link(const std::string & a) :
-  m_textStart(0),
-  m_textEnd(0),
-  m_color(WidgetColors::LINK_REGULAR),
-  m_clicked(false),
-  m_anchor(a),
-  m_src("")
+  m_anchor(a)
 { }
 
 Link::Link(unsigned short color) :
-  m_textStart(0),
-  m_textEnd(0),
-  m_color(color),
-  m_clicked(false),
-  m_anchor(""),
-  m_src("")
+  m_color(color)
 { }
 
 

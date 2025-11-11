@@ -20,6 +20,7 @@
 #include <list>
 #include "Rectangle.h"
 #include "util/classhelper.h"
+#include "WidgetColors.h"
 
 /** Encapsulates links and colored text on a text page.*/
 class Link
@@ -82,12 +83,12 @@ class Link
     std::string src() const;
     void setSrc(const std::string & src);
   private:
-    unsigned int m_textStart;
-    unsigned int m_textEnd;
-    unsigned short m_color;
-    bool m_clicked;
-    std::string m_anchor;
-    std::string m_src;
+    unsigned int m_textStart { 0 };
+    unsigned int m_textEnd { 0 };
+    unsigned short m_color { WidgetColors::LINK_REGULAR };
+    bool m_clicked { false };
+    std::string m_anchor { "" };
+    std::string m_src { "" };
     DISALLOW_COPY_AND_ASSIGN(Link);
 };
 
