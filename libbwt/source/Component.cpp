@@ -37,17 +37,24 @@ Component::~Component()
 
 void Component::removeChildren()
 {
-  for_each(m_children.begin(), m_children.end(), delete_ptr());
+  for (size_t i=0; i < m_children.size(); i++)
+  {
+    if (m_childrenIsDynamic[i])
+      delete m_children[i];
+  }
+
   m_children.clear();
+  m_childrenIsDynamic.clear();
 }
 
-void Component::add(Component * child)
+void Component::add(Component * child, bool isDynamic)
 {
   // check if not already added
   std::vector<Component*>::const_iterator it = std::find(m_children.begin(), m_children.end(), child);
   if (it == m_children.end())
   {
     m_children.push_back(child);
+    m_childrenIsDynamic.push_back(isDynamic);
   }
 }
 

@@ -43,8 +43,9 @@ class Component: public StylusListener
 
     /** Add a child Component.
      * @param child the child Component to add.
+     * @param isDynamic Set to true to delete the child with the Component.
      */
-    void add(Component * child);
+    void add(Component * child, bool isDynamic=true);
 
     /** Remove and delete all child Components. */
     void removeChildren();
@@ -131,6 +132,7 @@ class Component: public StylusListener
 
     /** The child Components. */
     std::vector<Component *> m_children;
+    std::vector<bool> m_childrenIsDynamic;
 
     bool m_dirty;
 
