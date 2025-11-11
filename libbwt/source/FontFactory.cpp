@@ -1,11 +1,15 @@
 #include "FontFactory.h"
 #include "Font.h"
 #include "File.h"
+#include "libnds.h"
 
 Font *FontFactory::create(const char *fileName)
 {
   nds::File fontFile;
-  Font *font(new Font());
+  Font *font = new (std::nothrow) Font();
+  if (font == NULL)
+    libndsCrash("FontFactory: OOM");
+
   std::string setName(fileName);
   setName += ".set";
   fontFile.open(setName.c_str());
@@ -15,7 +19,10 @@ Font *FontFactory::create(const char *fileName)
   // read the lot
   unsigned char * glyphData(0);
   int size = fontFile.size();
-  glyphData = new unsigned char[size+1];
+  glyphData = new (std::nothrow) unsigned char[size+1];
+  if (glyphData == NULL)
+    return font;
+
   fontFile.read((char*)glyphData);
   glyphData[size] = 0;
   fontFile.close();
@@ -32,7 +39,12 @@ Font *FontFactory::create(const char *fileName)
 
   unsigned char * data(0);
   size = mapFile.size();
-  data = new unsigned char[size+2];
+  data = new (std::nothrow) unsigned char[size+2];
+  if (data == NULL) {
+    delete[] glyphData;
+    return font;
+  }
+
   mapFile.read((char*)data);
   data[size] = 0;
   mapFile.close();
@@ -48,7 +60,9 @@ Font *FontFactory::create(
     const unsigned char *imageData,
     const unsigned char *mapData)
 {
-  Font *font(new Font());
+  Font *font = new (std::nothrow) Font();
+  if (font == NULL)
+    libndsCrash("FontFactory: OOM");
   font->init(imageData, mapData);
   return font;
 }
