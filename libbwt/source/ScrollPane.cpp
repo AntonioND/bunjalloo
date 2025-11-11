@@ -16,12 +16,9 @@
 */
 #include <cstdlib>
 #include "Canvas.h"
-#include "Palette.h"
 #include "ScrollPane.h"
-#include "ScrollBar.h"
 #include "Stylus.h"
 #include "scroll_img.h"
-#include "Sprite.h"
 
 Component * ScrollPane::s_popup(0);
 // TODO: make configurable.
@@ -35,30 +32,21 @@ using nds::Rectangle;
 
 ScrollPane::ScrollPane()
 :
-  m_scrollIncrement(1),
-  m_distanceScrolled(0),
-  m_topLevel(false),
-  m_canScrollUp(false),
-  m_canScrollDown(false),
-  m_scrollBar(new ScrollBar),
-  m_backgroundColour(nds::Color(31,31,31)),
-  m_stretchChildren(false),
-  m_touchedMe(false),
   // We need to use a 16 color sprite for the scroller because the toolbar.png
   // file is a 256 color image that may use several palettes (but it won't use
   // all 256 colors, so the last palette is safe).
-  m_scrollAnywhereSprite(new nds::Sprite(0,      // Screen
-                                         16, 16, // Size
-                                         20 * 8, // Tile
-                                         16)),   // Colors
-  m_scrollAnywherePalette(new nds::ObjectPalette(0, // Screen
-                                                 SCROLLER_PALETTE))
+  m_scrollAnywhereSprite(nds::Sprite(0,      // Screen
+                                     16, 16, // Size
+                                     20 * 8, // Tile
+                                     16)),   // Colors
+  m_scrollAnywherePalette(nds::ObjectPalette(0, // Screen
+                                             SCROLLER_PALETTE))
 {
-  m_scrollBar->setScrollable(this);
+  m_scrollBar.setScrollable(this);
   m_preferredWidth = nds::Canvas::instance().width();
-  m_scrollAnywhereSprite->loadTileData(scroll_imgTiles, scroll_imgTilesLen);
-  m_scrollAnywhereSprite->setPalette(SCROLLER_PALETTE);
-  m_scrollAnywherePalette->load(scroll_imgPal, scroll_imgPalLen);
+  m_scrollAnywhereSprite.loadTileData(scroll_imgTiles, scroll_imgTilesLen);
+  m_scrollAnywhereSprite.setPalette(SCROLLER_PALETTE);
+  m_scrollAnywherePalette.load(scroll_imgPal, scroll_imgPalLen);
 }
 
 void ScrollPane::setStretchChildren(bool s)
@@ -68,7 +56,6 @@ void ScrollPane::setStretchChildren(bool s)
 
 ScrollPane::~ScrollPane()
 {
-  delete m_scrollBar;
   Stylus::instance()->unregisterListener(this);
 }
 
@@ -77,8 +64,8 @@ void ScrollPane::setLocation(int x, int y)
   int dx = x-m_bounds.x;
   int dy = y-m_bounds.y;
   Component::setLocation(x,y);
-  Rectangle scrollBarBounds(m_scrollBar->bounds());
-  m_scrollBar->setLocation(scrollBarBounds.x + dx, scrollBarBounds.y + dy);
+  Rectangle scrollBarBounds(m_scrollBar.bounds());
+  m_scrollBar.setLocation(scrollBarBounds.x + dx, scrollBarBounds.y + dy);
   if (m_children.empty()) {
     return;
   }
@@ -94,7 +81,7 @@ void ScrollPane::setLocation(int x, int y)
 void ScrollPane::layoutChildren()
 {
   int childWidth = m_bounds.w - 1;
-  if (m_scrollBar->visible())
+  if (m_scrollBar.visible())
   {
     childWidth -= SCROLLER_WIDTH;
   }
@@ -149,22 +136,22 @@ void ScrollPane::layoutChildren()
 void ScrollPane::calculateScrollBar()
 {
   if (m_children.empty()) {
-    m_scrollBar->setVisible(false);
+    m_scrollBar.setVisible(false);
     return;
   }
-  m_scrollBar->setVisible(true);
+  m_scrollBar.setVisible(true);
   int topY = m_children.front()->bounds().top();
   int botY = m_children.back()->bounds().bottom();
   // Set the total coverage of the scrollBar
-  m_scrollBar->setTotal(botY-topY);
-  m_scrollBar->setSize(SCROLLER_WIDTH, m_topLevel? TOP_LEVEL_SIZE: m_bounds.h);
-  m_scrollBar->setLocation(m_bounds.right() - SCROLLER_WIDTH, m_topLevel? TOP_LEVEL_SIZE: m_bounds.top());
-  m_scrollBar->setValue((m_topLevel?TOP_LEVEL_SIZE:m_bounds.top())-topY);
+  m_scrollBar.setTotal(botY-topY);
+  m_scrollBar.setSize(SCROLLER_WIDTH, m_topLevel? TOP_LEVEL_SIZE: m_bounds.h);
+  m_scrollBar.setLocation(m_bounds.right() - SCROLLER_WIDTH, m_topLevel? TOP_LEVEL_SIZE: m_bounds.top());
+  m_scrollBar.setValue((m_topLevel?TOP_LEVEL_SIZE:m_bounds.top())-topY);
 
   // Recalculate the scrolling.
   m_canScrollUp = false;
   m_canScrollDown = false;
-  int topLimit = m_scrollBar->y();
+  int topLimit = m_scrollBar.y();
   int botLimit = m_bounds.bottom();
   nds::Rectangle bound(m_children.front()->bounds());
   if (bound.y < topLimit)
@@ -183,8 +170,8 @@ int ScrollPane::currentPosition() const
 {
   if (m_children.empty())
     return 0;
-  int total = m_scrollBar->total() - m_scrollBar->visibleRange();
-  int value = m_scrollBar->value();
+  int total = m_scrollBar.total() - m_scrollBar.visibleRange();
+  int value = m_scrollBar.value();
   if (total > 0)
   {
     int pc = (256 * value) / total;
@@ -303,7 +290,7 @@ bool ScrollPane::isScrollBarShowing() const
     return false;
   }
 
-  if (m_scrollBar->height() < m_scrollBar->total()) {
+  if (m_scrollBar.height() < m_scrollBar.total()) {
     return true;
   }
   return false;
@@ -312,7 +299,7 @@ bool ScrollPane::isScrollBarShowing() const
 void ScrollPane::showScrollBar(const nds::Rectangle & clip)
 {
   if (isScrollBarShowing()) {
-    m_scrollBar->paint(clip);
+    m_scrollBar.paint(clip);
   }
 }
 
@@ -367,7 +354,7 @@ void ScrollPane::paint(const nds::Rectangle & clip)
   }
   m_distanceScrolled = 0;
 
-  realClip.w -= m_scrollBar->width();
+  realClip.w -= m_scrollBar.width();
 
   // paint the child components
   std::vector<Component*>::iterator it(m_children.begin());
@@ -419,7 +406,7 @@ bool ScrollPane::topLevel() const
 
 bool ScrollPane::scrollBarHit(int x, int y)
 {
-  return m_scrollBar->bounds().hit(x, y);
+  return m_scrollBar.bounds().hit(x, y);
 }
 
 bool ScrollPane::stylusUp(const Stylus * stylus)
@@ -428,7 +415,7 @@ bool ScrollPane::stylusUp(const Stylus * stylus)
   if (not visible())
     return false;
   m_dirty = true;
-  if (m_scrollBar->stylusUp(stylus))
+  if (m_scrollBar.stylusUp(stylus))
   {
     return true;
   }
@@ -450,7 +437,7 @@ bool ScrollPane::stylusDownFirst(const Stylus * stylus)
     return false;
   }
 
-  if (m_scrollBar->stylusDownFirst(stylus))
+  if (m_scrollBar.stylusDownFirst(stylus))
   {
     return true;
   }
@@ -480,7 +467,7 @@ bool ScrollPane::stylusDownRepeat(const Stylus * stylus)
   {
     return false;
   }
-  if (m_scrollBar->stylusDownRepeat(stylus))
+  if (m_scrollBar.stylusDownRepeat(stylus))
   {
     return true;
   }
@@ -502,7 +489,7 @@ bool ScrollPane::stylusDown(const Stylus * stylus)
     return false;
   }
 
-  if (m_scrollBar->stylusDown(stylus))
+  if (m_scrollBar.stylusDown(stylus))
   {
     return true;
   }
@@ -548,8 +535,8 @@ void ScrollPane::scrollToPercent(int i)
     return;
   if (i < 0)
     i = 0;
-  int topLimit = m_scrollBar->y();
-  int total = m_scrollBar->total() - m_scrollBar->visibleRange();
+  int topLimit = m_scrollBar.y();
+  int total = m_scrollBar.total() - m_scrollBar.visibleRange();
   int y = 0;
   if (total > 0)
   {
@@ -561,7 +548,7 @@ void ScrollPane::scrollToPercent(int i)
   int currentTop = m_children.front()->bounds().top();
   int dy = currentTop - topLimit + y;
 
-  m_scrollBar->setValue(y);
+  m_scrollBar.setValue(y);
   adjustScroll(dy);
   // move all up one unit...
   std::vector<Component*>::iterator it(m_children.begin());
@@ -616,7 +603,7 @@ void ScrollPane::adjustScrollUp(int & scrollIncrement)
     return;
   }
   int top = m_children.front()->bounds().top();
-  int scrollY = m_scrollBar->y();
+  int scrollY = m_scrollBar.y();
   if ((top + scrollIncrement) > scrollY)
   {
     scrollIncrement = scrollY - top;
@@ -656,7 +643,7 @@ int ScrollPane::visibleHeight() const
 {
   if (m_children.empty())
     return 0;
-  return m_scrollBar->total() - m_scrollBar->visibleRange();
+  return m_scrollBar.total() - m_scrollBar.visibleRange();
 }
 
 /** Keeps a value and restores it when instance goes out of scope. */
@@ -678,7 +665,7 @@ class ValueKeeper {
 
 bool ScrollPane::anywhereScroll(const Stylus *stylus)
 {
-  if (not m_scrollAnywhereSprite->enabled())
+  if (not m_scrollAnywhereSprite.enabled())
     return false;
   const int &lastY(stylus->lastY());
   const int &startY(stylus->startY());
@@ -703,14 +690,14 @@ void ScrollPane::showScrollAnywhere(const Stylus *stylus)
   if (not m_bounds.hit(stylus->startX(), stylus->startY()))
     return;
 
-  m_scrollAnywhereSprite->setEnabled(true);
-  m_scrollAnywhereSprite->setX(stylus->startX()-m_scrollAnywhereSprite->width()/2);
-  m_scrollAnywhereSprite->setY(stylus->startY()-192-m_scrollAnywhereSprite->height()/2);
-  m_scrollAnywhereSprite->update();
+  m_scrollAnywhereSprite.setEnabled(true);
+  m_scrollAnywhereSprite.setX(stylus->startX()-m_scrollAnywhereSprite.width()/2);
+  m_scrollAnywhereSprite.setY(stylus->startY()-192-m_scrollAnywhereSprite.height()/2);
+  m_scrollAnywhereSprite.update();
 }
 
 void ScrollPane::hideScrollAnywhere()
 {
-  m_scrollAnywhereSprite->setEnabled(false);
-  m_scrollAnywhereSprite->update();
+  m_scrollAnywhereSprite.setEnabled(false);
+  m_scrollAnywhereSprite.update();
 }

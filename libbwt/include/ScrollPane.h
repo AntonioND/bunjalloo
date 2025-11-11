@@ -19,7 +19,9 @@
 
 #include "Component.h"
 #include "StylusListener.h"
+#include "ScrollBar.h"
 #include "Palette.h"
+#include "Sprite.h"
 
 class ScrollBar;
 namespace nds { class Sprite; }
@@ -125,17 +127,18 @@ class ScrollPane: public Component
 
   private:
     static Component * s_popup;
-    int m_scrollIncrement;
-    int m_distanceScrolled;
-    bool m_topLevel;
-    bool m_canScrollUp;
-    bool m_canScrollDown;
-    ScrollBar * m_scrollBar;
-    unsigned short m_backgroundColour;
-    bool m_stretchChildren;
-    bool m_touchedMe;
-    nds::Sprite *m_scrollAnywhereSprite;
-    nds::ObjectPalette *m_scrollAnywherePalette;
+    int m_scrollIncrement { 1 };
+    int m_distanceScrolled { 0 };
+    bool m_topLevel { false };
+    bool m_canScrollUp { false };
+    bool m_canScrollDown { false};
+    ScrollBar m_scrollBar { };
+    unsigned short m_backgroundColour { nds::Color(31,31,31) };
+    bool m_stretchChildren { false };
+    bool m_touchedMe { false };
+
+    nds::Sprite m_scrollAnywhereSprite;
+    nds::ObjectPalette m_scrollAnywherePalette;
 
     void layoutChildren();
     void calculateScrollBar();
