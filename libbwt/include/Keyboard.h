@@ -19,6 +19,7 @@
 
 #include "Component.h"
 #include "ButtonListener.h"
+#include "ScrollPane.h"
 #include "TextListener.h"
 
 class Button;
@@ -128,9 +129,9 @@ class Keyboard : public Component, public TextListener, public ButtonListener
     bool m_capsLock { false };
     KeyboardSelection m_selectedStatus { OK };
 
-    ScrollPane * m_scrollPane;
-    EditableTextArea * m_textArea;
-    RichTextArea * m_richTextArea;
+    ScrollPane m_scrollPane { };
+    EditableTextArea * m_textArea { NULL };
+    RichTextArea * m_richTextArea { NULL };
 
     Button m_numberKeys[ROW_NUM_LENGTH] {};
     Button m_rowKeys[ROW_1_LENGTH + ROW_2_LENGTH + ROW_3_LENGTH + ROW_4_LENGTH] {};
@@ -162,7 +163,7 @@ class Keyboard : public Component, public TextListener, public ButtonListener
     };
     SpecialKey buttonToSpecialKey(const ButtonI * button);
 
-    std::string m_initialText;
+    std::string m_initialText { "" };
     ScrollPane * m_topLevel;
     TextEntryI * m_entry;
 

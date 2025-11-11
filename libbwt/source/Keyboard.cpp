@@ -30,7 +30,6 @@
 #include "TextEntryI.h"
 
 Keyboard::Keyboard():
-  m_scrollPane(new ScrollPane),
   m_textArea((EditableTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_EDIT)),
   m_richTextArea((RichTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_RICH))
 {
@@ -130,9 +129,7 @@ Keyboard::Keyboard():
       EXTRA_STR,
       &m_extraKey);
 
-  // By adding the m_scrollPane to the Component::m_children it gets deleted
-  // in the destructor.
-  add(m_scrollPane);
+  add(&m_scrollPane, false);
   add(m_richTextArea);
   setVisible(false);
   Stylus::instance()->registerListener(this);
@@ -141,20 +138,24 @@ Keyboard::Keyboard():
 Keyboard::~Keyboard()
 {
   Stylus::instance()->unregisterListener(this);
+
+  // TODO: They are deleted by the destructor of Component
+  //delete m_textArea;
+  //delete m_richTextArea;
 }
 
 void Keyboard::initUI()
 {
   m_richTextArea->setCentred();
   m_richTextArea->setOutlined();
-  m_textArea->setParentScroller(m_scrollPane);
-  m_scrollPane->add(m_textArea);
-  m_scrollPane->setTopLevel(false);
-  m_scrollPane->setSize(nds::Canvas::instance().width(),SCROLLPANE_SIZE);
-  m_scrollPane->setLocation(0, SCREEN_HEIGHT+SCROLLPANE_POS_Y);
-  m_scrollPane->setScrollIncrement(m_textArea->font().height());
-  m_scrollPane->setStretchChildren(true);
-  m_scrollPane->setVisible(true);
+  m_textArea->setParentScroller(&m_scrollPane);
+  m_scrollPane.add(m_textArea);
+  m_scrollPane.setTopLevel(false);
+  m_scrollPane.setSize(nds::Canvas::instance().width(),SCROLLPANE_SIZE);
+  m_scrollPane.setLocation(0, SCREEN_HEIGHT+SCROLLPANE_POS_Y);
+  m_scrollPane.setScrollIncrement(m_textArea->font().height());
+  m_scrollPane.setStretchChildren(true);
+  m_scrollPane.setVisible(true);
 }
 
 void Keyboard::createSpecialKey(int x, int y, int w, int h, const std::string & text, Button * button)
@@ -233,7 +234,7 @@ void Keyboard::paint(const nds::Rectangle & clip)
     // FIXME: this is a hack to get the edit area to repaint
     // really we should only redraw what is necessary each time
     // eg. clear once at the start only.
-    m_scrollPane->forceRedraw();
+    m_scrollPane.forceRedraw();
     std::vector<Component*>::iterator it(m_children.begin());
     for (; it != m_children.end(); ++it)
     {
@@ -337,7 +338,7 @@ void Keyboard::layoutViewer()
   if (not m_textArea->caretVisible())
   {
     int scrollTo(m_textArea->caretLine() * m_textArea->font().height() * 256 / m_textArea->preferredSize().h);
-    m_scrollPane->scrollToPercent(scrollTo);
+    m_scrollPane.scrollToPercent(scrollTo);
   }
 }
 
@@ -509,5 +510,5 @@ void Keyboard::setTitle(const std::string & title)
 void Keyboard::forceRedraw()
 {
   m_dirty = true;
-  m_scrollPane->forceRedraw();
+  m_scrollPane.forceRedraw();
 }
