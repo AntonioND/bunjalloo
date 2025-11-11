@@ -82,6 +82,47 @@ class Keyboard : public Component, public TextListener, public ButtonListener
     void forceRedraw();
 
   private:
+
+    static constexpr int TICK_COUNT = 20;
+    static constexpr int SCROLLBAR_DECOR = 7;
+
+    static constexpr int KEY_HEIGHT = 18;
+    static constexpr int KEY_WIDTH = 19;
+    static constexpr int GAP = 10;
+    static constexpr int SCROLLPANE_POS_Y = 4;
+    static constexpr int SCROLLPANE_SIZE = SCREEN_HEIGHT*2/5 - GAP;
+    static constexpr int INITIAL_Y = SCROLLPANE_SIZE + GAP + SCREEN_HEIGHT;
+    static constexpr int INITIAL_X = 22;
+
+    const std::string BACKSPACE_STR { "BkSp." };
+    const std::string CAPS_STR { "Cap" };
+    const std::string ENTER_STR { " Enter" };
+    const std::string SHIFT_STR { "Shift" };
+    const std::string SPACE_STR { " " };
+    const std::string EXTRA_STR { " Alt" };
+    const std::string CLEAR_STR { " Clr" };
+
+    // TODO: use config for this?
+    // Based on http://en.wikipedia.org/wiki/Image:KB_US-International.svg
+
+    const char * NUMBERS       = "1234567890-=";
+    const char * NUMBERS_SHIFT = "!@#$%^&*()_+";
+
+    static constexpr int ROW_NUM_LENGTH = 12;
+
+    const char * LETTERS       = "qwertyuiopasdfghjklzxcvbnm,./[]:\"";
+    const char * LETTERS_SHIFT = "QWERTYUIOPASDFGHJKLZXCVBNM<>?{};'";
+    // QWERTYUIOPASDFGHJKLZXCVBNM{};'<>?
+
+    const char * EXTRA = "~\\àáãäåèéêëìíîïñðòóôõöùúûü¿£¥ýþç¡";
+    const char * EXTRA_SHIFT = "ÀÀÁÂÃÄÅÈÉÊÝÞËÌÍÎÏÑÐÇßÒÓÔÕÖÙÚÛÜ¢|ÿ";
+
+    static constexpr int ROW_1_LENGTH = 10;
+    static constexpr int ROW_2_LENGTH = 9;
+    static constexpr int ROW_3_LENGTH = 10;
+    static constexpr int ROW_4_LENGTH = 4;
+
+    // Keyboard state
     bool m_extra { false };
     bool m_shift { false };
     bool m_capsLock { false };

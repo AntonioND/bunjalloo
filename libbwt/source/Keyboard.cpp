@@ -29,41 +29,6 @@
 #include "TextAreaFactory.h"
 #include "TextEntryI.h"
 
-// TODO: use config for this?
-// Based on http://en.wikipedia.org/wiki/Image:KB_US-International.svg
-static const char * NUMBERS          = "1234567890-=";
-static const char * NUMBERS_SHIFT    = "!@#$%^&*()_+";
-static const char * LETTERS          = "qwertyuiopasdfghjklzxcvbnm,./[]:\"";
-static const char * LETTERS_SHIFT    = "QWERTYUIOPASDFGHJKLZXCVBNM<>?{};'";
-
-// QWERTYUIOPASDFGHJKLZXCVBNM{};'<>?
-static const char * EXTRA = "~\\àáãäåèéêëìíîïñðòóôõöùúûü¿£¥ýþç¡";
-static const char * EXTRA_SHIFT = "ÀÀÁÂÃÄÅÈÉÊÝÞËÌÍÎÏÑÐÇßÒÓÔÕÖÙÚÛÜ¢|ÿ";
-
-static const std::string BACKSPACE_STR("BkSp.");
-static const std::string CAPS_STR("Cap");
-static const std::string ENTER_STR(" Enter");
-static const std::string SHIFT_STR("Shift");
-static const std::string SPACE_STR(" ");
-static const std::string EXTRA_STR(" Alt");
-static const std::string CLEAR_STR(" Clr");
-
-const static int KEY_HEIGHT = 18;
-const static int KEY_WIDTH = 19;
-const static int GAP = 10;
-const static int SCROLLPANE_POS_Y = 4;
-const static int SCROLLPANE_SIZE = SCREEN_HEIGHT*2/5 - GAP;
-const static int INITIAL_Y = SCROLLPANE_SIZE + GAP + SCREEN_HEIGHT;
-const static int INITIAL_X = 22;
-
-const static int ROW1_LENGTH = 10;
-const static int ROW2_LENGTH = 9;
-const static int ROW3_LENGTH = 10;
-const static int ROW4_LENGTH = 4;
-
-const static int TICK_COUNT = 20;
-const static int SCROLLBAR_DECOR = 7;
-
 Keyboard::Keyboard():
   m_scrollPane(new ScrollPane),
   m_textArea((EditableTextArea*)TextAreaFactory::create(TextAreaFactory::TXT_EDIT)),
@@ -73,50 +38,50 @@ Keyboard::Keyboard():
   int x = INITIAL_X;
   int y = INITIAL_Y;
   const char * text(NUMBERS);
-  createRow(x-KEY_WIDTH/2, y, text, strlen(NUMBERS));
+  createRow(x-KEY_WIDTH/2, y, text, ROW_NUM_LENGTH);
 
   // QWERTY
   text = LETTERS;
   y += KEY_HEIGHT;
-  createRow(x, y, text, ROW1_LENGTH);
+  createRow(x, y, text, ROW_1_LENGTH);
 
   // ASDFG
   x += KEY_WIDTH/2;
   y += KEY_HEIGHT;
-  text += ROW1_LENGTH;
-  createRow(x, y, text, ROW2_LENGTH);
+  text += ROW_1_LENGTH;
+  createRow(x, y, text, ROW_2_LENGTH);
 
   // ZXCVB
   x += KEY_WIDTH/2;
   y += KEY_HEIGHT;
-  text += ROW2_LENGTH;
-  createRow(x, y, text, ROW3_LENGTH);
+  text += ROW_2_LENGTH;
+  createRow(x, y, text, ROW_3_LENGTH);
 
 
   // special, end of chars. [] and /"
   x += KEY_WIDTH/2;
   y += KEY_HEIGHT;
-  text += ROW3_LENGTH;
+  text += ROW_3_LENGTH;
   createRow(x, y, text, 2);
-  x += (KEY_WIDTH)*(ROW3_LENGTH-3);
+  x += (KEY_WIDTH)*(ROW_3_LENGTH-3);
   text += 2;
   createRow(x, y, text, 2);
 
   // shift, capsLock, tab, enter, backspace, delete, altkeys, space
   // backspace - at the end of the Q-P row, 2 keys wide
-  createSpecialKey(INITIAL_X+(ROW1_LENGTH)*(KEY_WIDTH), INITIAL_Y+KEY_HEIGHT,
+  createSpecialKey(INITIAL_X+(ROW_1_LENGTH)*(KEY_WIDTH), INITIAL_Y+KEY_HEIGHT,
       KEY_WIDTH*2, KEY_HEIGHT,
       BACKSPACE_STR,
       &m_backspaceKey);
 
   // enter - at the end of the A-L row, 2.5 keys wide.
-  createSpecialKey(INITIAL_X+(ROW2_LENGTH)*(KEY_WIDTH)+KEY_WIDTH/2, INITIAL_Y+(KEY_HEIGHT*2),
+  createSpecialKey(INITIAL_X+(ROW_2_LENGTH)*(KEY_WIDTH)+KEY_WIDTH/2, INITIAL_Y+(KEY_HEIGHT*2),
       KEY_WIDTH*5/2, KEY_HEIGHT,
       ENTER_STR,
       &m_enterKey);
 
   // m_clearKey - at the end of the space and final row
-  createSpecialKey(INITIAL_X+KEY_WIDTH/2+(KEY_WIDTH)*ROW3_LENGTH-1, INITIAL_Y+(KEY_HEIGHT*4),
+  createSpecialKey(INITIAL_X+KEY_WIDTH/2+(KEY_WIDTH)*ROW_3_LENGTH-1, INITIAL_Y+(KEY_HEIGHT*4),
       (KEY_WIDTH*3/2), KEY_HEIGHT,
       CLEAR_STR,
       &m_clearKey);
@@ -130,13 +95,13 @@ Keyboard::Keyboard():
   // ok key - floating after the keyboard
   createSpecialKey(INITIAL_X+KEY_WIDTH, INITIAL_Y+(KEY_HEIGHT*5)+KEY_HEIGHT/3,
       (KEY_WIDTH)*3, KEY_HEIGHT,
-      T("ok"),
+      T("ok"), // Get translation
       &m_ok);
 
   // cancel key - floating after the keyboard
   createSpecialKey(INITIAL_X+KEY_WIDTH*8, INITIAL_Y+(KEY_HEIGHT*5)+KEY_HEIGHT/3,
       (KEY_WIDTH)*3, KEY_HEIGHT,
-      T("cancel"),
+      T("cancel"), // Get translation
       &m_cancel);
 
   // caps - at the start of the a-l row. 1.5 keys wide
@@ -411,15 +376,15 @@ void Keyboard::updateModifierKeys()
 
 void Keyboard::updateLayout(const char * text, const char * numbers)
 {
-  int start = strlen(NUMBERS);
+  int start = ROW_NUM_LENGTH;
   updateRow(numbers, start, 0);
-  int size = ROW1_LENGTH + ROW2_LENGTH + ROW3_LENGTH;
+  int size = ROW_1_LENGTH + ROW_2_LENGTH + ROW_3_LENGTH;
   updateRow(text, size, start);
   // now the odd keys
   // special, end of chars. [] and /"
   utf8::unchecked::advance(text, size);
   start += size;
-  updateRow(text, ROW4_LENGTH, start);
+  updateRow(text, ROW_4_LENGTH, start);
 
 }
 
