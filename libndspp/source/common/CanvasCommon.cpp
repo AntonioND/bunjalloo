@@ -46,7 +46,7 @@ Rectangle Canvas::clip() const
   return m_clip;
 }
 
-void Canvas::verticalLine(int x, int y, int length, int colour)
+ITCM_CODE void Canvas::verticalLine(int x, int y, int length, int colour)
 {
   if (length < 0)
     return;
@@ -92,7 +92,7 @@ void Canvas::verticalLine(int x, int y, int length, int colour)
   }
 }
 
-void Canvas::unsafeDrawPixel(int x, int y, int color)
+ITCM_CODE void Canvas::unsafeDrawPixel(int x, int y, int color)
 {
   unsigned short *gfx(vram(y));
   if (y >= 192)
@@ -105,7 +105,7 @@ void Canvas::unsafeDrawPixel(int x, int y, int color)
       ;
 }
 
-void Canvas::horizontalLine(int x, int y, int length, int colour)
+ITCM_CODE void Canvas::horizontalLine(int x, int y, int length, int colour)
 {
   if (length < 0)
     return;
@@ -170,7 +170,7 @@ void Canvas::drawRectangle(int x, int y, int w, int h, int colour)
   verticalLine(x+w,y,h+1,colour);
 }
 
-void Canvas::fillRectangle(int x, int y, int w, int h, int colour)
+ITCM_CODE void Canvas::fillRectangle(int x, int y, int w, int h, int colour)
 {
   if (y < 0) {
     h = h + y;
@@ -195,8 +195,8 @@ void Canvas::fillRectangle(int x, int y, int w, int h, int colour)
   }
 }
 
-void Canvas::copyBlock(int x1, int y1, int w, int h,
-                     int x2, int y2)
+ITCM_CODE void Canvas::copyBlock(int x1, int y1, int w, int h,
+                                 int x2, int y2)
 {
   // copy the data @ x1, y1 to x2, y2
   for (int i = 0; i < h; ++i) {

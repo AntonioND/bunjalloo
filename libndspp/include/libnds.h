@@ -187,6 +187,12 @@ uint32_t peripheralSlot2RamSize(void);
 
 __attribute__((noreturn)) void libndsCrash(const char *message);
 
+#define ARM_CODE
+#define THUMB_CODE
+#define ITCM_CODE
+#define ITCM_DATA
+#define DTCM_DATA
+
 // ARM9, ARM7
 #else
 #ifdef __cplusplus

@@ -92,7 +92,7 @@ int Canvas::width() const
   return SCREEN_WIDTH;
 }
 
-void Canvas::drawPixel(int x, int y, int colour)
+ITCM_CODE void Canvas::drawPixel(int x, int y, int colour)
 {
   if (not m_clip.hit(x, y))
     return;

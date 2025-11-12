@@ -56,7 +56,7 @@ ImageComponent::~ImageComponent()
   delete m_image;
 }
 
-static void drawImage(Canvas & canvas, const nds::Image & image, int startx, int starty)
+ITCM_CODE static void drawImage(Canvas & canvas, const nds::Image & image, int startx, int starty)
 {
   const unsigned short * data = image.data();
   for (unsigned int y = 0; y < image.height(); ++y)
