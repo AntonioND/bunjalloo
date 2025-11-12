@@ -39,7 +39,31 @@ Image::Image(const char * filename, bool keepPalette):
 
 Image::~Image()
 {
+  freeData();
+  freePalette();
+}
+
+void Image::allocData(size_t size, bool allowExternal)
+{
+  freeData();
+
+  m_data = (unsigned short*)malloc(size);
+  m_dataExternal = false;
+}
+
+void Image::allocPalette(size_t size)
+{
+  freePalette();
+  m_palette = (unsigned short*)malloc(size);
+}
+
+void Image::freeData()
+{
   free(m_data);
+}
+
+void Image::freePalette()
+{
   free(m_palette);
 }
 
@@ -62,24 +86,6 @@ unsigned int Image::height() const
 const unsigned short * Image::data() const
 {
   return m_data;
-}
-
-// allocate data, assuming it isn't already alloc'd
-void Image::allocData()
-{
-  size_t size(m_width * m_height * sizeof(u16));
-  m_data = (unsigned short*)realloc( m_data, size);
-  memset(m_data, 0, size);
-}
-
-void Image::allocPalette(size_t size)
-{
-  if (!m_palette) {
-    m_palette = (unsigned short*)malloc(size);
-  }
-  else {
-    m_palette = (unsigned short*)realloc(m_palette, size);
-  }
 }
 
 void Image::readFile()
@@ -141,7 +147,7 @@ void Image::readFile()
         //fflush(stderr);
 
         m_paletteSize = (int)image->max_palette_index + 1;
-        m_palette = (unsigned short *)malloc(m_paletteSize * 2);
+        allocPalette(m_paletteSize * 2);
         if (m_palette == NULL)
             goto error;
         memcpy(m_palette, image->palette, m_paletteSize * 2);
@@ -151,7 +157,7 @@ void Image::readFile()
     {
         if (m_keepPalette)
         {
-            m_data = (unsigned short *)malloc(m_height * m_width);
+            allocData(m_height * m_width); // Don't allow external RAM
             if (m_data == NULL)
             {
                 free(m_palette);
@@ -179,7 +185,7 @@ void Image::readFile()
         }
         else
         {
-            m_data = (unsigned short *)malloc(m_height * m_width * 2);
+            allocData(m_height * m_width * 2, true); // Allow external RAM
             if (m_data == NULL)
             {
                 free(m_palette);
@@ -209,7 +215,7 @@ void Image::readFile()
     }
     else
     {
-        m_data = (unsigned short *)malloc(m_height * m_width * 2);
+        allocData(m_height * m_width * 2, true); // Allow external RAM
         if (m_data == NULL)
         {
             free(m_palette);

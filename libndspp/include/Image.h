@@ -117,12 +117,15 @@ namespace nds
       unsigned int m_channels { 3 };
       unsigned short * m_data { NULL };
       unsigned short * m_palette { NULL };
+      bool m_dataExternal { false };
 
       void readFile();
 
       void calculateScale();
-      void allocData();
+      void allocData(size_t size, bool allowExternal=false);
       void allocPalette(size_t size);
+      void freeData();
+      void freePalette();
 
       DISALLOW_COPY_AND_ASSIGN(Image);
   };
