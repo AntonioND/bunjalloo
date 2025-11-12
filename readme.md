@@ -35,6 +35,7 @@ SD card. The contents of `sdroot` must be copied to the root of your SD card.
 
 ## Features
 
+- Slot-2 RAM expansion support (Opera, SuperCard SD, etc).
 - Bookmark support.
 - Cookie and image support.
 - Optional CA certificate checks.

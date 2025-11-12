@@ -21,6 +21,7 @@
 #include "libnds.h"
 #include "Image.h"
 #include "File.h"
+#include "Slot2Allocator.h"
 
 #include <libplum.h>
 
@@ -47,6 +48,17 @@ void Image::allocData(size_t size, bool allowExternal)
 {
   freeData();
 
+  if (allowExternal)
+  {
+    unsigned short * ptr = (unsigned short *)Slot2Allocator::instance().alloc(size);
+    if (ptr != NULL)
+    {
+      m_data = ptr;
+      m_dataExternal = true;
+      return;
+    }
+  }
+
   m_data = (unsigned short*)malloc(size);
   m_dataExternal = false;
 }
@@ -59,12 +71,24 @@ void Image::allocPalette(size_t size)
 
 void Image::freeData()
 {
-  free(m_data);
+  if (m_data == NULL)
+    return;
+
+  if (m_dataExternal)
+    Slot2Allocator::instance().free(m_data);
+  else
+    free(m_data);
+
+  m_data = NULL;
 }
 
 void Image::freePalette()
 {
+  if (m_palette == NULL)
+    return;
+
   free(m_palette);
+  m_palette = NULL;
 }
 
 bool Image::isValid() const

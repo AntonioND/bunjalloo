@@ -41,7 +41,6 @@ These ideas will never appear:
 
 - Javascript
 - Flash
-- Support for extra RAM (I don't own a RAM gizmo)
 
 If you want a feature added sooner rather than later, then
 [get coding](http://code.google.com/p/quirkysoft/wiki/Compiling#Sending_patches)!
