@@ -21,11 +21,15 @@ SD card. The contents of `sdroot` must be copied to the root of your SD card.
 
 ## Controls
 
-- Start: Enter a URL
-- Up/Down: Scroll screen up and down
-- Left/Right: Scroll screen a page at a time
-- R: Move forwards in the history
-- L: Move backwards in the history
+- A: Enter a URL.
+- B: Reload page.
+- Y: Open bookmarks page.
+- X: Open settings page.
+- L: Move backwards in the history.
+- R: Move forwards in the history.
+- Up/Down: Scroll screen up and down.
+- Left/Right: Scroll screen a page at a time.
+- Select: Move toolbar to a different side of the touch screen.
 - Click stylus: Follow link, enter data in forms, press keys.
 - Hold stylus: Scroll.
 
@@ -37,6 +41,9 @@ SD card. The contents of `sdroot` must be copied to the root of your SD card.
 
 ## Credits
 
-Richard Quirk (quirkysoft): Original author of Bunjalloo (http://code.google.com/p/quirkysoft)
+- Richard Quirk (quirkysoft):
+  - Original author of Bunjalloo (http://code.google.com/p/quirkysoft)
 
-Antonio Niño Díaz: Port to BlocksDS.
+- Antonio Niño Díaz:
+  - Port to BlocksDS.
+  - Maintainer after version 0.8.0.
