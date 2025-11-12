@@ -563,9 +563,10 @@ unsigned short * Sprite::oamData() const
 void Sprite::loadTileData(const void * tileData, unsigned int length)
 {
   uint16 * OAMData = this->oamData();
-  DC_FlushRange(OAMData, length);
+  DC_FlushRange(tileData, length);
   dmaCopy(tileData, OAMData, length);
 }
+
 void Sprite::loadTileMapData(const void * t, const void * m, unsigned int length)
 {
   // load data from tile data referencing the map - "emulates" the tile data in the bg
@@ -588,8 +589,9 @@ void Sprite::loadTileMapData(const void * t, const void * m, unsigned int length
   for (unsigned int loop = 0; loop < length; loop++) {
     // id = <the tile id in the map file at this position>
     int id = map[loop];
-    DC_FlushRange(&OAMData[loop * stepSize + thisTile], amount);
-    dmaCopy(&(gfx[id*stepSize]), &OAMData[loop * stepSize + thisTile], amount);
+    const void * src = (const void *)&(gfx[id*stepSize]);
+    DC_FlushRange(src, amount);
+    dmaCopy(src, &OAMData[loop * stepSize + thisTile], amount);
   }
 }
 
