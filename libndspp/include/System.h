@@ -26,6 +26,19 @@ namespace nds
       /** Get the system name. */
       static const char * uname();
 
+      // Supported:
+      //
+      //   0 = Japanese
+      //   1 = English
+      //   2 = French
+      //   3 = German
+      //   4 = Italian
+      //   5 = Spanish
+      //
+      // Not supported:
+      //
+      //   6 = Chinese(?)
+      //   7 = Unknown/Reserved
       static int language();
   };
 }

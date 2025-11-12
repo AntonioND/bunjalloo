@@ -26,20 +26,6 @@ const char * nds::System::uname()
 
 int nds::System::language()
 {
-  // Supported:
-  //
-  //   0 = Japanese
-  //   1 = English
-  //   2 = French
-  //   3 = German
-  //   4 = Italian
-  //   5 = Spanish
-  //
-  // Not supported:
-  //
-  //   6 = Chinese(?)
-  //   7 = Unknown/Reserved
-
   // Default to English
   return getenv_int("BUNJALLOO_LANGUAGE", 1, 0, 5);
 }
