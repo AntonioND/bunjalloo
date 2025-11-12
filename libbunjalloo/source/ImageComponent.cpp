@@ -14,6 +14,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <cassert>
 #include "libnds.h"
 #include "BoxLayout.h"
 #include "Canvas.h"
@@ -59,6 +61,7 @@ ImageComponent::~ImageComponent()
 ITCM_CODE static void drawImage(Canvas & canvas, const nds::Image & image, int startx, int starty)
 {
   const unsigned short * data = image.data();
+  assert(data);
   for (unsigned int y = 0; y < image.height(); ++y)
   {
     const unsigned short * row = &data[y*image.width()];

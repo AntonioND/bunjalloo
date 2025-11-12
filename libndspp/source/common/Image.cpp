@@ -160,7 +160,7 @@ void Image::readFile()
             allocData(m_height * m_width); // Don't allow external RAM
             if (m_data == NULL)
             {
-                free(m_palette);
+                freePalette();
                 goto error;
             }
 
@@ -188,7 +188,7 @@ void Image::readFile()
             allocData(m_height * m_width * 2, true); // Allow external RAM
             if (m_data == NULL)
             {
-                free(m_palette);
+                freePalette();
                 goto error;
             }
 
@@ -207,7 +207,7 @@ void Image::readFile()
                 }
             }
 
-            free(m_palette);
+            freePalette();
             m_palette = NULL;
 
             m_paletteSize = 0;
@@ -218,7 +218,7 @@ void Image::readFile()
         allocData(m_height * m_width * 2, true); // Allow external RAM
         if (m_data == NULL)
         {
-            free(m_palette);
+            freePalette();
             goto error;
         }
 
