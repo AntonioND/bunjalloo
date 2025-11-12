@@ -57,6 +57,8 @@ environment variables:
 - `BUNJALLOO_SCREEN_SCALE`: The size of the screens (and the gap between
   screens) is scaled by this value. It can only be an integer number without
   decimals.
+- `BUNJALLOO_SLOT2_RAM_SIZE`: Size of the emulated Slot-2 RAM device used to
+  store image data.
 
 You can adjust the settings on Linux, for example, like this:
 

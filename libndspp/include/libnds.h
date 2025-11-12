@@ -181,6 +181,10 @@ void playGenericSound(const void* data, u32 length);
 short cosLerp(short angle);
 short sinLerp(short angle);
 
+bool peripheralSlot2InitDefault(void);
+uint16_t *peripheralSlot2RamStart(void);
+uint32_t peripheralSlot2RamSize(void);
+
 __attribute__((noreturn)) void libndsCrash(const char *message);
 
 // ARM9, ARM7
@@ -212,6 +216,7 @@ extern "C" {
 // No! #include <nds/arm9/videoGL.h>
 // No! #include <nds/arm9/boxtest.h>
 #include <nds/arm9/sprite.h>
+#include <nds/arm9/peripherals/slot2.h>
 #include <nds/cothread.h>
 #ifdef __cplusplus
 }

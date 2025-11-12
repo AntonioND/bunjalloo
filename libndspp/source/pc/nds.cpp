@@ -19,6 +19,7 @@
 #include <string.h>
 #include <iostream>
 #include "SDLhandler.h"
+#include "EnvHelpers.h"
 
 short cosLerp(short angle) {
   return 0;
@@ -54,6 +55,44 @@ void libndsCrash(const char *message)
   fprintf(stderr, "%s\n", message);
   exit(1);
 }
+
+// ---------------------
+
+static uint16_t *slot2MemData;
+static size_t slot2MemSize;
+
+bool peripheralSlot2InitDefault(void)
+{
+  slot2MemSize = getenv_int("BUNJALLOO_SLOT2_RAM_SIZE",
+                            8 * 1024 * 1024, // Default to 8 MB
+                            0,
+                            16 * 1024 * 1024); // Max is 16 MB
+  if (slot2MemSize == 0)
+    return false;
+
+  slot2MemData = (uint16_t *)malloc(slot2MemSize);
+  if (slot2MemData == NULL)
+  {
+    slot2MemSize = 0;
+    return false;
+  }
+
+  //fprintf(stderr, "Slot 2 RAM: %zu bytes\n", slot2MemSize);
+
+  return true;
+}
+
+uint16_t *peripheralSlot2RamStart(void)
+{
+  return slot2MemData;
+}
+
+uint32_t peripheralSlot2RamSize(void)
+{
+  return slot2MemSize;
+}
+
+// ---------------------
 
 #if 0
 void glReset(void)
