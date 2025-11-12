@@ -21,6 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include "SDLhandler.h"
+#include "EnvHelpers.h"
 #include "Background.h"
 #include "Sprite.h"
 #include "HardwareHandler.cpp"
@@ -29,38 +30,9 @@
 #include "Keys.h"
 #include "Video.h"
 
-// This function reads the value of an environment variable, makes sure that
-// it's a valid integer, and restricts it to the range [min, max]. If the
-// environment variable isn't set or it has an invalid value (not a valid
-// integer) it returns the default value passed to the function.
-//
 // We use environment variables instead of command line arguments because
 // SDLhandler is a singleton created before any code in main() has run.
-// with command line arguments. The SDLhandler
-static int getenv_int(const char *var_name, int default_value, int min, int max)
-{
-  const char *value = getenv(var_name);
-  if (value == NULL)
-    return default_value;
-
-  int user_value;
-
-  try
-  {
-    user_value = std::stoi(std::string(value));
-  }
-  catch (...)
-  {
-    return default_value;
-  }
-
-  if (user_value < min)
-    return min;
-  if (user_value > max)
-    return max;
-
-  return user_value;
-}
+// with command line arguments.
 
 using namespace std;
 const int SDLhandler::WIDTH(32*8);
