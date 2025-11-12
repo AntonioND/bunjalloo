@@ -87,7 +87,11 @@ void RichTextArea::addLink(const std::string & href, bool visited)
 {
   if (m_state == Link::STATE_LINK)
     return;
-  Link * link = new Link(href);
+
+  Link * link = new (std::nothrow) Link(href);
+  if (link == NULL)
+    return;
+
   link->setTextStart(totalCharacters());
   m_links.push_back(link);
   m_state = Link::STATE_LINK;
@@ -128,7 +132,9 @@ void RichTextArea::addImage(const std::string & src)
   }
   else
   {
-    Link * link = new Link(WidgetColors::LINK_IMAGE);
+    Link * link = new (std::nothrow) Link(WidgetColors::LINK_IMAGE);
+    if (link == NULL)
+      return;
     link->setTextStart(totalCharacters());
     m_links.push_back(link);
     m_state = Link::STATE_COLOR;
