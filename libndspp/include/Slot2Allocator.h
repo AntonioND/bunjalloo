@@ -43,6 +43,8 @@ public:
     void *alloc(size_t size);
     int free(void *pointer);
 
+    void get_usage(size_t *used_bytes, size_t *free_bytes, size_t *total_bytes);
+
     static Slot2Allocator & instance();
 
 private:

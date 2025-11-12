@@ -268,3 +268,29 @@ int Slot2Allocator::free(void *pointer)
 
     return 0;
 }
+
+void Slot2Allocator::get_usage(size_t *used_bytes, size_t *free_bytes, size_t *total_bytes)
+{
+    size_t _used = 0;
+    size_t _free = 0;
+    size_t _total = 0;
+
+    Chunk *this_chunk = first_chunk;
+
+    for ( ; this_chunk != NULL; this_chunk = this_chunk->next)
+    {
+        _total += sizeof(Chunk) + this_chunk->size;
+
+        if (this_chunk->used)
+            _used += this_chunk->size;
+        else
+            _free += this_chunk->size;
+    }
+
+    if (used_bytes)
+        *used_bytes = _used;
+    if (free_bytes)
+        *free_bytes = _free;
+    if (total_bytes)
+        *total_bytes = _total;
+}
