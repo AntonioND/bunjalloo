@@ -57,8 +57,12 @@ environment variables:
 - `BUNJALLOO_SCREEN_SCALE`: The size of the screens (and the gap between
   screens) is scaled by this value. It can only be an integer number without
   decimals.
-- `BUNJALLOO_SLOT2_RAM_SIZE`: Size of the emulated Slot-2 RAM device used to
-  store image data.
+- `BUNJALLOO_SLOT2_RAM_SIZE`: Size in bytes of the emulated Slot-2 RAM device
+  used to store image data.
+- `BUNJALLOO_LANGUAGE`: Language used when "Default" is selected as language
+  in the preferences.
+- `BUNJALLOO_DLDI_OK`: Set this to 0 to simulate a DLDI initialization failure.
+  Normally this is set to 1, and it's only useful for debugging.
 
 You can adjust the settings on Linux, for example, like this:
 

@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <stdlib.h>
+#include "EnvHelpers.h"
 #include "System.h"
 #include "libnds.h"
 
@@ -25,10 +26,20 @@ const char * nds::System::uname()
 
 int nds::System::language()
 {
-  char *l(getenv("NDS_LANG"));
-  if (l)
-  {
-    return strtol(l, 0, 0);
-  }
-  return 0;
+  // Supported:
+  //
+  //   0 = Japanese
+  //   1 = English
+  //   2 = French
+  //   3 = German
+  //   4 = Italian
+  //   5 = Spanish
+  //
+  // Not supported:
+  //
+  //   6 = Chinese(?)
+  //   7 = Unknown/Reserved
+
+  // Default to English
+  return getenv_int("BUNJALLOO_LANGUAGE", 1, 0, 5);
 }

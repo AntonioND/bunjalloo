@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "libnds.h"
+#include "EnvHelpers.h"
 #include "File.h"
 #include "MiniMessage.h"
 #include <errno.h>
@@ -33,20 +34,17 @@ class StaticFileInit
   private:
     StaticFileInit()
     {
-      char * dldiCheck = getenv("NDS_DLDI");
-      if (dldiCheck)
+      int ok = getenv_int("BUNJALLOO_DLDI_OK", 1, 0, 1);
+
+      MiniMessage msg("Initialising FAT card");
+      if (not ok)
       {
-        MiniMessage msg("Initialising FAT card");
-        int ok = strtol(dldiCheck, 0, 0);
-        if (not ok)
-        {
-          // show an error message and "hang"
-          msg.failed();
-        }
-        else
-        {
-          msg.ok();
-        }
+        // show an error message and "hang"
+        msg.failed();
+      }
+      else
+      {
+        msg.ok();
       }
     }
 

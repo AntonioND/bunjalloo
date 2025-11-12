@@ -30,10 +30,6 @@
 #include "Keys.h"
 #include "Video.h"
 
-// We use environment variables instead of command line arguments because
-// SDLhandler is a singleton created before any code in main() has run.
-// with command line arguments.
-
 using namespace std;
 const int SDLhandler::WIDTH(32*8);
 const int SDLhandler::HEIGHT(2*24*8);
@@ -43,7 +39,7 @@ const int SDLhandler::HEIGHT(2*24*8);
 // variable.
 SDL_Rect SDLhandler::GAP = {
     0, 192,
-    SDLhandler::WIDTH, Uint16(getenv_int("BUNJALLOO_SCREEN_GAP", 0, 0, 100))
+    SDLhandler::WIDTH, 0
 };
 
 SDLhandler::SDLhandler()
@@ -111,17 +107,10 @@ void SDLhandler::initGL( )
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity( );
 }
+
 int SDLhandler::init()
 {
-  char *gap(getenv("NDS_GAP"));
-  if (gap)
-  {
-    int h = strtol(gap, 0, 0);
-    if (h > 0)
-    {
-      GAP.h = h;
-    }
-  }
+  GAP.h = Uint16(getenv_int("BUNJALLOO_SCREEN_GAP", 0, 0, 100));
 
   char msg[256];
   int initFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER;
