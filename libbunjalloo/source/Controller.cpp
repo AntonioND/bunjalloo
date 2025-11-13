@@ -46,8 +46,9 @@ static const char s_errorText[] = {
 "<html> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
 };
 
-const char Controller::LICENCE_URL[] = "file:///licence";
-const char Controller::SYSINFO_URL[] = "file:///sysinfo";
+const char Controller::LICENCE_URL[] = "about://licence";
+const char Controller::SYSINFO_URL[] = "about://sysinfo";
+
 const static char * UNABLE_TO_LOAD = "cannot_load";
 const static int MAX_REDIRECTS(7);
 
@@ -138,7 +139,7 @@ void Controller::handleUri(const URI & uri)
   m_document->setCacheFile("");
   switch (uri.protocol())
   {
-    case URI::FILE_PROTOCOL:
+    case URI::ABOUT_PROTOCOL:
       if (uri.asString() == LICENCE_URL)
       {
         showLicence();
@@ -149,8 +150,12 @@ void Controller::handleUri(const URI & uri)
       }
       else
       {
-        localFile(uri.fileName());
+        loadError();
       }
+      break;
+
+    case URI::FILE_PROTOCOL:
+      localFile(uri.fileName());
       break;
 
     case URI::HTTPS_PROTOCOL:

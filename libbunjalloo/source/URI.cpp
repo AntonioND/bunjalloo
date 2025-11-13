@@ -29,6 +29,8 @@ static const char * const HTTP_STR = "http";
 static const char * const HTTPS_STR = "https";
 static const char * const FILE_STR = "file";
 static const char * const CONFIG_STR = "config";
+static const char * const ABOUT_STR = "about";
+
 static const char * const GET_STR = "GET";
 
 URI::URI()
@@ -100,6 +102,7 @@ URI::Protocol_t URI::protocol() const
   if (m_protocol == HTTP_STR) return HTTP_PROTOCOL;
   if (m_protocol == HTTPS_STR) return HTTPS_PROTOCOL;
   if (m_protocol == CONFIG_STR) return CONFIG_PROTOCOL;
+  if (m_protocol == ABOUT_STR) return ABOUT_PROTOCOL;
   return UNKNOWN_PROTOCOL;
 }
 
@@ -115,6 +118,7 @@ bool URI::isValid() const
     case HTTPS_PROTOCOL:
     case HTTP_PROTOCOL:
     case CONFIG_PROTOCOL:
+    case ABOUT_PROTOCOL:
       return true;
     default:
       return false;
@@ -189,6 +193,7 @@ const std::string URI::fileName() const
   {
     case FILE_PROTOCOL:
     case CONFIG_PROTOCOL:
+    case ABOUT_PROTOCOL:
       {
         stripInternal(m_address, file, internal);
         return file;

@@ -30,7 +30,8 @@ class URI
       HTTPS_PROTOCOL,
       HTTP_PROTOCOL,
       FILE_PROTOCOL,
-      CONFIG_PROTOCOL
+      CONFIG_PROTOCOL,
+      ABOUT_PROTOCOL
     };
 
     /** Escape a string for use in URIs, removing spaces and other nasty
