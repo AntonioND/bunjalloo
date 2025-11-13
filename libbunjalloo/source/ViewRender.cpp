@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ViewRenderHeaders.h"
+#include "config_defs.h"
 
 using namespace std;
 const static char * NOT_VIEWABLE("not_view");
@@ -97,23 +98,34 @@ void ViewRender::setBgColor(const HtmlElement * body)
 }
 
 static std::string uri2filename(const URI &uri) {
-  std::string filename;
+
   switch (uri.protocol())
   {
-    case URI::FILE_PROTOCOL:
     case URI::CONFIG_PROTOCOL:
-      filename = uri.fileName();
-      break;
+      return uri.fileName();
+
+    case URI::FILE_PROTOCOL:
+      if (uri.server() == "bunjalloo")
+      {
+        return std::string(DATADIR) + uri.fileName();
+      }
+      else if (uri.server() == "localhost")
+      {
+        return uri.fileName();
+      }
+      return "";
+
     case URI::HTTPS_PROTOCOL:
     case URI::HTTP_PROTOCOL:
-      filename = Cache::CACHE_DIR;
+    {
+      std::string filename(Cache::CACHE_DIR);
       filename += "/";
       filename += uri.crc32();
-      break;
+      return filename;;
+    }
     default:
-      break;
+      return "";
   }
-  return filename;
 }
 
 void ViewRender::doImage(const std::string & imgStr,
@@ -177,7 +189,18 @@ void ViewRender::renderImage()
   string filename;
   if (uri.protocol() == URI::FILE_PROTOCOL)
   {
-    filename = uri.fileName();
+    if (uri.server() == "bunjalloo")
+    {
+      filename = std::string(DATADIR) + uri.fileName();
+    }
+    else if (uri.server() == "localhost")
+    {
+      filename = uri.fileName();
+    }
+    else
+    {
+      filename = "";
+    }
   }
   else
   {
@@ -224,7 +247,18 @@ void ViewRender::render()
       string filename;
       if (uri.protocol() == URI::FILE_PROTOCOL)
       {
-        filename = uri.fileName();
+        if (uri.server() == "bunjalloo")
+        {
+          filename = std::string(DATADIR) + uri.fileName();
+        }
+        else if (uri.server() == "localhost")
+        {
+          filename = uri.fileName();
+        }
+        else
+        {
+          filename = "";
+        }
       }
       else
       {

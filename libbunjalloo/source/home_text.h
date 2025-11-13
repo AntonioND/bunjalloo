@@ -1,5 +1,5 @@
 "<html><head><title>Bunjalloo</title></head><body>\
-<img src='file://" DATADIR "/docs/bunjalloo.png'>\
+<img src='file://bunjalloo/docs/bunjalloo.png'>\
  <p>\
 Bunjalloo is an <a href='https://github.com/AntonioND/bunjalloo'>open source</a> \
 web browser for Nintendo DS and DSi.<br>\
@@ -8,26 +8,26 @@ Copyright (C) 2007-2009 Richard Quirk<br>\
 Copyright (C) 2025 Antonio Ni&ntilde;o D&iacute;az<br>\
  <p>\
 Bunjalloo comes with ABSOLUTELY NO WARRANTY; for details touch \
-<a href='file://" DATADIR "/docs/warranty'>here</a>.\
+<a href='file://bunjalloo/docs/warranty'>here</a>.\
  <p>\
 This is free software, and you are welcome to redistribute it \
 under certain conditions. Touch the following link for details:<p>\
  <p>\
-<a href='file://" DATADIR "/docs/copying_bunjalloo'>Bunjalloo license</a><br> \
+<a href='file://bunjalloo/docs/copying_bunjalloo'>Bunjalloo license</a><br> \
  <p>\
 Bunjalloo includes code from Okiwi - a free NDS browser - version 0.2-Alpha:<p>\
  <p>\
-<a href='file://" DATADIR "/docs/copying_okiwi'>Okiwi license</a><br> \
+<a href='file://bunjalloo/docs/copying_okiwi'>Okiwi license</a><br> \
  <p>\
 Bunjalloo uses libraries distributed under the following terms:<p>\
  <p>\
-<a href='file://" DATADIR "/docs/copying_libnds'>libnds license</a><br> \
-<a href='file://" DATADIR "/docs/copying_dswifi'>DSWiFi license</a><br> \
-<a href='file://" DATADIR "/docs/copying_fatfs'>FatFs license</a><br> \
-<a href='file://" DATADIR "/docs/copying_mbedtls'>Mbed TLS license</a><br> \
-<a href='file://" DATADIR "/docs/copying_zlib'>Zlib license</a><br> \
-<a href='file://" DATADIR "/docs/copying_libplum'>libplum license</a><br> \
-<a href='file://" DATADIR "/docs/copying_utf8cpp'>utf8cpp license</a><p> \
+<a href='file://bunjalloo/docs/copying_libnds'>libnds license</a><br> \
+<a href='file://bunjalloo/docs/copying_dswifi'>DSWiFi license</a><br> \
+<a href='file://bunjalloo/docs/copying_fatfs'>FatFs license</a><br> \
+<a href='file://bunjalloo/docs/copying_mbedtls'>Mbed TLS license</a><br> \
+<a href='file://bunjalloo/docs/copying_zlib'>Zlib license</a><br> \
+<a href='file://bunjalloo/docs/copying_libplum'>libplum license</a><br> \
+<a href='file://bunjalloo/docs/copying_utf8cpp'>utf8cpp license</a><p> \
  <p>\
 Bunjalloo uses the following assets:<p>\
  <p>\

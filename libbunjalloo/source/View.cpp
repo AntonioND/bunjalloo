@@ -14,6 +14,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <cassert>
 #include <libgen.h>
 #include <cstdio>
 #include "ndspp.h"
@@ -318,7 +320,7 @@ void View::endBookmark()
 
 void View::bookmarkUrl()
 {
-  // Add a line to the file DATADIR/userdata/bookmarks.html
+  // Add a new entry to the bookmarks file at DATADIR/userdata/bookmarks.html
   setToolbar(m_bookmarkToolbar);
   m_state = BOOKMARK;
   showBookmarkPage();
@@ -327,12 +329,17 @@ void View::bookmarkUrl()
 void View::showBookmarkPage()
 {
   m_document.setHistoryEnabled(false);
-  if (nds::File::exists(Config::BOOKMARK_FILE) == nds::File::F_NONE)
+
+  URI bookmarksUrl(Config::BOOKMARK_URL);
+  assert(bookmarksUrl.server() == "bunjalloo");
+  std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
+
+  if (nds::File::exists(bookmarksPath.c_str()) == nds::File::F_NONE)
   {
     // create it
     nds::File bookmarks;
     // doesn't exist, so write out the header...
-    bookmarks.open(Config::BOOKMARK_FILE, "w");
+    bookmarks.open(bookmarksPath.c_str(), "w");
     if (not bookmarks.is_open()) {
       // that's unpossible!
       return;
@@ -340,9 +347,7 @@ void View::showBookmarkPage()
     const static string header("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=UTF-8'><TITLE>Bookmarks</TITLE>\n");
     bookmarks.write(header.c_str(), header.length());
   }
-  string bookmarkUrl("file://");
-  bookmarkUrl += Config::BOOKMARK_FILE;
-  m_controller.doUri(bookmarkUrl);
+  m_controller.doUri(bookmarksUrl);
   m_document.setHistoryEnabled(true);
 }
 
@@ -356,9 +361,13 @@ void View::editConfig()
 void View::bookmarkCurrentPage()
 {
   {
+    URI bookmarksUrl(Config::BOOKMARK_URL);
+    assert(bookmarksUrl.server() == "bunjalloo");
+    std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
+
     nds::File bookmarks;
     // OK - add to the bm file
-    bookmarks.open(Config::BOOKMARK_FILE, "a");
+    bookmarks.open(bookmarksPath.c_str(), "a");
     if (bookmarks.is_open())
     {
       // write out "<a href=%1>%2</a>" 1=href 2=title

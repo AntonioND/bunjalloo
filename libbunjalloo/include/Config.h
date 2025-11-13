@@ -40,7 +40,7 @@ class Config: public FileParser
     static const char USER_AGENT_STR[];
     static const char FULL_REF[];
     static const char SHOW_IMAGES[];
-    static const char BOOKMARK_FILE[];
+    static const char BOOKMARK_URL[];
     static const char LEFTY[];
 
     /** Initialise the config class. Set the document parser and the controller.  */

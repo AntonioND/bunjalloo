@@ -155,7 +155,18 @@ void Controller::handleUri(const URI & uri)
       break;
 
     case URI::FILE_PROTOCOL:
-      localFile(uri.fileName());
+      if (uri.server() == "bunjalloo")
+      {
+        localFile(std::string(DATADIR) + uri.fileName());
+      }
+      else if (uri.server() == "localhost")
+      {
+        localFile(uri.fileName());
+      }
+      else
+      {
+        loadError();
+      }
       break;
 
     case URI::HTTPS_PROTOCOL:

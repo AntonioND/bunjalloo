@@ -14,13 +14,17 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <cassert>
 #include "Config.h"
 #include "Document.h"
 #include "EditPopup.h"
 #include "HtmlElement.h"
 #include "Language.h"
 #include "NodeDumper.h"
+#include "URI.h"
 #include "View.h"
+#include "config_defs.h"
 #include "string_utils.h"
 
 EditPopup::EditPopup(View * parent):
@@ -55,7 +59,11 @@ void EditPopup::delElement()
   p->remove(m_element);
   // now dump the Bookmark file to disk
   {
-    NodeDumper dumper(Config::BOOKMARK_FILE);
+    URI bookmarksUrl(Config::BOOKMARK_URL);
+    assert(bookmarksUrl.server() == "bunjalloo");
+    std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
+
+    NodeDumper dumper(bookmarksPath.c_str());
     HtmlElement * root((HtmlElement*)m_parent->document().rootNode());
     root->accept(dumper);
   }
@@ -91,7 +99,12 @@ void EditPopup::postEdit(const std::string & val)
   {
     t += tokens[i];
   }
-  NodeDumper dumper(Config::BOOKMARK_FILE);
+
+  URI bookmarksUrl(Config::BOOKMARK_URL);
+  assert(bookmarksUrl.server() == "bunjalloo");
+  std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
+
+  NodeDumper dumper(bookmarksPath.c_str());
   HtmlElement * root((HtmlElement*)m_parent->document().rootNode());
   root->accept(dumper);
 }

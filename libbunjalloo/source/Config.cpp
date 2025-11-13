@@ -43,7 +43,7 @@ const char Config::UPDATE[] = "update";
 const char Config::USER_AGENT_STR[] = "useragent";
 const char Config::FULL_REF[] = "fullref";
 const char Config::SHOW_IMAGES[] = "images";
-const char Config::BOOKMARK_FILE[] = DATADIR "/user/bookmarks.html";
+const char Config::BOOKMARK_URL[] = "file://bunjalloo/user/bookmarks.html";
 const char Config::LEFTY[] = "lefty";
 const char LANG_STR[] = "language";
 using namespace std;

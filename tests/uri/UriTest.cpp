@@ -131,20 +131,37 @@ TEST(UriTest, ToString)
 
 TEST(UriTest, NavigateFile)
 {
-  URI uri("file:///path/file");
+  string expectedFile;
 
-  string expectedFile = "/path/file";
-  EXPECT_EQ( URI::FILE_PROTOCOL, uri.protocol());
-  EXPECT_EQ( expectedFile, uri.fileName());
+  // Start with a file from localhost (no server name)
+  URI absUri("file:///path/file");
 
-  uri = uri.navigateTo("newPath/newfile.html");
+  expectedFile = "/path/file";
+  EXPECT_EQ( URI::FILE_PROTOCOL, absUri.protocol());
+  EXPECT_EQ( expectedFile, absUri.fileName());
+
+  absUri = absUri.navigateTo("newPath/newfile.html");
   expectedFile = "/path/newPath/newfile.html";
-  EXPECT_EQ( expectedFile, uri.fileName());
+  EXPECT_EQ( expectedFile, absUri.fileName());
 
-  uri = uri.navigateTo("/root/index.txt");
+  absUri = absUri.navigateTo("/root/index.txt");
   expectedFile = "/root/index.txt";
-  EXPECT_EQ( expectedFile, uri.fileName());
+  EXPECT_EQ( expectedFile, absUri.fileName());
 
+  // Start with a file in the bunjalloo server
+  URI relUri("file://bunjalloo/path/file");
+
+  expectedFile = "/path/file";
+  EXPECT_EQ( URI::FILE_PROTOCOL, relUri.protocol());
+  EXPECT_EQ( expectedFile, relUri.fileName());
+
+  relUri = relUri.navigateTo("newPath/newfile.html");
+  expectedFile = "/path/newPath/newfile.html";
+  EXPECT_EQ( expectedFile, relUri.fileName());
+
+  relUri = relUri.navigateTo("/root/index.txt");
+  expectedFile = "/root/index.txt";
+  EXPECT_EQ( expectedFile, relUri.fileName());
 }
 
 TEST(UriTest, NavigateDots)

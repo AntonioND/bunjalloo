@@ -149,7 +149,10 @@ int URI::port() const
 
 std::string URI::server() const
 {
-  if (isValid() and (protocol() == HTTP_PROTOCOL or protocol() == HTTPS_PROTOCOL))
+  if (!isValid())
+    return "";
+
+  if (protocol() == HTTP_PROTOCOL or protocol() == HTTPS_PROTOCOL)
   {
     size_t firstSlash(m_address.find("/"));
     size_t portDots(m_address.find(":"));
@@ -169,6 +172,21 @@ std::string URI::server() const
       return m_address.substr(0, firstSlash);
     }
     return m_address.substr(0, m_address.length());
+  }
+  else if (protocol() == FILE_PROTOCOL)
+  {
+    size_t firstSlash(m_address.find("/"));
+
+    // No server specified, invalid URL: "file://file.txt"
+    if (firstSlash == string::npos)
+      return "";
+
+    // No server specified, use localhost: "file:///file.txt"
+    if (firstSlash == 0)
+      return "localhost";
+
+    // Server specified, use it: "file://server/file.txt"
+    return m_address.substr(0, firstSlash);
   }
   return "";
 }
@@ -191,13 +209,13 @@ const std::string URI::fileName() const
   string file, internal;
   switch(protocol())
   {
-    case FILE_PROTOCOL:
     case CONFIG_PROTOCOL:
     case ABOUT_PROTOCOL:
       {
         stripInternal(m_address, file, internal);
         return file;
       }
+    case FILE_PROTOCOL:
     case HTTPS_PROTOCOL:
     case HTTP_PROTOCOL:
       {
@@ -260,7 +278,10 @@ URI URI::navigateTo(const std::string & newFile ) const
   string newURI;
   if (newFile[0] == '/')
   {
-    // ok, so strip off the last part and try again
+    // Absolute path
+
+    // Strip off everything after the first / and go to the new URI:
+    // www.example.com/about/me + you/name -> www.example.com/you/name
     size_t firstSlash(tmp.m_address.find("/"));
     if (firstSlash == string::npos)
     {
@@ -299,7 +320,10 @@ URI URI::navigateTo(const std::string & newFile ) const
   }
   else
   {
-    // strip off last part of file and go here.
+    // Relative path
+
+    // Strip off last part of URI and go to the new URI:
+    // www.example.com/about/me + you/name -> www.example.com/about/you/name
     size_t lastSlash(tmp.m_address.rfind("/"));
     if (lastSlash == string::npos)
     {
@@ -314,6 +338,16 @@ URI URI::navigateTo(const std::string & newFile ) const
   vector<string> pathElements;
   vector<string> newPath;
   split(newURI, pathElements, string("/"));
+
+  bool emptyServerName = false;
+  if (protocol() == FILE_PROTOCOL)
+  {
+    // If we had no server name (which can only happen for "file:///" we need to
+    // reintroduce the initial "/" because split() will have removed that first
+    // (zero-length) component of the path.
+    if (newURI[0] == '/')
+      emptyServerName = true;
+  }
 
   vector<string>::const_iterator it(pathElements.begin());
 
@@ -339,9 +373,13 @@ URI URI::navigateTo(const std::string & newFile ) const
       newPath.push_back(*it);
     }
   }
+
   it = newPath.begin();
   newURI = tmp.m_protocol + "://";
   bool needSep(false);
+
+  if (emptyServerName)
+    newURI += "/";
 
   for (; it != newPath.end();++it)
   {
