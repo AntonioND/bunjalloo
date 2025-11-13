@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
   }
   else
   {
-    c->doUri(URI(std::string(Controller::LICENCE_URL)));
+    c->doUri(URI(std::string(Controller::HOME_URL)));
   }
   c->mainLoop();
 }

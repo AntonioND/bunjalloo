@@ -33,7 +33,7 @@ class Controller
   friend class HttpClient;
   public:
 
-    static const char LICENCE_URL[];
+    static const char HOME_URL[];
     static const char SYSINFO_URL[];
 
     //!Constructor.
@@ -138,8 +138,8 @@ class Controller
 
     void checkDownloadQueue();
 
-    /** Show the software licence.*/
-    void showLicence();
+    /** Show the home page.*/
+    void showHome();
     /** Show system information */
     void showSysInfo();
 

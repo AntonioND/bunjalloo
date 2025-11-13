@@ -39,14 +39,14 @@
 
 using namespace std;
 
-static const char s_licenceText[] = {
-#include "licence"
+static const char s_homeText[] = {
+#include "home_text.h"
 };
 static const char s_errorText[] = {
 "<html> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
 };
 
-const char Controller::LICENCE_URL[] = "about://licence";
+const char Controller::HOME_URL[] = "about://home";
 const char Controller::SYSINFO_URL[] = "about://sysinfo";
 
 const static char * UNABLE_TO_LOAD = "cannot_load";
@@ -103,11 +103,11 @@ Controller::~Controller()
   delete m_config;
 }
 
-void Controller::showLicence()
+void Controller::showHome()
 {
   m_document->reset();
-  m_document->setUri(LICENCE_URL);
-  m_document->appendLocalData(s_licenceText, strlen(s_licenceText));
+  m_document->setUri(HOME_URL);
+  m_document->appendLocalData(s_homeText, strlen(s_homeText));
   m_document->flush();
   m_document->setStatus(Document::LOADED_HTML);
 }
@@ -140,9 +140,9 @@ void Controller::handleUri(const URI & uri)
   switch (uri.protocol())
   {
     case URI::ABOUT_PROTOCOL:
-      if (uri.asString() == LICENCE_URL)
+      if (uri.asString() == HOME_URL)
       {
-        showLicence();
+        showHome();
       }
       else if (uri.asString() == SYSINFO_URL)
       {
