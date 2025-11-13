@@ -47,6 +47,7 @@ static const char s_errorText[] = {
 };
 
 const char Controller::LICENCE_URL[] = "file:///licence";
+const char Controller::SYSINFO_URL[] = "file:///sysinfo";
 const static char * UNABLE_TO_LOAD = "cannot_load";
 const static int MAX_REDIRECTS(7);
 
@@ -110,6 +111,22 @@ void Controller::showLicence()
   m_document->setStatus(Document::LOADED_HTML);
 }
 
+void Controller::showSysInfo()
+{
+  m_document->reset();
+  m_document->setUri(SYSINFO_URL);
+
+  std::string info = "<html><head><title>System information</title></head><body>";
+  info += std::string("Platform: ") + nds::System::uname() + std::string("<br>");
+  info += nds::System::meminfo() + std::string("<br>");
+  info += nds::System::slot2meminfo() + std::string("<br>");
+  info += "</body></html>";
+
+  m_document->appendLocalData(info.c_str(), info.length());
+  m_document->flush();
+  m_document->setStatus(Document::LOADED_HTML);
+}
+
 const Config & Controller::config() const
 {
   return *m_config;
@@ -125,6 +142,10 @@ void Controller::handleUri(const URI & uri)
       if (uri.asString() == LICENCE_URL)
       {
         showLicence();
+      }
+      else if (uri.asString() == SYSINFO_URL)
+      {
+        showSysInfo();
       }
       else
       {

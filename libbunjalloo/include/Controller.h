@@ -34,6 +34,8 @@ class Controller
   public:
 
     static const char LICENCE_URL[];
+    static const char SYSINFO_URL[];
+
     //!Constructor.
     Controller();
     void initialise();
@@ -138,6 +140,8 @@ class Controller
 
     /** Show the software licence.*/
     void showLicence();
+    /** Show system information */
+    void showSysInfo();
 
 };
 #endif

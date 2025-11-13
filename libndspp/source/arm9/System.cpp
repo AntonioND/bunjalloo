@@ -27,3 +27,15 @@ int nds::System::language()
 {
   return PersonalData->language;
 }
+
+std::string nds::System::meminfo()
+{
+  size_t heapSizeMax = getHeapLimit() - getHeapStart();
+  size_t heapSizeCurrent = getHeapLimit() - getHeapEnd();
+
+  std::string info = std::string("System RAM: ")
+            + std::to_string(heapSizeCurrent / 1024) + std::string(" / ")
+            + std::to_string(heapSizeMax / 1024) + std::string(" KiB");
+
+  return info;
+}

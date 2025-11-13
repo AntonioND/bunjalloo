@@ -29,3 +29,9 @@ int nds::System::language()
   // Default to English
   return getenv_int("BUNJALLOO_LANGUAGE", 1, 0, 5);
 }
+
+std::string nds::System::meminfo()
+{
+  std::string info = std::string("System RAM: Unknown");
+  return info;
+}

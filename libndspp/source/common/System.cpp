@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2007,2008 Richard Quirk
+  Copyright (C) 2025 Antonio Niño Díaz
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -14,38 +14,26 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef System_h_seen
-#define System_h_seen
 
-#include <string>
+#include "Slot2Allocator.h"
+#include "System.h"
 
-namespace nds
+std::string nds::System::slot2meminfo()
 {
-  class System
+  std::string info;
+
+  size_t _used, _free, _total;
+  Slot2Allocator::instance().get_usage(&_used, &_free, &_total);
+  if (_total == 0)
   {
+    info += std::string("Slot-2 RAM: Not detected");
+  }
+  else
+  {
+    info += std::string("Slot-2 RAM: ")
+            + std::to_string(_free / 1024) + std::string(" / ")
+            + std::to_string(_total / 1024) + std::string(" KiB");
+  }
 
-    public:
-      /** Get the system name. */
-      static const char * uname();
-
-      // Supported:
-      //
-      //   0 = Japanese
-      //   1 = English
-      //   2 = French
-      //   3 = German
-      //   4 = Italian
-      //   5 = Spanish
-      //
-      // Not supported:
-      //
-      //   6 = Chinese(?)
-      //   7 = Unknown/Reserved
-      static int language();
-
-      static std::string meminfo();
-      static std::string slot2meminfo();
-  };
+  return info;
 }
-
-#endif
