@@ -4,6 +4,14 @@
 
 - User changes:
 
+  - Slot-2 RAM expansion cartridges (such as the one that came with Opera) is
+    now supported. They are used as temporary storage for images.
+  - A new protocol called "about" has been added. This protocol is used for
+    built-in pages that aren't stored in the filesystem or downloaded. Also,
+    `file://licence` has been renamed to `about://home`.
+  - A new internal page called `about://sysinfo` has been added. It shows system
+    information such as available RAM. This page can be loaded while browsing a
+    website and it will show the memory available after loading that website.
   - The HTML parser doesn't support partial parsing of data. The code is
     organized to fed it partial data, but the parser has several loops that
     assume that there is more data to be used, and they hang if there isn't more
@@ -20,12 +28,16 @@
     it doesn't overlap with the colors used by the toolbar.
   - In the SDL version, allow the user to set the gap between screens and the
     zoom factor with the environment variables `BUNJALLOO_SCREEN_GAP` and
-    `BUNJALLOO_SCREEN_SCALE`.
+    `BUNJALLOO_SCREEN_SCALE`. `NDS_GAP` is no longer supported.
   - The SDL window now displays "Bunjalloo" as title instead of "SDL
     Application".
   - In the SDL version, keyboard input with the PC input now works in a fluid
     way rather than having to wait for a second or so between each key press.
     Backspace and return keys are also supported now.
+  - Some checks have been added to the Canvas class to avoid crashes because of
+    writting out bounds.
+  - Environment variable `NDS_DLDI` has been renamed to `BUNJALLOO_DLDI_OK` and
+    `NDS_LANG` has been renamed to `BUNJALLOO_LANGUAGE`.
 
 - Dev changes:
 
@@ -41,6 +53,17 @@
   - The crashes in the HtmlParser tests have been fixed.
   - Some tests have been fixed. Some of them were broken during the development
     of versions 0.9.0 and 0.10.0 because the behaviour of some things changed..
+  - Most tests can be run automatically with one command from make.
+  - Many classes have been refactored to require fewer dynamic instantiations
+    and reduce heap fragmentation.
+  - Lots of checks have been added to dynamic allocations. This should prevent
+    some crashes due to running out of memory.
+  - Some memory leaks have been fixed.
+  - C++ exceptions have been enabled in DS builds. They were already enabled in
+    SDL builds.
+  - Some code has been moved to ITCM to increase speed.
+  - Cache management has been fixed. The destination (VRAM) was flushed instead
+    of the source (main RAM).
 
 ## Version 0.10.0
 
