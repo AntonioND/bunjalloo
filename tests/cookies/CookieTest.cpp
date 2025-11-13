@@ -37,7 +37,7 @@ class CookieTest : public testing::Test
     }
 
     void TearDown() {
-      nds::File::rmrf("data");
+      nds::File::rmrf("sdroot/");
       delete m_cookieJar;
     }
 
@@ -377,7 +377,9 @@ TEST_F(CookieTest, Expires)
   Cookie *c(m_cookieJar->hasCookieForDomain(uri.server(), "mycookie"));
   EXPECT_NE((void*)0, c);
   EXPECT_FALSE(c->expired(when - 1));
-  EXPECT_TRUE(c->expired(1246705272 + 1));
+  EXPECT_FALSE(c->expired(1246708872 - 1)); // "04 Jul 2009 12:01:12 GMT" - 1
+  EXPECT_FALSE(c->expired(1246708872)); // "04 Jul 2009 12:01:12 GMT"
+  EXPECT_TRUE(c->expired(1246708872 + 1)); // "04 Jul 2009 12:01:12 GMT" + 1
 
   when = 1246811088; // Sun 05 Jul
   resultHeader = "";
