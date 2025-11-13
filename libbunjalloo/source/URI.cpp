@@ -123,16 +123,16 @@ bool URI::isValid() const
 
 int URI::port() const
 {
-  int firstSlash(m_address.find("/"));
-  int portDots(m_address.find(":"));
+  size_t firstSlash(m_address.find("/"));
+  size_t portDots(m_address.find(":"));
   int defaultPort = protocol() == HTTPS_PROTOCOL?443:80;
-  if (portDots == -1)
+  if (portDots == string::npos)
   {
     return defaultPort;
   }
-  if (firstSlash == -1 or (firstSlash > portDots))
+  if (firstSlash == string::npos or (firstSlash > portDots))
   {
-    int amount = firstSlash==-1?m_address.length():firstSlash;
+    int amount = firstSlash == string::npos ? m_address.length() : firstSlash;
     amount -= portDots;
     if (amount == 1) {
       return defaultPort;
@@ -147,21 +147,21 @@ std::string URI::server() const
 {
   if (isValid() and (protocol() == HTTP_PROTOCOL or protocol() == HTTPS_PROTOCOL))
   {
-    int firstSlash(m_address.find("/"));
-    int portDots(m_address.find(":"));
-    if (firstSlash == -1 and portDots == -1) {
+    size_t firstSlash(m_address.find("/"));
+    size_t portDots(m_address.find(":"));
+    if (firstSlash == string::npos and portDots == string::npos) {
       return m_address;
     }
     // has / but not : -> http://server/
-    if (firstSlash != -1 and portDots == -1)
+    if (firstSlash != string::npos and portDots == string::npos)
     {
       return m_address.substr(0, firstSlash);
     }
     // has : but not / ->  http://server:8080
-    if (portDots != -1 and (firstSlash == -1 or portDots < firstSlash)) {
+    if (portDots != string::npos and (firstSlash == string::npos or portDots < firstSlash)) {
       return m_address.substr(0, portDots);
     }
-    if (firstSlash != -1) {
+    if (firstSlash != string::npos) {
       return m_address.substr(0, firstSlash);
     }
     return m_address.substr(0, m_address.length());
@@ -197,8 +197,8 @@ const std::string URI::fileName() const
     case HTTP_PROTOCOL:
       {
         // strip off server
-        int firstSlash(m_address.find("/"));
-        if (firstSlash == -1)
+        size_t firstSlash(m_address.find("/"));
+        if (firstSlash == string::npos)
         {
           return "/";
         }
