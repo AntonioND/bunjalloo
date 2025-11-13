@@ -39,14 +39,11 @@
 
 using namespace std;
 
-static const char s_homeText[] = {
-#include "home_text.h"
-};
 static const char s_errorText[] = {
 "<html> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
 };
 
-const char Controller::HOME_URL[] = "about://home";
+const char Controller::HOME_URL[] = "file://bunjalloo/docs/home.html";
 const char Controller::SYSINFO_URL[] = "about://sysinfo";
 
 const static char * UNABLE_TO_LOAD = "cannot_load";
@@ -103,15 +100,6 @@ Controller::~Controller()
   delete m_config;
 }
 
-void Controller::showHome()
-{
-  m_document->reset();
-  m_document->setUri(HOME_URL);
-  m_document->appendLocalData(s_homeText, strlen(s_homeText));
-  m_document->flush();
-  m_document->setStatus(Document::LOADED_HTML);
-}
-
 void Controller::showSysInfo()
 {
   m_document->reset();
@@ -140,11 +128,7 @@ void Controller::handleUri(const URI & uri)
   switch (uri.protocol())
   {
     case URI::ABOUT_PROTOCOL:
-      if (uri.asString() == HOME_URL)
-      {
-        showHome();
-      }
-      else if (uri.asString() == SYSINFO_URL)
+      if (uri.asString() == SYSINFO_URL)
       {
         showSysInfo();
       }
