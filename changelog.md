@@ -2,13 +2,35 @@
 
 ## Version DEV
 
+When updating to this version you should keep your `data/bunjalloo/user` files
+safe, but you should delete all other files and folders from `data/bunjalloo`.
+The new version includes all the required files in the NDS ROM and it creates
+all temporary and user folders automatically.
+
 - User changes:
 
   - Slot-2 RAM expansion cartridges (such as the one that came with Opera) is
     now supported. They are used as temporary storage for images.
-  - A new protocol called "about" has been added. This protocol is used for
-    built-in pages that aren't stored in the filesystem or downloaded. Also,
-    `file://licence` has been renamed to `about://home`.
+  - Search engine shortcuts have been updated. Google and Yahoo have been
+    removed because they no longer work. The Wikipedia search string has been
+    updated, and DuckDuckGo, FrogFind! and GitHub have been added to the list.
+  - The URL used by the auto-updater has been fixed, so future versions of
+    Bunjalloo can be downloaded by Bunjalloo itself.
+  - The NDS ROM of Bunjalloo now contains all the files it needs to run, it
+    doesn't need to be distributed with a folder with lots of extra files.
+    `data/bunjalloo` is now only used as temporary storage and for user
+    configuration storage. Unfortunately, changing the font of the CA
+    certificates now requires the user to use `ndstool` to modify the NitroFS
+    files. Also, if `data/bunjalloo` doesn't exist at boot it will be created
+    automatically.
+  - A new protocol called `about://` has been added. This protocol is used for
+    built-in pages that aren't stored in the filesystem or downloaded. Also, the
+    home page `file://licence` has been moved to a file in NitroFS.
+  - The `file://` URI schema support has been improved. Now it supports servers.
+    `file://localhost/file.txt` accesses a file at the root of the filesystem,
+    `file://bunjalloo/file.txt` accesses a file inside `data/bunjalloo`, and
+    `file://nitro/file.txt` accesses a file inside the NitroFS filesystem of
+    Bunjalloo.
   - A new internal page called `about://sysinfo` has been added. It shows system
     information such as available RAM. This page can be loaded while browsing a
     website and it will show the memory available after loading that website.
@@ -26,6 +48,8 @@
     fit on the screen.
   - The palette of the scroll touch screen icon is now loaded correctly so that
     it doesn't overlap with the colors used by the toolbar.
+  - Combo boxes that were too big would have a scroll bar outside of the screen.
+    This has been fixed in this version.
   - In the SDL version, allow the user to set the gap between screens and the
     zoom factor with the environment variables `BUNJALLOO_SCREEN_GAP` and
     `BUNJALLOO_SCREEN_SCALE`. `NDS_GAP` is no longer supported.
@@ -45,14 +69,15 @@
     can be built independently as static archives. This makes it possible to
     build tests without rebuilding all the codebase for each tests.
   - Fully replace the old build system by a new one. Tools and tests can now be
-    built with the new build system.
+    built with the new build system. Tests can also be run automatically with
+    `make PLAT=SDL run` from the `tests` folder.
   - GoogleTest v1.17.0 has been added to the repository. It is used by the test
     binaries.
   - The instructions to change the TTF font used by Bunjalloo have been updated
     to work with `convertftf`.
   - The crashes in the HtmlParser tests have been fixed.
   - Some tests have been fixed. Some of them were broken during the development
-    of versions 0.9.0 and 0.10.0 because the behaviour of some things changed..
+    of versions 0.9.0 and 0.10.0 because the behaviour of some things changed.
   - Most tests can be run automatically with one command from make.
   - Many classes have been refactored to require fewer dynamic instantiations
     and reduce heap fragmentation.
@@ -62,6 +87,8 @@
   - C++ exceptions have been enabled in DS builds. They were already enabled in
     SDL builds.
   - Some code has been moved to ITCM to increase speed.
+  - The home page is now a file in NitroFS rather than being hardcoded in the
+    Bunjalloo binary.
   - Cache management has been fixed. The destination (VRAM) was flushed instead
     of the source (main RAM).
 
