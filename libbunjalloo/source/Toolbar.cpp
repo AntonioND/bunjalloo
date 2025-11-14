@@ -64,7 +64,7 @@ static void initSpriteData(unsigned short * oamData)
 
   setBlendHelper(8, 8);
 
-  nds::Image image(DATADIR "/fonts/toolbar.png", true);
+  nds::Image image(NITRODIR "/fonts/toolbar.png", true);
   if (image.isValid())
   {
     const unsigned char * data = (const unsigned char *)image.data();
