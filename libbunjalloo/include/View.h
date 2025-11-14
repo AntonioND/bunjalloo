@@ -32,15 +32,11 @@ class CookieHandler;
 class Controller;
 
 class FormControl;
-class Keyboard;
-class KeyState;
-class LinkHandler;
 class EditPopup;
 class ProgressBar;
 class ScrollPane;
 class SearchEntry;
 class TextField;
-class Toolbar;
 class Updater;
 class ViewRender;
 
@@ -142,6 +138,43 @@ class View : public ViewI, public ButtonListener, public LinkListener
       SAVE_DOWNLOADING
     };
 
+    class KeyState
+    {
+    public:
+      KeyState() { }
+
+      void initialise( u16 repeat, u16 down, u16 held, u16 up)
+      {
+        m_repeat = repeat;
+        m_down = down;
+        m_held = held;
+        m_up = up;
+      }
+
+      inline int isRepeat(int mask) const
+      {
+        return (m_repeat & mask);
+      }
+      inline int isHeld(int mask) const
+      {
+        return m_held & mask;
+      }
+      inline int isDown(int mask) const
+      {
+        return m_down & mask;
+      }
+      inline int isUp(int mask) const
+      {
+        return m_up & mask;
+      }
+
+    private:
+      u16 m_repeat;
+      u16 m_down;
+      u16 m_held;
+      u16 m_up;
+    };
+
     Document & m_document;
     Controller & m_controller;
     Keyboard m_keyboard { };
@@ -158,7 +191,7 @@ class View : public ViewI, public ButtonListener, public LinkListener
     LinkHandler m_linkHandler;
     EditPopup * m_editPopup;
     SearchEntry * m_search { NULL };
-    KeyState * m_keyState;
+    KeyState m_keyState { };
     CookieHandler * m_cookieHandler;
     int m_preInputStartLine;
     bool m_dirty { true };

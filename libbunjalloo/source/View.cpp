@@ -60,41 +60,6 @@ const static char * ENTER_TEXT_TITLE("enter_text");
 const static int STEP(1);
 const static char * SEARCH_TEMPLATE = NITRODIR "/docs/search-example.txt";
 
-struct KeyState
-{
-  KeyState() { }
-
-  void initialise( u16 repeat, u16 down, u16 held, u16 up)
-  {
-    m_repeat = repeat;
-    m_down = down;
-    m_held = held;
-    m_up = up;
-  }
-
-  inline int isRepeat(int mask) const
-  {
-    return (m_repeat & mask);
-  }
-  inline int isHeld(int mask) const
-  {
-    return m_held & mask;
-  }
-  inline int isDown(int mask) const
-  {
-    return m_down & mask;
-  }
-  inline int isUp(int mask) const
-  {
-    return m_up & mask;
-  }
-  private:
-  u16 m_repeat;
-  u16 m_down;
-  u16 m_held;
-  u16 m_up;
-};
-
 View::View(Document & doc, Controller & c):
   m_document(doc),
   m_controller(c),
@@ -107,7 +72,6 @@ View::View(Document & doc, Controller & c):
   m_scrollPane(new ScrollPane),
   m_linkHandler(this),
   m_editPopup(new EditPopup(this)),
-  m_keyState(new KeyState),
   m_cookieHandler(new CookieHandler(this))
 {
   m_scrollPane->setTopLevel();
@@ -462,16 +426,20 @@ void View::saveAs()
 
 void View::updateInput()
 {
-  m_keyState->initialise(
+  m_keyState.initialise(
       keysDownRepeat(),
       keysDown(),
       keysHeld(),
       keysUp());
+
   touchPosition tp;
   touchRead(&tp);
-  Stylus::TouchType touchType = Stylus::keysToTouchType( m_keyState->isHeld(KEY_TOUCH), m_keyState->isUp(KEY_TOUCH));
-  Stylus::instance()->update(touchType, m_keyState->isRepeat(KEY_TOUCH),
-      tp.px, tp.py+SCREEN_HEIGHT);
+
+  Stylus::TouchType touchType =
+      Stylus::keysToTouchType(m_keyState.isHeld(KEY_TOUCH), m_keyState.isUp(KEY_TOUCH));
+
+  Stylus::instance()->update(touchType, m_keyState.isRepeat(KEY_TOUCH),
+                             tp.px, tp.py+SCREEN_HEIGHT);
 }
 
 enum {
@@ -530,50 +498,50 @@ void View::browse()
 
   if (not m_keyboard.visible())
   {
-    if (m_keyState->isRepeat(handy2key(HANDY_A))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_A))) {
       enterUrl();
     }
-    if (m_keyState->isRepeat(KEY_SELECT)) {
+    if (m_keyState.isRepeat(KEY_SELECT)) {
       m_toolbar->cyclePosition();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_DOWN))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_DOWN))) {
       // scroll down ...
       m_scrollPane->down();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_UP))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_UP))) {
       // scroll up ...
       m_scrollPane->up();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_RIGHT))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_RIGHT))) {
       // scroll down ...
       m_scrollPane->pageDown();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_LEFT))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_LEFT))) {
       // scroll up ...
       m_scrollPane->pageUp();
     }
-    if (m_keyState->isRepeat(KEY_L)) {
+    if (m_keyState.isRepeat(KEY_L)) {
       if (m_toolbar == m_browseToolbar)
         m_controller.previous();
     }
-    if (m_keyState->isRepeat(KEY_R)) {
+    if (m_keyState.isRepeat(KEY_R)) {
       if (m_toolbar == m_browseToolbar)
         m_controller.next();
     }
 
-    if (m_keyState->isRepeat(handy2key(HANDY_Y))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_Y))) {
       bookmarkUrl();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_X))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_X))) {
       preferences();
       editConfig();
     }
-    if (m_keyState->isRepeat(handy2key(HANDY_B))) {
+    if (m_keyState.isRepeat(handy2key(HANDY_B))) {
       stopOrReload();
     }
   }
 
-  if (m_keyState->isRepeat(KEY_START)) {
+  if (m_keyState.isRepeat(KEY_START)) {
     // render the node tree
     m_document.dumpDOM();
   }
