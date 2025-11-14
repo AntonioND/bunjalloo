@@ -36,7 +36,7 @@
     Backspace and return keys are also supported now.
   - Some checks have been added to the Canvas class to avoid crashes because of
     writting out bounds.
-  - Environment variable `NDS_DLDI` has been renamed to `BUNJALLOO_DLDI_OK` and
+  - Environment variable `NDS_DLDI` has been renamed to `BUNJALLOO_DLDI` and
     `NDS_LANG` has been renamed to `BUNJALLOO_LANGUAGE`.
 
 - Dev changes:

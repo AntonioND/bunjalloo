@@ -61,8 +61,8 @@ environment variables:
   used to store image data.
 - `BUNJALLOO_LANGUAGE`: Language used when "Default" is selected as language
   in the preferences.
-- `BUNJALLOO_DLDI_OK`: Set this to 0 to simulate a DLDI initialization failure.
-  Normally this is set to 1, and it's only useful for debugging.
+- `BUNJALLOO_DLDI`: Set this to 0 to simulate a DLDI initialization failure.
+  This is only useful for debugging.
 
 You can adjust the settings on Linux, for example, like this:
 
