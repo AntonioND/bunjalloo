@@ -14,6 +14,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "libnds.h"
 #include "Palette.h"
 #include "Canvas.h"
 #include "ComboBox.h"
@@ -119,6 +121,14 @@ void ComboBox::setLocation(int x, int y)
 
 void ComboBox::setSize(unsigned int w, unsigned int h)
 {
+  // The combo box needs a bit of extra space on the right to display the scroll
+  // bar. If there is no space the scroll bar will be drawn outside of the
+  // screen and it won't be possible to scroll the list of options.
+  // TODO: Double-check that this max value is correct.
+  unsigned int wMax = SCREEN_WIDTH-16-COMBO_DD_BAR_WIDTH;
+  if (w > wMax)
+    w = wMax;
+
   Component::setSize(w, h);
 
   scrollPane()->setSize(w+16, scrollPane()->preferredSize().h);
