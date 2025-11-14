@@ -61,7 +61,7 @@ void CacheTest::TearDown()
   delete m_cache;
   delete m_document;
   delete [] m_data;
-  nds::File::rmrf("data");
+  nds::File::rmrf("sdroot");
 }
 
 void CacheTest::SetUp()
