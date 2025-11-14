@@ -43,7 +43,7 @@ static const char s_errorText[] = {
 "<html> <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />"
 };
 
-const char Controller::HOME_URL[] = "file://bunjalloo/docs/home.html";
+const char Controller::HOME_URL[] = "file://nitro/docs/home.html";
 const char Controller::SYSINFO_URL[] = "about://sysinfo";
 
 const static char * UNABLE_TO_LOAD = "cannot_load";
