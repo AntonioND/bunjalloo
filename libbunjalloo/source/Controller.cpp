@@ -105,8 +105,11 @@ void Controller::showSysInfo()
   m_document->reset();
   m_document->setUri(SYSINFO_URL);
 
+  extern const char * VERSION;
+
   std::string info = "<html><head><title>System information</title></head><body>";
   info += std::string("Platform: ") + nds::System::uname() + std::string("<br>");
+  info += std::string("Version: ") + std::string(VERSION) + std::string("<br>");
   info += nds::System::meminfo() + std::string("<br>");
   info += nds::System::slot2meminfo() + std::string("<br>");
   info += "</body></html>";
