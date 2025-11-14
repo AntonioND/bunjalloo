@@ -446,7 +446,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
         // m_textArea = 0;
         if (size <= 0)
           size = MIN_SIZE*8; // FIXME! textArea->font().height();
-        text->setListener(m_self->m_keyboard);
+        text->setListener(&(m_self->m_keyboard));
         text->setSize(size, text->preferredSize().h);
         /*m_self->m_scrollPane->add(text);*/
         add(text);
@@ -459,7 +459,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
         // m_textArea = 0;
         if (size <= 0)
           size = MIN_SIZE*8; // FIXME! textArea->font().height();
-        text->setListener(m_self->m_keyboard);
+        text->setListener(&(m_self->m_keyboard));
         text->setSize(size, text->preferredSize().h);
         // m_self->m_scrollPane->add(text);
         add(text);
@@ -504,7 +504,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
 void ViewRender::renderTextArea(const HtmlElement * textAreaElement)
 {
   FormTextArea * text = new FormTextArea(const_cast<HtmlElement*>(textAreaElement));
-  text->setListener(m_self->m_keyboard);
+  text->setListener(&(m_self->m_keyboard));
   m_textArea = 0;
   add(text);
 }

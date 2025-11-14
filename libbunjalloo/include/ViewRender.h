@@ -24,6 +24,8 @@ class RichTextArea;
 class Updater;
 class View;
 class ZipViewer;
+
+#include <list>
 #include <map>
 #include "Visitor.h"
 #include "HtmlElementFwd.h"

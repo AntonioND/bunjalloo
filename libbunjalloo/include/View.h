@@ -18,9 +18,14 @@
 #define View_h_seen
 
 #include <string>
-#include "ViewI.h"
 #include "ButtonListener.h"
+#include "Keyboard.h"
+#include "LinkHandler.h"
 #include "LinkListener.h"
+#include "TextField.h"
+#include "Toolbar.h"
+#include "ViewI.h"
+#include "ViewRender.h"
 
 class Document;
 class CookieHandler;
@@ -139,30 +144,30 @@ class View : public ViewI, public ButtonListener, public LinkListener
 
     Document & m_document;
     Controller & m_controller;
-    Keyboard * m_keyboard;
-    ViewRender * m_renderer;
-    TextField * m_addressBar;
+    Keyboard m_keyboard { };
+    ViewRender m_renderer;
+    TextField m_addressBar { "" };
     Toolbar * m_browseToolbar;
     Toolbar * m_bookmarkToolbar;
     Toolbar * m_prefsToolbar;
     Toolbar * m_toolbar;
     ProgressBar * m_progress;
     ScrollPane * m_scrollPane;
-    InputState m_state;
-    FormControl * m_form;
-    LinkHandler * m_linkHandler;
+    InputState m_state { BROWSE };
+    FormControl * m_form { NULL };
+    LinkHandler m_linkHandler;
     EditPopup * m_editPopup;
-    SearchEntry * m_search;
+    SearchEntry * m_search { NULL };
     KeyState * m_keyState;
     CookieHandler * m_cookieHandler;
     int m_preInputStartLine;
-    bool m_dirty;
+    bool m_dirty { true };
     std::string m_linkHref;
-    int m_refreshing;
+    int m_refreshing { 0 };
     // store the title of the page to bookmark..
     std::string m_bookmarkTitleUtf8;
     std::string m_filenameForProgress;
-    bool m_saveAsEnabled;
+    bool m_saveAsEnabled { true };
 
     void updateInput();
     void browse();

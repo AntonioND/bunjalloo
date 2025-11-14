@@ -98,32 +98,24 @@ struct KeyState
 View::View(Document & doc, Controller & c):
   m_document(doc),
   m_controller(c),
-  m_keyboard(new Keyboard),
-  m_renderer(new ViewRender(this)),
-  m_addressBar(new TextField("")),
+  m_renderer(this),
   m_browseToolbar(new BrowseToolbar(*this)),
   m_bookmarkToolbar(new BookmarkToolbar(*this)),
-  m_prefsToolbar( new PreferencesToolbar(*this)),
+  m_prefsToolbar(new PreferencesToolbar(*this)),
   m_toolbar(m_browseToolbar),
   m_progress(new ProgressBar(0, 100)),
   m_scrollPane(new ScrollPane),
-  m_state(BROWSE),
-  m_form(0),
-  m_linkHandler(new LinkHandler(this)),
+  m_linkHandler(this),
   m_editPopup(new EditPopup(this)),
-  m_search(0),
   m_keyState(new KeyState),
-  m_cookieHandler(new CookieHandler(this)),
-  m_dirty(true),
-  m_refreshing(0),
-  m_saveAsEnabled(true)
+  m_cookieHandler(new CookieHandler(this))
 {
   m_scrollPane->setTopLevel();
   m_scrollPane->setLocation(0, 0);
   m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
   m_scrollPane->setScrollIncrement(20);
-  m_keyboard->setTopLevel(m_scrollPane);
-  m_keyboard->setTitle(T(ENTER_TEXT_TITLE));
+  m_keyboard.setTopLevel(m_scrollPane);
+  m_keyboard.setTitle(T(ENTER_TEXT_TITLE));
   m_document.registerView(this);
   keysSetRepeat( 10, 5 );
   m_toolbar->setVisible(true);
@@ -143,12 +135,8 @@ View::View(Document & doc, Controller & c):
 
 View::~View()
 {
-  delete m_keyboard;
-  delete m_renderer;
-  delete m_addressBar;
   delete m_browseToolbar;
   delete m_bookmarkToolbar;
-  delete m_linkHandler;
   delete m_search;
   Stylus::deleteInstance();
 }
@@ -196,7 +184,7 @@ void View::notify()
         m_filenameForProgress.clear();
         // extract the *current* title
         extractTitle();
-        m_renderer->render();
+        m_renderer.render();
         int pos = m_document.position();
         if (pos == -1)
         {
@@ -244,7 +232,7 @@ void View::notify()
         snprintf(buffer, sizeof(buffer), " %d%%", pc);
         s += buffer;
         m_progress->setVisible();
-        m_keyboard->forceRedraw();
+        m_keyboard.forceRedraw();
         m_scrollPane->forceRedraw();
       }
       break;
@@ -279,9 +267,9 @@ void View::notify()
 
 void View::enterUrl()
 {
-  m_addressBar->setText(m_document.uri());
-  m_keyboard->setTitle(T(ENTER_URL_TITLE));
-  m_keyboard->editText(m_addressBar);
+  m_addressBar.setText(m_document.uri());
+  m_keyboard.setTitle(T(ENTER_URL_TITLE));
+  m_keyboard.editText(&m_addressBar);
   m_toolbar->setVisible(false);
   m_state = ENTER_URL;
   m_dirty = true;
@@ -289,9 +277,9 @@ void View::enterUrl()
 
 void View::editBookmark()
 {
-  m_addressBar->setText(m_editPopup->details());
-  m_keyboard->setTitle(T(EDIT_BOOKMARK_TITLE));
-  m_keyboard->editText(m_addressBar);
+  m_addressBar.setText(m_editPopup->details());
+  m_keyboard.setTitle(T(EDIT_BOOKMARK_TITLE));
+  m_keyboard.editText(&m_addressBar);
   m_toolbar->setVisible(false);
   m_state = EDIT_BOOKMARK;
   m_dirty = true;
@@ -315,7 +303,7 @@ void View::endBookmark()
   m_state = BROWSE;
 
   setToolbar(m_browseToolbar);
-  m_renderer->setUpdater(0);
+  m_renderer.setUpdater(0);
 }
 
 void View::bookmarkUrl()
@@ -397,7 +385,7 @@ void View::addCookie()
   if (uri.protocol() == URI::HTTPS_PROTOCOL or
       uri.protocol() == URI::HTTP_PROTOCOL)
   {
-    m_renderer->clear();
+    m_renderer.clear();
     m_cookieHandler->setMode(CookieHandler::ADD_MODE);
     m_cookieHandler->show();
   }
@@ -406,7 +394,7 @@ void View::addCookie()
 void View::editCookie()
 {
   // edit the list of cookies
-  m_renderer->clear();
+  m_renderer.clear();
   m_cookieHandler->setMode(CookieHandler::EDIT_MODE);
   m_cookieHandler->show();
 }
@@ -464,9 +452,9 @@ void View::saveAs()
   string fileName(nds::File::base(uri.fileName().c_str()));
   makeNiceFileName(fileName);
 
-  m_addressBar->setText(fileName);
-  m_keyboard->setTitle(T(SAVE_AS_TITLE));
-  m_keyboard->editText(m_addressBar);
+  m_addressBar.setText(fileName);
+  m_keyboard.setTitle(T(SAVE_AS_TITLE));
+  m_keyboard.editText(&m_addressBar);
   m_toolbar->setVisible(false);
   m_state = SAVE_CURRENT_FILE;
   m_dirty = true;
@@ -540,7 +528,7 @@ void View::browse()
 
   updateInput();
 
-  if (not m_keyboard->visible())
+  if (not m_keyboard.visible())
   {
     if (m_keyState->isRepeat(handy2key(HANDY_A))) {
       enterUrl();
@@ -594,7 +582,7 @@ void View::browse()
   Stylus * stylus(Stylus::instance());
   if (stylus->touchType() != Stylus::NOTHING)
   {
-    m_dirty = m_keyboard->visible() and m_keyboard->dirty();
+    m_dirty = m_keyboard.visible() and m_keyboard.dirty();
     if (not m_dirty) {
       m_dirty = m_scrollPane->dirty();
       if (m_dirty)
@@ -602,7 +590,7 @@ void View::browse()
         m_document.setPosition( m_scrollPane->currentPosition());
       }
     }
-    m_toolbar->setVisible(!m_keyboard->visible());
+    m_toolbar->setVisible(!m_keyboard.visible());
   }
   // else --- add drag gestures, etc..
   if (m_scrollPane->visible() and m_dirty)
@@ -665,9 +653,9 @@ void View::linkClicked(Link * link)
   else // isAnchor and isImage
   {
     Stylus * stylus(Stylus::instance());
-    m_linkHandler->setLink(link);
-    m_linkHandler->setLocation(stylus->lastX(), stylus->lastY());
-    m_linkHandler->setVisible();
+    m_linkHandler.setLink(link);
+    m_linkHandler.setLocation(stylus->lastX(), stylus->lastY());
+    m_linkHandler.setVisible();
   }
 }
 
@@ -723,7 +711,7 @@ void View::tick()
       browse();
       break;
   }
-  m_dirty |= m_keyboard->tick();
+  m_dirty |= m_keyboard.tick();
   m_dirty |= m_cookieHandler->tick();
   m_dirty |= m_scrollPane->visible() and m_scrollPane->dirty();
   m_dirty |= m_progress->visible() and m_progress->dirty();
@@ -733,31 +721,31 @@ void View::tick()
   if (m_dirty) {
     const static nds::Rectangle clip(0, 0, nds::Canvas::instance().width(), nds::Canvas::instance().height());
     m_scrollPane->paint(clip);
-    m_keyboard->paint(clip);
-    m_linkHandler->paint(clip);
+    m_keyboard.paint(clip);
+    m_linkHandler.paint(clip);
     m_editPopup->paint(clip);
     m_progress->paint(m_progress->bounds());
     nds::Canvas::instance().endPaint();
     m_dirty = false;
-    m_scrollPane->setVisible(not m_keyboard->visible());
+    m_scrollPane->setVisible(not m_keyboard.visible());
   }
 
-  if (m_state != BROWSE and not m_keyboard->visible())
+  if (m_state != BROWSE and not m_keyboard.visible())
   {
-    m_keyboard->setTitle(T(ENTER_TEXT_TITLE));
+    m_keyboard.setTitle(T(ENTER_TEXT_TITLE));
   }
-  if (m_state == ENTER_URL and not m_keyboard->visible()) {
+  if (m_state == ENTER_URL and not m_keyboard.visible()) {
     m_toolbar->setVisible(true);
     doEnterUrl();
   }
 
-  if (m_state == EDIT_BOOKMARK and not m_keyboard->visible()) {
+  if (m_state == EDIT_BOOKMARK and not m_keyboard.visible()) {
     m_toolbar->setVisible(true);
     doEditBookmark();
   }
 
   if (( m_state == SAVE_CURRENT_FILE or m_state == SAVE_DOWNLOADING )
-    and not m_keyboard->visible()) {
+    and not m_keyboard.visible()) {
     m_toolbar->setVisible(true);
     doSaveAs();
   }
@@ -791,8 +779,8 @@ void View::tick()
 void View::doEnterUrl()
 {
   m_state = BROWSE;
-  string newAddress = m_keyboard->result();
-  if (not newAddress.empty() and m_keyboard->selected() == Keyboard::OK)
+  string newAddress = m_keyboard.result();
+  if (not newAddress.empty() and m_keyboard.selected() == Keyboard::OK)
   {
     // check for search
     string result;
@@ -808,8 +796,8 @@ void View::doEnterUrl()
 
 void View::doEditBookmark()
 {
-  const std::string &value = m_keyboard->result();
-  if (not value.empty() and m_keyboard->selected() == Keyboard::OK)
+  const std::string &value = m_keyboard.result();
+  if (not value.empty() and m_keyboard.selected() == Keyboard::OK)
   {
     m_editPopup->postEdit(value);
   }
@@ -818,8 +806,8 @@ void View::doEditBookmark()
 
 void View::doSaveAs()
 {
-  string fileName = m_keyboard->result();
-  if (not fileName.empty() and m_keyboard->selected() == Keyboard::OK)
+  string fileName = m_keyboard.result();
+  if (not fileName.empty() and m_keyboard.selected() == Keyboard::OK)
   {
     m_toolbar->setVisible(true);
     m_controller.saveAs(fileName.c_str(),
@@ -836,7 +824,7 @@ void View::doSaveAs()
 
 void View::setUpdater(Updater * updater)
 {
-  m_renderer->setUpdater(updater);
+  m_renderer.setUpdater(updater);
 }
 
 void View::resetScroller()
@@ -849,7 +837,7 @@ void View::resetScroller()
 
 ViewRender * View::renderer()
 {
-  return m_renderer;
+  return &m_renderer;
 }
 
 int View::internalLinkPos()
@@ -865,7 +853,7 @@ int View::internalLinkPos()
     if (visitor.found())
     {
       std::list<RichTextArea*> richTextAreas;
-      m_renderer->textAreas(richTextAreas);
+      m_renderer.textAreas(richTextAreas);
       int linksFound = 0;
       // search in each RichTextArea until we find the link position
       for (std::list<RichTextArea*>::iterator it(richTextAreas.begin());

@@ -17,7 +17,9 @@
 #ifndef Keyboard_h_seen
 #define Keyboard_h_seen
 
+#include "libnds.h"
 #include "Component.h"
+#include "Button.h"
 #include "ButtonListener.h"
 #include "ScrollPane.h"
 #include "TextListener.h"
