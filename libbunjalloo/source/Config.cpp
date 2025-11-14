@@ -98,22 +98,23 @@ void Config::reload()
 
   string cfgTemplate(DOCS_DIR);
   cfgTemplate += s_templateName;
-  string update;
+  //string update;
   if (nds::File::exists(cfgFilename.c_str()) == nds::File::F_NONE)
   {
-    // write default config file
+    // Write default config file
     copyTemplate(cfgTemplate.c_str(), cfgFilename.c_str());
   }
   else
   {
-    // load new values.
+    // Load all default values in case the user has forgotten something
     parseFile(cfgTemplate.c_str());
-    resource(UPDATE, update);
+    //resource(UPDATE, update);
   }
 
+  // Load values set by the user
   parseFile(cfgFilename.c_str());
-  if (not update.empty())
-    callback(UPDATE, update);
+  //if (not update.empty())
+  //  callback(UPDATE, update);
 
   if (nds::File::exists(USER_DIR) == nds::File::F_NONE)
   {
