@@ -45,7 +45,7 @@ GFXDIRS		:=
 BINDIRS		:=
 AUDIODIRS	:=
 # List of folders to combine into the root of NitroFS:
-NITROFSDIR	:=
+NITROFSDIR	:= ../nitrofs/
 
 # Defines passed to all files
 # ---------------------------

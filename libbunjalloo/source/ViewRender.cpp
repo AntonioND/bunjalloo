@@ -105,16 +105,23 @@ static std::string uri2filename(const URI &uri) {
       return uri.fileName();
 
     case URI::FILE_PROTOCOL:
-      if (uri.server() == "bunjalloo")
+    {
+      std::string server(uri.server());
+
+      if (server == "bunjalloo")
       {
         return std::string(DATADIR) + uri.fileName();
       }
-      else if (uri.server() == "localhost")
+      else if (server == "localhost")
       {
         return uri.fileName();
       }
+      else if (server == "nitro")
+      {
+        return std::string(NITRODIR) + uri.fileName();
+      }
       return "";
-
+    }
     case URI::HTTPS_PROTOCOL:
     case URI::HTTP_PROTOCOL:
     {
@@ -189,13 +196,19 @@ void ViewRender::renderImage()
   string filename;
   if (uri.protocol() == URI::FILE_PROTOCOL)
   {
-    if (uri.server() == "bunjalloo")
+    std::string server(uri.server());
+
+    if (server == "bunjalloo")
     {
       filename = std::string(DATADIR) + uri.fileName();
     }
-    else if (uri.server() == "localhost")
+    else if (server == "localhost")
     {
       filename = uri.fileName();
+    }
+    else if (server == "nitro")
+    {
+      filename = std::string(NITRODIR) + uri.fileName();
     }
     else
     {
@@ -247,13 +260,19 @@ void ViewRender::render()
       string filename;
       if (uri.protocol() == URI::FILE_PROTOCOL)
       {
-        if (uri.server() == "bunjalloo")
+        std::string server(uri.server());
+
+        if (server == "bunjalloo")
         {
           filename = std::string(DATADIR) + uri.fileName();
         }
-        else if (uri.server() == "localhost")
+        else if (server == "localhost")
         {
           filename = uri.fileName();
+        }
+        else if (server == "nitro")
+        {
+          filename = std::string(NITRODIR) + uri.fileName();
         }
         else
         {

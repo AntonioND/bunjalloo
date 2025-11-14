@@ -142,20 +142,27 @@ void Controller::handleUri(const URI & uri)
       break;
 
     case URI::FILE_PROTOCOL:
-      if (uri.server() == "bunjalloo")
+    {
+      std::string server = uri.server();
+
+      if (server == "bunjalloo")
       {
         localFile(std::string(DATADIR) + uri.fileName());
       }
-      else if (uri.server() == "localhost")
+      else if (server == "localhost")
       {
         localFile(uri.fileName());
+      }
+      else if (server == "nitro")
+      {
+        localFile(std::string(NITRODIR) + uri.fileName());
       }
       else
       {
         loadError();
       }
       break;
-
+    }
     case URI::HTTPS_PROTOCOL:
     case URI::HTTP_PROTOCOL:
       fetchHttp(uri);

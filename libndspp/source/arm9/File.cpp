@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #include <cstring>
 #include <fat.h>
+#include <filesystem.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <dirent.h>
@@ -43,13 +44,34 @@ FatLibrary & FatLibrary::instance()
 }
 FatLibrary::FatLibrary()
 {
-  bool result = fatInitDefault();
-  MiniMessage msg("Initialising FAT card");
-  if (not result)
+  bool init_ok = fatInitDefault();
+  MiniMessage msg1("Initialising FAT card");
+  if (not init_ok)
   {
-    msg.failed();
+    msg1.failed();
   }
-  msg.ok();
+  msg1.ok();
+
+  init_ok = nitroFSInit(NULL);
+  MiniMessage msg2("Initialising NitroFS");
+  if (not init_ok)
+  {
+    msg2.failed();
+  }
+  msg2.ok();
+
+  char *cwd = fatGetDefaultCwd();
+  MiniMessage msg3("Setting CWD");
+  if (!cwd)
+  {
+    msg3.failed();
+  }
+  if (chdir(cwd) != 0)
+  {
+    msg3.failed();
+  }
+  msg3.ok();
+  free(cwd);
 }
 FatLibrary::~FatLibrary()
 {
