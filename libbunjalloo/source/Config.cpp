@@ -50,7 +50,15 @@ using namespace std;
 
 void Config::checkPre()
 {
+  // If the data folder doesn't exist, try to create it
   bool exists = (nds::File::exists(s_datadir) == nds::File::F_DIR);
+  if (not exists)
+  {
+    nds::File::mkdir(s_datadir);
+  }
+
+  // If it still doesn't exist, hang
+  exists = (nds::File::exists(s_datadir) == nds::File::F_DIR);
   nds::MiniMessage msg("/data/bunjalloo exists");
   if (not exists)
   {
