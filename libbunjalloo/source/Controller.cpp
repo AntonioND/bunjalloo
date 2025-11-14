@@ -169,7 +169,7 @@ void Controller::handleUri(const URI & uri)
       break;
 
     case URI::CONFIG_PROTOCOL:
-      configureUrl(DATADIR "/config/" + uri.fileName());
+      configureUrl(NITRODIR "/config/" + uri.fileName());
       break;
 
     default:
