@@ -33,7 +33,7 @@ static const char * DOMAIN_STR("domain");
 static const char * SECURE_STR("secure");
 static const char * EXPIRES_STR("expires");
 static const char * HTTP_ONLY("httponly");
-static const char COOKIE_TEMPLATE[] = "ckallow-example.txt";
+static const char COOKIE_TEMPLATE[] = NITRODIR "/docs/ckallow-example.txt";
 
 CookieJar::CookieJar()
 {
@@ -368,9 +368,7 @@ void CookieJar::loadAcceptList(Config & config)
   config.resource(Config::COOKIE_STR, cookieFile);
   if (nds::File::exists(cookieFile.c_str()) == nds::File::F_NONE)
   {
-    string cookietemp(DATADIR);
-    cookietemp += "/docs/";
-    cookietemp += COOKIE_TEMPLATE;
+    string cookietemp(COOKIE_TEMPLATE);
     Config::copyTemplate(cookietemp.c_str(), cookieFile.c_str());
   }
   cookieList.open(cookieFile.c_str());

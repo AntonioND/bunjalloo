@@ -58,7 +58,7 @@ const static char * EDIT_BOOKMARK_TITLE("edit_bm");
 const static char * SAVE_AS_TITLE("save_as");
 const static char * ENTER_TEXT_TITLE("enter_text");
 const static int STEP(1);
-const static char * SEARCH_TEMPLATE = DATADIR "/docs/search-example.txt";
+const static char * SEARCH_TEMPLATE = NITRODIR "/docs/search-example.txt";
 
 struct KeyState
 {

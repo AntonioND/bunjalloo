@@ -25,9 +25,9 @@
 
 static const char * s_datadir = DATADIR;
 static const char s_configFile[] = "config.ini";
-static const char s_templateName[] = "config-example.txt";
+static const char s_templateName[] = NITRODIR "/docs/config-example.txt";
 static const char USER_DIR[] = DATADIR "/user";
-static const char DOCS_DIR[] = DATADIR "/docs/";
+static const char DOCS_DIR[] = NITRODIR "/docs/";
 
 const char Config::PROXY_STR[] = "proxy";
 const char Config::FONT_STR[] = "font";
@@ -96,8 +96,7 @@ void Config::reload()
   cfgFilename += "/";
   cfgFilename += s_configFile;
 
-  string cfgTemplate(DOCS_DIR);
-  cfgTemplate += s_templateName;
+  string cfgTemplate(s_templateName);
   //string update;
   if (nds::File::exists(cfgFilename.c_str()) == nds::File::F_NONE)
   {
