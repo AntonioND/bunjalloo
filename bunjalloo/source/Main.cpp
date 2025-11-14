@@ -24,7 +24,7 @@
 using namespace nds;
 int main(int argc, char * argv[])
 {
-  Controller * c = new Controller();
+  Controller * c = new (std::nothrow) Controller();
   if (c == NULL)
     libndsCrash("main: OOM");
 
