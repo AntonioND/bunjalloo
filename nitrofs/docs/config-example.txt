@@ -52,7 +52,7 @@ fullref=0
 download=/
 
 # Place to look for updates
-update=https://wiki.quirkysoft.googlecode.com/hg/BunjallooVersion.wiki
+update=https://raw.githubusercontent.com/AntonioND/bunjalloo/refs/heads/updates/version.txt
 
 # Allow inline images
 images=1
