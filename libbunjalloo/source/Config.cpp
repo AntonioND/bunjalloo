@@ -123,14 +123,14 @@ void Config::reload()
 
 void Config::callback(const std::string & first, const std::string & second)
 {
-  if (first == FONT_STR)
+  // Files in NitroFS that can't be modified by the user
+  if (first == FONT_STR or first == CERT_FILE)
   {
     string value = string(NITRODIR) + second;
     m_resources[first] = value;
   }
-  else if (first == COOKIE_STR
-        or first == SEARCHFILE_STR
-        or first == CERT_FILE)
+  // Files in the SD card that can be modified by the user
+  else if (first == COOKIE_STR or first == SEARCHFILE_STR)
   {
     string value;
     configPathMember(second, value);
