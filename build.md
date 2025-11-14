@@ -10,9 +10,7 @@ Clone this repository and run:
 make nds -j`nproc`
 ```
 
-Copy `bunjalloo/bunjalloo.nds` to your flashcard and the folder `sdroot/` to the
-root of your SD card (either in your flashcard or your DSi). The `data` folder
-inside `sdroot` must be in the same folder as the `bunjalloo.nds` ROM.
+Now copy `bunjalloo/bunjalloo.nds` to your flashcard.
 
 ## Linux
 
@@ -39,14 +37,13 @@ Then simply run the following command from the root of the repository:
 
 ## melonDS
 
-If you want to run this in melonDS you will need a SD image. Unfortunately you
-will need to add some file to `sdroot` (preferably a few tens of megabytes) that
-you remove later. This is required because Bunjalloo will use the SD card to
-store some user settings, cookies, cached pages, etc.
+If you want to run this in melonDS you will need a SD image with some free
+space to store some user settings, cookies, cached pages, etc.
 
-Run:
+Look for a file of a few tens of megabytes and run the following commands:
 
 ```sh
+mkdir sdroot/
 cp myfile sdroot/
 make -f bunjalloo/Makefile sdimage
 
