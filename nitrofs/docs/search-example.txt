@@ -1,6 +1,9 @@
-# this is an example search file, it is copied to 
-# search.cfg on start up - edit that file if you want
-# to add your own search engines.
-g http://www.google.com/search?q=%s&btnG=Google+Search
-y http://search.yahoo.com/search?p=%s&ei=UTF-8
-w http://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go
+# This is an example search file, it is copied to DATADIR/user/search.cfg on
+# start up if it didn't exist. Edit that file if you want to add your own
+# search engines.
+#g http://www.google.com/search?q=%s
+#y https://search.yahoo.com/search?p=%s
+d https://duckduckgo.com/?q=%s&ia=web
+w https://en.m.wikipedia.org/w/index.php?title=Special:Search&search=%s
+f http://frogfind.com/?q=%s
+gh https://github.com/search?q=%s&type=repositories

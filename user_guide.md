@@ -28,6 +28,23 @@ The icons shown on this menu are, from left to right:
 Clicking on each active icon, apart from the return one of course, takes you to
 a new screen with more self-explanatory options.
 
+## Quick search
+
+You can do a quick search with different search engines if they are configured
+in your user settings. All you have to do is open the URL input window and type
+the shorthand for the engine followed by the query. For example, to use
+DuckDuckGo, all you have to do is type `d example`. By default, Bunjalloo
+supports the following shortcuts:
+
+- DuckDuckGo: `g`
+- Wikipedia: `w`
+- FrogFind!: `f`
+- GitHub (repositories): `gh`
+
+If you want to add more shortcuts, open `/data/bunjalloo/user/search.cfg` with
+your text editor and add more lines to it. The `%s` part of the URL will be
+replaced by your search keywords.
+
 ## Using CA certificates
 
 The CA certificates used by Bunjalloo are found in the SD card in
@@ -46,7 +63,7 @@ by your own, or you can add your own file to this folder. Then, open file
 point to the file with your certificates. If `config.ini` doesn't exist, boot
 Bunjalloo once so that it gets created.
 
-## SDL screen settings
+## SDL settings
 
 When using the SDL build of Bunjalloo you can adjust some settings using
 environment variables:
@@ -76,7 +93,7 @@ The files in `sdroot/data/bunjalloo/user` contain some useful information:
 
 - `bookmarks.html`: List of bookmarks.
 - `ckallow.lst`: URLs of sites that allow cookies.
-- `search.cfg`: Search keyword shortcuts. `%s` is replaced by the search text.
+- `search.cfg`: Search keyword shortcuts.
 
 ## Changing the font
 
