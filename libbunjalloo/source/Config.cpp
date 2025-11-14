@@ -123,10 +123,14 @@ void Config::reload()
 
 void Config::callback(const std::string & first, const std::string & second)
 {
-  if (first == FONT_STR
-      or first == COOKIE_STR
-      or first == SEARCHFILE_STR
-      or first == CERT_FILE)
+  if (first == FONT_STR)
+  {
+    string value = string(NITRODIR) + second;
+    m_resources[first] = value;
+  }
+  else if (first == COOKIE_STR
+        or first == SEARCHFILE_STR
+        or first == CERT_FILE)
   {
     string value;
     configPathMember(second, value);
