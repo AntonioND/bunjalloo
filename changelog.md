@@ -48,8 +48,11 @@ all temporary and user folders automatically.
     fit on the screen.
   - The palette of the scroll touch screen icon is now loaded correctly so that
     it doesn't overlap with the colors used by the toolbar.
-  - Combo boxes that were too big would have a scroll bar outside of the screen.
-    This has been fixed in this version.
+  - Combo boxes have been made a lot more stable. Boxes that were too big would
+    have a scroll bar outside of the screen (or cause a crash). If a combo box
+    was left open and the user, for example, pressed "back" in the toolbar, or
+    button Y to open the bookmarks, it would cause a crash. This all has been
+    fixed in this version.
   - In the SDL version, allow the user to set the gap between screens and the
     zoom factor with the environment variables `BUNJALLOO_SCREEN_GAP` and
     `BUNJALLOO_SCREEN_SCALE`. `NDS_GAP` is no longer supported.
