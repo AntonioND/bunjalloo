@@ -22,6 +22,7 @@
 #include "Keyboard.h"
 #include "LinkHandler.h"
 #include "LinkListener.h"
+#include "ScrollPane.h"
 #include "TextField.h"
 #include "Toolbar.h"
 #include "ViewI.h"
@@ -34,11 +35,8 @@ class Controller;
 class FormControl;
 class EditPopup;
 class ProgressBar;
-class ScrollPane;
 class SearchEntry;
-class TextField;
 class Updater;
-class ViewRender;
 
 /** Handle the displaying of HTML data.*/
 class View : public ViewI, public ButtonListener, public LinkListener
@@ -185,7 +183,7 @@ class View : public ViewI, public ButtonListener, public LinkListener
     Toolbar * m_prefsToolbar;
     Toolbar * m_toolbar;
     ProgressBar * m_progress;
-    ScrollPane * m_scrollPane;
+    ScrollPane m_scrollPane { };
     InputState m_state { BROWSE };
     FormControl * m_form { NULL };
     LinkHandler m_linkHandler;

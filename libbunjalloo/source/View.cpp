@@ -69,16 +69,15 @@ View::View(Document & doc, Controller & c):
   m_prefsToolbar(new PreferencesToolbar(*this)),
   m_toolbar(m_browseToolbar),
   m_progress(new ProgressBar(0, 100)),
-  m_scrollPane(new ScrollPane),
   m_linkHandler(this),
   m_editPopup(new EditPopup(this)),
   m_cookieHandler(new CookieHandler(this))
 {
-  m_scrollPane->setTopLevel();
-  m_scrollPane->setLocation(0, 0);
-  m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
-  m_scrollPane->setScrollIncrement(20);
-  m_keyboard.setTopLevel(m_scrollPane);
+  m_scrollPane.setTopLevel();
+  m_scrollPane.setLocation(0, 0);
+  m_scrollPane.setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
+  m_scrollPane.setScrollIncrement(20);
+  m_keyboard.setTopLevel(&m_scrollPane);
   m_keyboard.setTitle(T(ENTER_TEXT_TITLE));
   m_document.registerView(this);
   keysSetRepeat( 10, 5 );
@@ -155,8 +154,8 @@ void View::notify()
           // is it relative?
           pos = internalLinkPos();
         }
-        m_scrollPane->scrollToPercent(pos);
-        //m_scrollPane->scrollToAbsolute(pos);
+        m_scrollPane.scrollToPercent(pos);
+        //m_scrollPane.scrollToAbsolute(pos);
         m_dirty = true;
         string refresh;
         int refreshTime;
@@ -197,7 +196,7 @@ void View::notify()
         s += buffer;
         m_progress->setVisible();
         m_keyboard.forceRedraw();
-        m_scrollPane->forceRedraw();
+        m_scrollPane.forceRedraw();
       }
       break;
     case Document::HAS_HEADERS:
@@ -506,19 +505,19 @@ void View::browse()
     }
     if (m_keyState.isRepeat(handy2key(HANDY_DOWN))) {
       // scroll down ...
-      m_scrollPane->down();
+      m_scrollPane.down();
     }
     if (m_keyState.isRepeat(handy2key(HANDY_UP))) {
       // scroll up ...
-      m_scrollPane->up();
+      m_scrollPane.up();
     }
     if (m_keyState.isRepeat(handy2key(HANDY_RIGHT))) {
       // scroll down ...
-      m_scrollPane->pageDown();
+      m_scrollPane.pageDown();
     }
     if (m_keyState.isRepeat(handy2key(HANDY_LEFT))) {
       // scroll up ...
-      m_scrollPane->pageUp();
+      m_scrollPane.pageUp();
     }
     if (m_keyState.isRepeat(KEY_L)) {
       if (m_toolbar == m_browseToolbar)
@@ -552,18 +551,18 @@ void View::browse()
   {
     m_dirty = m_keyboard.visible() and m_keyboard.dirty();
     if (not m_dirty) {
-      m_dirty = m_scrollPane->dirty();
+      m_dirty = m_scrollPane.dirty();
       if (m_dirty)
       {
-        m_document.setPosition( m_scrollPane->currentPosition());
+        m_document.setPosition( m_scrollPane.currentPosition());
       }
     }
     m_toolbar->setVisible(!m_keyboard.visible());
   }
   // else --- add drag gestures, etc..
-  if (m_scrollPane->visible() and m_dirty)
+  if (m_scrollPane.visible() and m_dirty)
   {
-    m_document.setPosition( m_scrollPane->currentPosition());
+    m_document.setPosition( m_scrollPane.currentPosition());
   }
 
   if (m_refreshing > 0)
@@ -681,21 +680,21 @@ void View::tick()
   }
   m_dirty |= m_keyboard.tick();
   m_dirty |= m_cookieHandler->tick();
-  m_dirty |= m_scrollPane->visible() and m_scrollPane->dirty();
   m_dirty |= m_progress->visible() and m_progress->dirty();
+  m_dirty |= m_scrollPane.visible() and m_scrollPane.dirty();
   m_toolbar->tick();
   m_toolbar->updateIcons();
 
   if (m_dirty) {
     const static nds::Rectangle clip(0, 0, nds::Canvas::instance().width(), nds::Canvas::instance().height());
-    m_scrollPane->paint(clip);
+    m_scrollPane.paint(clip);
     m_keyboard.paint(clip);
     m_linkHandler.paint(clip);
     m_editPopup->paint(clip);
     m_progress->paint(m_progress->bounds());
     nds::Canvas::instance().endPaint();
     m_dirty = false;
-    m_scrollPane->setVisible(not m_keyboard.visible());
+    m_scrollPane.setVisible(not m_keyboard.visible());
   }
 
   if (m_state != BROWSE and not m_keyboard.visible())
@@ -797,10 +796,10 @@ void View::setUpdater(Updater * updater)
 
 void View::resetScroller()
 {
-  m_scrollPane->setLocation(0,0);
-  m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
-  m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
-  m_scrollPane->scrollToPercent(0);
+  m_scrollPane.setLocation(0,0);
+  m_scrollPane.setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
+  m_scrollPane.setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
+  m_scrollPane.scrollToPercent(0);
 }
 
 ViewRender * View::renderer()
@@ -834,7 +833,7 @@ int View::internalLinkPos()
           // if (link is in this text area)...
           int linkInText = visitor.index() - linksFound;
           unsigned int linkPos = text->linkPosition(linkInText)  - 192;
-          return (linkPos * 256) / (m_scrollPane->visibleHeight());
+          return (linkPos * 256) / (m_scrollPane.visibleHeight());
         }
         linksFound += links;
       }

@@ -93,7 +93,7 @@ void ViewRender::setBgColor(const HtmlElement * body)
     m_self->m_textArea->setBackgroundColor(col);
     - semi fixed, but not perfect
     */
-    m_self->m_scrollPane->setBackgroundColor(col);
+    m_self->m_scrollPane.setBackgroundColor(col);
   }
 }
 
@@ -181,7 +181,7 @@ void ViewRender::clearRadioGroups()
 
 void ViewRender::clear()
 {
-  m_self->m_scrollPane->removeChildren();
+  m_self->m_scrollPane.removeChildren();
   clearRadioGroups();
   m_textArea = 0;
   m_richTextAreas.clear();
@@ -225,7 +225,7 @@ void ViewRender::renderImage()
     image = new nds::Image(filename.c_str());
   }
   ImageComponent * imageComponent = new ImageComponent(image, m_box, &m_self->document());
-  m_self->m_scrollPane->add(imageComponent);
+  m_self->m_scrollPane.add(imageComponent);
 }
 
 bool ViewRender::hasImage()
@@ -324,7 +324,7 @@ void ViewRender::render()
 void ViewRender::done(bool resetScroller)
 {
   pushTextArea();
-  m_self->m_scrollPane->add(m_box);
+  m_self->m_scrollPane.add(m_box);
   if (resetScroller)
   {
     m_self->resetScroller();
@@ -360,7 +360,7 @@ void ViewRender::doTitle(const HtmlElement * title)
     {
       visit(*titleText);
     }
-    m_self->m_scrollPane->add(m_textArea);
+    m_self->m_scrollPane.add(m_textArea);
     m_textArea = 0;
   }
 }
@@ -436,7 +436,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
         {
           submitButton->setSize(size, submitButton->preferredSize().h);
         }
-        /* m_self->m_scrollPane->add(submitButton); */
+        /* m_self->m_scrollPane.add(submitButton); */
         add(submitButton);
       }
       break;
@@ -448,7 +448,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
           size = MIN_SIZE*8; // FIXME! textArea->font().height();
         text->setListener(&(m_self->m_keyboard));
         text->setSize(size, text->preferredSize().h);
-        /*m_self->m_scrollPane->add(text);*/
+        /*m_self->m_scrollPane.add(text);*/
         add(text);
       }
       break;
@@ -461,7 +461,7 @@ void ViewRender::renderInput(const HtmlElement * inputElement)
           size = MIN_SIZE*8; // FIXME! textArea->font().height();
         text->setListener(&(m_self->m_keyboard));
         text->setSize(size, text->preferredSize().h);
-        // m_self->m_scrollPane->add(text);
+        // m_self->m_scrollPane.add(text);
         add(text);
       }
       break;
@@ -520,7 +520,7 @@ void ViewRender::notify()
     case Document::LOADED_HTML:
       {
         progressId = 0;
-        m_self->m_scrollPane->setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
+        m_self->m_scrollPane.setSize(nds::Canvas::instance().width(), nds::Canvas::instance().height());
       }
       break;
     case Document::INPROGRESS:
