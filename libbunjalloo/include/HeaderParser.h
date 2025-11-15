@@ -138,9 +138,12 @@ class HeaderParser
     CacheControl * m_cacheControl { NULL };
     HeaderListener * m_headerListener { NULL };
 
+    static constexpr int ZWINDOW_SIZE = 47;
+    static constexpr unsigned int WINSIZE = 16384;
+
     std::string m_cacheFile;
     struct z_stream_s * m_stream;
-    char * m_window;
+    char m_window[WINSIZE];
 
     void parseError();
     void handleHeader(const std::string & field, const std::string & value);

@@ -32,8 +32,6 @@ using namespace std;
 static const string HTTP1("HTTP/1.");
 static const int HTTP1_LEN = HTTP1.length();
 static const unsigned char FIELD_VALUE_SEP(':');
-static const int ZWINDOW_SIZE(47);
-static const unsigned int WINSIZE(16384);
 
 HeaderParser::HeaderParser(HtmlParser * htmlParser,
     CookieJar * cookieJar,
@@ -44,14 +42,15 @@ HeaderParser::HeaderParser(HtmlParser * htmlParser,
   m_htmlParser(htmlParser),
   m_cookieJar(cookieJar),
   m_cacheControl(cacheControl), // We own this and we will have to delete it
-  m_stream(new z_stream_s),
-  m_window(new char[WINSIZE])
+  m_stream(new z_stream_s)
 {
   reset();
 }
+
 HeaderParser::~HeaderParser()
 {
   delete m_cacheControl;
+  delete m_stream;
 
   if (m_bufferData)
     free(m_bufferData);
