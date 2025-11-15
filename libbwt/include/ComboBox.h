@@ -35,7 +35,7 @@ class ComboBox: public Component,
     ComboBox();
 
     /** End of the objects existence.*/
-    //~ComboBox();
+    ~ComboBox();
 
     /** Add an item to the list. If it is the first item, it is selected.
      * @param item the text to add.

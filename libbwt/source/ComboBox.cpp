@@ -40,6 +40,11 @@ ComboBox::ComboBox()
   scrollPane()->setTopLevel(false);
 }
 
+ComboBox::~ComboBox()
+{
+  ScrollPane::removePopup(scrollPane());
+}
+
 void ComboBox::addItem(const std::string & item)
 {
   // If the box is empty, add the first element and set the dimensions of the
