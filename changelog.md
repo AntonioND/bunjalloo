@@ -95,7 +95,7 @@ all temporary and user folders automatically.
   - Cache management has been fixed. The destination (VRAM) was flushed instead
     of the source (main RAM).
 
-## Version 0.10.0
+## Version 0.10.0 (2025-11-02)
 
 - Fixed SSL connections. Entropy is now gathered correctly and the main thread
   yields every now and then to let the SSL handshake finish.
@@ -129,7 +129,7 @@ all temporary and user folders automatically.
 - Some internal code cleanup.
 - Updated instructions in readme.
 
-## Version 0.9.0
+## Version 0.9.0 (2025-10-22)
 
 - Migrated to BlocksDS from devkitARM. Now Bunjalloo can take advantage of the
   Wifi driver in DSi mode, with WPA2 support and the additional RAM of DSi.
@@ -146,7 +146,7 @@ all temporary and user folders automatically.
   fails, for example. Previously it would just reload the cached error page.
 - Added missing copyright notices to the "show copying" page.
 
-## Changes 0.8
+## Version 0.8 (2009-12-21)
 
 - Updated to the latest devkitARM, libnds, libfat and libpng
 - Fix the updater that was broken in 0.7.7
@@ -162,7 +162,7 @@ all temporary and user folders automatically.
 - Change to Okiwi font generation and rendering
 - Fix some major memory leaks
 
-## Changes 0.7.7
+## Version 0.7.7 (2009-10-31)
 
 - Spaces at the start of elements change
   ([issue 112](https://code.google.com/p/quirkysoft/issues/detail?id=112))
@@ -171,7 +171,7 @@ all temporary and user folders automatically.
 - Tabs were shown as an invalid character, instead of a space
 - Warranty shown as html
 
-## Changes 0.7.6
+## Version 0.7.6 (2009-07-23)
 
 - Added saving, loading and expiring of cookies
 - Fix several cookie-related bugs
@@ -195,7 +195,7 @@ all temporary and user folders automatically.
   libpng 1.2.38, latest libraries from devkitPro)
 - Moved the code to Google Code's Mercurial hosting
 
-## Changes 0.7.5
+## Version 0.7.5 (2009-07-08)
 
 - Improvements to caching - logging in to GMail works again
   ([issue 99](https://code.google.com/p/quirkysoft/issues/detail?id=99))
@@ -206,12 +206,12 @@ all temporary and user folders automatically.
 - Fix configuration changes that use escapable % characters
 - you may have to manually fix the download path in your configuration settings
 
-## Changes 0.7.4
+## Version 0.7.4 (2009-07-02)
 
 - Fixed freezing after only a few page loads
   ([Issue 97](https://code.google.com/p/quirkysoft/issues/detail?id=97))
 
-## Changes 0.7.3
+## Version 0.7.3 (2009-07-01)
 
 - A new NDS banner bitmap by Sam Goldfield
 - Add new scrolling method - just hold and drag, sort of
@@ -228,7 +228,7 @@ all temporary and user folders automatically.
 Please read [my blog post](http://quirkygba.blogspot.com/2009/06/ez-flash-vi-and-libnds-136.html)
 if you use an EZ Flash Vi as touch screen may not work.
 
-## Changes 0.7.2
+## Version 0.7.2 (2008-12-28)
 
 - Update code for devkitARM r24
 - Italian localisation courtesy of Paolo Ferraresi
@@ -238,7 +238,7 @@ works. I'll remove the option in the next release. I can no longer test
 patching, as my card's firmware auto patches anyway. If this is a feature you
 really need... er.. sorry!
 
-## Changes 0.7.1
+## Version 0.7.1 (2008-10-05)
 
 - Fix url parsing stuff so Google Images searches show
 - Added \ to the keyboard * Add ABXY functions (A=URL, B=Stop, X=edit config,
@@ -247,7 +247,7 @@ really need... er.. sorry!
 - Fix for [issue 74](https://code.google.com/p/quirkysoft/issues/detail?id=74),
   bookmarks have incorrect title
 
-## Changes 0.7
+## Version 0.7 (2008-09-02)
 
 - User visible changes
 
@@ -278,17 +278,19 @@ really need... er.. sorry!
   - Show/hide bookmarks still flickers
   - Progress bar doesn't refresh correctly on unzip and save-as
 
-## Changes 0.6.3 (tiny release to get back into the groove :-)
+## Version 0.6.3 (2008-07-23)
+
+Tiny release to get back into the groove. :-)
 
 - [Issue 60](https://code.google.com/p/quirkysoft/issues/detail?id=60): Fix the
   flashing when downloading files
 
-## Changes 0.6.2
+## Version 0.6.2 (2008-05-25)
 
 - Fix SSL connections (https)
 - Add sleep mode when closing the lid
 
-## Changes 0.6.1
+## Version 0.6.1 (2008-05-10)
 
 - French translation updated by Kikdifferent
 - German translation updated by Pascal Braig
@@ -303,7 +305,7 @@ really need... er.. sorry!
 - Can turn off the wifi connection by clicking the connection icon
 - Fix scrolling way off the bottom of the page that sometimes happened
 
-## Changes 0.6
+## Version 0.6 (2008-04-18)
 
 - Enhancements
 
@@ -334,7 +336,7 @@ really need... er.. sorry!
   - Updated the script that downloads dependencies so it actually works.
   - Autoconf-like dependency checks added (`./configure && make`)
 
-## Changes 0.5.4
+## Version 0.5.4 (2008-03-04)
 
 - Improved save-as to check mime type.
 - Add Referer header.
@@ -349,12 +351,12 @@ really need... er.. sorry!
 - Fix crash bug when title is empty.
 - Fix combo box slowness.
 
-## Changes 0.5.3.1
+## Version 0.5.3.1 (2008-02-19)
 
 - Fix clicking URL on url/image menu, as reported in
   [issue 44](https://code.google.com/p/quirkysoft/issues/detail?id=44)
 
-## Changes 0.5.3
+## Version 0.5.3 (2008-02-15)
 
 - Enhancements
 
@@ -373,25 +375,27 @@ really need... er.. sorry!
   - Fix crash bug caused by some URLs with ":" in them.
   - Page position remembered on fwd/back for touch screen scrolling too.
 
-## Changes 0.5.2 (a very minor release)
+## Version 0.5.2 (2008-01-28)
+
+A very minor release.
 
 - The only user-visible change is the use of the Independent JPEG Group's JPEG
   library instead of the jpegd library.
 
-## Changes 0.5.1
+## Version 0.5.1 (2007-11-17)
 
 - No longer fails when SSL certificate chain validation does not pass.
 - Fix for SSL links stopping early in some cases.
 - Add context information above the keyboard.
 
-## Changes 0.5
+## Version 0.5 (2007-11-11)
 
 - Add HTTPS for proxy and direct connections.
 - Make cookies work more thoroughly.
 - Bug fixes (add name to .nds again, content refreshing fix, tags after `</body>`)
 - Update to dswifi 0.3.4
 
-## Changes 0.4-beta1 to 0.4
+## Version 0.4 (2007-11-04)
 
 - Show small pages and images at the top of the lower screen.
 - Make right/left on the D-pad do a page down/up.
@@ -402,7 +406,7 @@ really need... er.. sorry!
 - Remember the scroll position of previously visited pages.
 - Fix crash when showing a form after no `</form>` tag on last page.
 
-## Changes from version 0.3.6 to 0.4-beta1
+## Version 0.4-beta1 (2007-10-29)
 
 - Major changes
 
@@ -422,40 +426,40 @@ really need... er.. sorry!
   - Build with devkitArm r21
   - Changed to [scons](http://www.scons.org/) build system
 
-## Bug fixes in version 0.3.6
+## Version 0.3.6 (2007-10-20)
 
 - Fix newline bug in header parser for servers that send \n instead of \r\n
 - Remove the accidental inclusion of cache dir
   ([issue 33](https://code.google.com/p/quirkysoft/issues/detail?id=33))
 
-## Bug fixes in version 0.3.5
+## Version 0.3.5 (2007-10-7)
 
-- Crash in the HTML parser from
+- Fix crash in the HTML parser from
   [Issue 29](https://code.google.com/p/quirkysoft/issues/detail?id=29)
 
-## Bug fixes in version 0.3.4
+## Version 0.3.4 (2007-10-03)
 
-- Crash deleting text when editing a URL
+- Fix crash deleting text when editing a URL
   ([issue 28](https://code.google.com/p/quirkysoft/issues/detail?id=28))
 - Do not initialise sound system as it isn't used.
 
-## Bug fixes in version 0.3.3
+## Version 0.3.3 (2007-10-01)
 
 - Background colour removed (fixes
   [issue 26](https://code.google.com/p/quirkysoft/issues/detail?id=26)). It
   wasn't fully implemented and caused some pages to be unreadable.
 
-## Bug fixes in version 0.3.2
+## Version 0.3.2 (2007-09-29)
 
 - Cancel URL no longer reloads page (fixes
   [issue 25](https://code.google.com/p/quirkysoft/issues/detail?id=25))
 
-## Bug fixes in version 0.3.1
+## Version 0.3.1 (2007-09-27)
 
 - Regression in charset handling corrected.
 - Potential crash when text area scrolls off the top of the screen fixed.
 
-## Changes in version 0.3
+## Version 0.3 (2007-09-24)
 
 - Complete GUI rewrite. Fixes [issue 7](https://code.google.com/p/quirkysoft/issues/detail?id=7)
   and (most of) [issue 5](https://code.google.com/p/quirkysoft/issues/detail?id=5).
@@ -480,12 +484,12 @@ really need... er.. sorry!
 directory across. The font files have been slightly altered and the new
 toolbar.png file is required.
 
-## Changes in version 0.2.1
+## Version 0.2.1 (2007-08-03)
 
 - Bug fix release. The only difference to 0.2 was a fix for
   [Supercard CF compatibility](http://code.google.com/p/quirkysoft/issues/detail?id=1&can=1).
 
-## Changes in version 0.2
+## Version 0.2 (2007-07-30)
 
 - Removed the built-in font - now **requires** DLDI patching
 - Escaping of forms and urls. Now urls with "&" should work as expected.
