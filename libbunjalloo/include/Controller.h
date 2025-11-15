@@ -17,15 +17,15 @@
 #ifndef Controller_h_seen
 #define Controller_h_seen
 
+#include "Document.h"
+#include "HttpClient.h"
 #include "URI.h"
 #include <queue>
 
-class Document;
 class View;
 class Config;
 class Cache;
 
-class HttpClient;
 /** Controller maps user actions to model updates. For example, responds to setting the URI.
  */
 class Controller
@@ -107,19 +107,22 @@ class Controller
     void waitVBlank() const;
 
   private:
-    Document * m_document;
-    View * m_view;
-    Config * m_config;
-    Cache * m_cache;
-    HttpClient * m_httpClient;
-    bool m_wifiInit;
-    bool m_stop;
-    int m_redirected;
-    int m_maxRedirects;
-    SaveAs_t m_saveAs;
+
+    constexpr static int MAX_REDIRECTS = 7;
+
+    Document m_document { };
+    View * m_view { NULL };
+    Config * m_config { NULL };
+    Cache * m_cache { NULL };
+    HttpClient m_httpClient { };
+    bool m_wifiInit { false };
+    bool m_stop { false };
+    int m_redirected { 0 };
+    int m_maxRedirects { MAX_REDIRECTS };
+    SaveAs_t m_saveAs { NO_SAVE };
     std::string m_saveFileName;
     std::queue<URI> m_downloadQ;
-    bool m_checkingQueue;
+    bool m_checkingQueue { false };
 
 
     void localFile(const std::string &);

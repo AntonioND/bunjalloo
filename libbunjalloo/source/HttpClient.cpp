@@ -133,7 +133,7 @@ void HttpClient::handleRaw(void * bufferIn, int amountRead)
   char * buffer = (char*)bufferIn;
 
   if (m_controller)
-    m_controller->m_document->appendData(buffer, amountRead);
+    m_controller->m_document.appendData(buffer, amountRead);
 
   m_total += amountRead;
 
@@ -162,7 +162,7 @@ void HttpClient::finish() {
   else
   {
     if (m_controller)
-      m_controller->m_document->setStatus(Document::LOADED_HTML);
+      m_controller->m_document.setStatus(Document::LOADED_HTML);
   }
 }
 
@@ -209,7 +209,7 @@ std::string HttpClient::cookieString(const URI &uri) const
 {
   string cookies;
   if (m_controller) {
-    m_controller->m_document->cookieJar()->cookiesForRequest(uri, cookies);
+    m_controller->m_document.cookieJar()->cookiesForRequest(uri, cookies);
   }
   return cookies;
 }
@@ -428,7 +428,7 @@ void HttpClient::readAll()
       // We have received the full payload, flush Flush m_controller->m_document
       // to display the results.
       if (m_controller)
-        m_controller->m_document->flush();
+        m_controller->m_document.flush();
       m_state = FINISHED;
       break;
 
@@ -436,11 +436,11 @@ void HttpClient::readAll()
       /* Keep going */
       debug("readAll(): RETRY_LATER");
 #if 0
-      if (m_controller->m_document->uri() != m_uri.asString())
+      if (m_controller->m_document.uri() != m_uri.asString())
       {
         // redirected.
         debug("Redirect:");
-        debug(m_controller->m_document->uri().c_str());
+        debug(m_controller->m_document.uri().c_str());
         m_state = FINISHED;
       }
 #endif

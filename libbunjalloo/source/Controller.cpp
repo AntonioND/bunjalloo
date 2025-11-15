@@ -47,21 +47,12 @@ const char Controller::HOME_URL[] = "file://nitro/docs/home.html";
 const char Controller::SYSINFO_URL[] = "about://sysinfo";
 
 const static char * UNABLE_TO_LOAD = "cannot_load";
-const static int MAX_REDIRECTS(7);
 
 Controller::Controller()
-: m_document(new Document()),
-  m_view(0),
-  m_config(0),
-  m_cache(new Cache(*m_document, false)),
-  m_httpClient(new HttpClient()),
-  m_wifiInit(false),
-  m_stop(false),
-  m_redirected(0),
-  m_maxRedirects(MAX_REDIRECTS),
-  m_saveAs(NO_SAVE),
-  m_checkingQueue(false)
 {
+  m_cache = new (std::nothrow) Cache(m_document, false);
+  if (m_cache == NULL)
+    libndsCrash("Controller(): OOM");
 }
 
 void Controller::initialise()
@@ -70,7 +61,7 @@ void Controller::initialise()
   m_config->checkPre();
   m_config->reload();
   m_config->checkPost();
-  m_document->cookieJar()->loadAcceptList(*m_config);
+  m_document.cookieJar()->loadAcceptList(*m_config);
   string font;
   m_config->resource(Config::FONT_STR, font);
   TextAreaFactory::setFont(FontFactory::create(font.c_str()));
@@ -88,22 +79,22 @@ void Controller::initialise()
     }
   }
 
-  m_view = new View(*m_document, *this);
+  m_view = new View(m_document, *this);
   m_config->resource("redirects", m_maxRedirects);
-  m_httpClient->setController(this);
+  m_httpClient.setController(this);
 }
 
 Controller::~Controller()
 {
-  delete m_document;
   delete m_view;
   delete m_config;
+  delete m_cache;
 }
 
 void Controller::showSysInfo()
 {
-  m_document->reset();
-  m_document->setUri(SYSINFO_URL);
+  m_document.reset();
+  m_document.setUri(SYSINFO_URL);
 
   extern const char * VERSION;
 
@@ -114,9 +105,9 @@ void Controller::showSysInfo()
   info += nds::System::slot2meminfo() + std::string("<br>");
   info += "</body></html>";
 
-  m_document->appendLocalData(info.c_str(), info.length());
-  m_document->flush();
-  m_document->setStatus(Document::LOADED_HTML);
+  m_document.appendLocalData(info.c_str(), info.length());
+  m_document.flush();
+  m_document.setStatus(Document::LOADED_HTML);
 }
 
 const Config & Controller::config() const
@@ -126,8 +117,8 @@ const Config & Controller::config() const
 
 void Controller::handleUri(const URI & uri)
 {
-  m_document->reset();
-  m_document->setCacheFile("");
+  m_document.reset();
+  m_document.setCacheFile("");
   switch (uri.protocol())
   {
     case URI::ABOUT_PROTOCOL:
@@ -181,19 +172,19 @@ void Controller::doUri(const URI & uri)
 {
   // cout << uri.asString() << endl;
   if (uri.isValid()) {
-    m_document->setUri(uri.asString());
+    m_document.setUri(uri.asString());
     do {
-      if (m_document->status() == Document::REDIRECTED)
+      if (m_document.status() == Document::REDIRECTED)
       {
-        handleUri(uri.navigateTo(m_document->uri()));
+        handleUri(uri.navigateTo(m_document.uri()));
       }
       else
       {
         handleUri(uri);
-        m_document->setPosition(-1);
+        m_document.setPosition(-1);
       }
     }
-    while (m_document->status() == Document::REDIRECTED);
+    while (m_document.status() == Document::REDIRECTED);
     checkDownloadQueue();
 
   }
@@ -201,8 +192,8 @@ void Controller::doUri(const URI & uri)
 
 void Controller::reload()
 {
-  m_cache->remove(m_document->uri());
-  doUri(m_document->uri());
+  m_cache->remove(m_document.uri());
+  doUri(m_document.uri());
 }
 
 void Controller::saveAs(const char * fileName, SaveAs_t saveType)
@@ -221,7 +212,7 @@ void Controller::saveAs(const char * fileName, SaveAs_t saveType)
     default:
       // download the file first!
       m_saveFileName = fileName;
-      if (m_document->status() == Document::LOADED_ITEM or m_document->status() == Document::LOADED_HTML)
+      if (m_document.status() == Document::LOADED_ITEM or m_document.status() == Document::LOADED_HTML)
       {
         checkSave();
       }
@@ -233,7 +224,7 @@ void Controller::saveCurrentFileAs(const char * fileName)
 {
   // save the current document as fileName
   // simply copy from the cache.
-  string cachedFile = m_cache->fileName(m_document->uri());
+  string cachedFile = m_cache->fileName(m_document.uri());
   if (nds::File::exists(cachedFile.c_str()) == nds::File::F_REG)
   {
     string path;
@@ -251,9 +242,9 @@ void Controller::saveCurrentFileAs(const char * fileName)
 
 void Controller::previous()
 {
-  if (m_document->status() != Document::LOADED_PAGE)
+  if (m_document.status() != Document::LOADED_PAGE)
     stop();
-  string ph = m_document->gotoPreviousHistory();
+  string ph = m_document.gotoPreviousHistory();
   if (not ph.empty())
   {
     URI uri(ph);
@@ -264,9 +255,9 @@ void Controller::previous()
 
 void Controller::next()
 {
-  if (m_document->status() != Document::LOADED_PAGE)
+  if (m_document.status() != Document::LOADED_PAGE)
     stop();
-  string ph = m_document->gotoNextHistory();
+  string ph = m_document.gotoNextHistory();
   if (not ph.empty())
   {
     URI uri(ph);
@@ -285,18 +276,18 @@ void Controller::mainLoop()
 
 void Controller::loadError()
 {
-  m_document->reset();
-  m_document->appendLocalData(s_errorText, strlen(s_errorText));
+  m_document.reset();
+  m_document.appendLocalData(s_errorText, strlen(s_errorText));
   string errorStr(T(UNABLE_TO_LOAD));
-  m_document->appendLocalData(errorStr.c_str(), errorStr.length());
+  m_document.appendLocalData(errorStr.c_str(), errorStr.length());
   string href("<a href='");
-  href += m_document->uri();
+  href += m_document.uri();
   href += "'>";
-  href += m_document->uri();
+  href += m_document.uri();
   href += "</a>";
-  m_document->appendLocalData(href.c_str(), href.length());
-  m_document->flush();
-  m_document->setStatus(Document::LOADED_HTML);
+  m_document.appendLocalData(href.c_str(), href.length());
+  m_document.flush();
+  m_document.setStatus(Document::LOADED_HTML);
 }
 
 void Controller::configureUrl(const std::string & fileName)
@@ -334,7 +325,7 @@ void Controller::checkUpdates()
   {
     return;
   }
-  Updater * updater = new Updater(*this, *m_document, *m_view);
+  Updater * updater = new Updater(*this, m_document, *m_view);
   m_view->setUpdater(updater);
   updater->show();
 }
@@ -348,16 +339,16 @@ void Controller::localConfigFile(const std::string & fileName)
   {
     vector<string> lines;
     uriFile.readlines(lines);
-    m_document->reset();
+    m_document.reset();
     ConfigParser configParser(*m_config);
     for (vector<string>::iterator it(lines.begin()); it != lines.end(); ++it)
     {
       string & line(*it);
       configParser.replaceMarkers(line);
-      m_document->appendLocalData(line.c_str(), line.length());
-      m_document->flush();
+      m_document.appendLocalData(line.c_str(), line.length());
+      m_document.flush();
     }
-    m_document->setStatus(Document::LOADED_HTML);
+    m_document.setStatus(Document::LOADED_HTML);
   }
   else
   {
@@ -378,10 +369,10 @@ void Controller::localFile(const std::string & fileName)
     char * data = new char[size+2];
     uriFile.read(data);
     data[size] = 0;
-    m_document->reset();
-    m_document->appendLocalData(data, size);
-    m_document->flush();
-    m_document->setStatus(Document::LOADED_HTML);
+    m_document.reset();
+    m_document.appendLocalData(data, size);
+    m_document.flush();
+    m_document.setStatus(Document::LOADED_HTML);
     delete [] data;
     uriFile.close();
   }
@@ -414,18 +405,18 @@ void Controller::fetchHttp(const URI & uri)
    *
    */
   bool hasPage = false;
-  m_httpClient->setUri(uri);
-  m_httpClient->reset();
+  m_httpClient.setUri(uri);
+  m_httpClient.reset();
   m_stop = false;
   if (not m_cache->load(uri))
   {
     // loop one, if get, then head
     // if that is ok, then get again
     m_saveAs = NO_SAVE;
-    while (not m_httpClient->finished())
+    while (not m_httpClient.finished())
     {
-      m_httpClient->handleNextState();
-      if (m_httpClient->state() > HttpClient::WIFI_OFF)
+      m_httpClient.handleNextState();
+      if (m_httpClient.state() > HttpClient::WIFI_OFF)
       {
         m_wifiInit = true;
       }
@@ -437,8 +428,8 @@ void Controller::fetchHttp(const URI & uri)
       }
       waitVBlank();
     }
-    hasPage = m_httpClient->hasPage();
-    m_httpClient->disconnect();
+    hasPage = m_httpClient.hasPage();
+    m_httpClient.disconnect();
   }
   else
   {
@@ -454,12 +445,12 @@ void Controller::fetchHttp(const URI & uri)
 
 URI Controller::downloadingFile() const
 {
-  URI uri(m_document->uri());
+  URI uri(m_document.uri());
   switch (uri.protocol())
   {
     case URI::HTTPS_PROTOCOL:
     case URI::HTTP_PROTOCOL:
-      return m_httpClient->uri();
+      return m_httpClient.uri();
 
     default:
       return uri;
@@ -468,25 +459,25 @@ URI Controller::downloadingFile() const
 
 void Controller::finishFetchHttp(const URI & uri)
 {
-  if (m_document->status() == Document::REDIRECTED and m_document->historyEnabled() and m_redirected < m_maxRedirects)
+  if (m_document.status() == Document::REDIRECTED and m_document.historyEnabled() and m_redirected < m_maxRedirects)
   {
     // redirected.
     m_redirected++;
     waitVBlank();
     waitVBlank();
-    m_document->reset();
-    m_document->setStatus(Document::REDIRECTED);
+    m_document.reset();
+    m_document.setStatus(Document::REDIRECTED);
   }
   else
   {
     m_redirected = 0;
     if (m_checkingQueue)
     {
-      m_document->setStatus(Document::LOADED_ITEM);
+      m_document.setStatus(Document::LOADED_ITEM);
     }
     else
     {
-      m_document->setStatus(Document::LOADED_HTML);
+      m_document.setStatus(Document::LOADED_HTML);
     }
     checkSave();
   }
@@ -513,7 +504,7 @@ void Controller::stop()
   m_saveFileName.clear();
   if (m_checkingQueue)
   {
-    const URI &uri(m_httpClient->uri());
+    const URI &uri(m_httpClient.uri());
     if (uri.protocol() == URI::HTTPS_PROTOCOL or uri.protocol() == URI::HTTP_PROTOCOL)
     {
       m_cache->remove(uri);
@@ -536,12 +527,12 @@ Cache * Controller::cache() const
 
 void Controller::setReferer(const URI & referer)
 {
-  m_httpClient->setReferer(referer);
+  m_httpClient.setReferer(referer);
 }
 
 void Controller::clearReferer()
 {
-  m_httpClient->clearReferer();
+  m_httpClient.clearReferer();
 }
 
 void Controller::saveCookieSettings()
@@ -554,7 +545,7 @@ void Controller::saveCookieSettings()
     if (allowed.is_open())
     {
       CookieJar::AcceptedDomainSet domains;
-      m_document->cookieJar()->acceptedDomains(domains);
+      m_document.cookieJar()->acceptedDomains(domains);
       for (CookieJar::AcceptedDomainSet::const_iterator it(domains.begin());
           it != domains.end(); ++it)
       {
@@ -576,7 +567,7 @@ void Controller::queueUri(const URI & uri)
 
 void Controller::checkDownloadQueue()
 {
-  m_document->setHistoryEnabled(false);
+  m_document.setHistoryEnabled(false);
   m_checkingQueue = true;
   while (m_downloadQ.size())
   {
@@ -584,8 +575,8 @@ void Controller::checkDownloadQueue()
     m_downloadQ.pop();
     fetchHttp(uri);
   }
-  m_document->setHistoryEnabled(true);
-  m_document->setStatus(Document::LOADED_PAGE);
+  m_document.setHistoryEnabled(true);
+  m_document.setStatus(Document::LOADED_PAGE);
   m_checkingQueue = false;
 }
 

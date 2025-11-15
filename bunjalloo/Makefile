@@ -39,7 +39,8 @@ SDIMAGE		:= image.bin
 
 SOURCEDIRS	:= source
 
-INCLUDEDIRS	:= ../libbunjalloo/include/
+INCLUDEDIRS	:= ../libbunjalloo/include/ \
+			   ../3rdparty/mbedtls-3.6.4/include/
 
 GFXDIRS		:=
 BINDIRS		:=
