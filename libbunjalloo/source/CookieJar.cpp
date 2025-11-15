@@ -186,7 +186,12 @@ void CookieJar::addCookieHeader(
     }
     else
     {
-      Cookie * cookie(new Cookie(name, value, domain, path, expires, secure));
+      Cookie * cookie =
+          new (std::nothrow) Cookie(name, value, domain, path, expires, secure);
+      // If we can't allocate the cookie we shouldn't crash
+      if (cookie == NULL)
+        return;
+
       m_cookies.push_back(cookie);
     }
   }
