@@ -18,6 +18,7 @@
 #include <set>
 #include <algorithm>
 #include <functional>
+#include "libnds.h"
 #include "Canvas.h"
 #include "BoxLayout.h"
 #include "Delete.h"
@@ -168,7 +169,12 @@ class BoxLayout::Box
     void addPrivate(Component *child)
     {
       child->setLocation(m_bounds.right(), m_bounds.top());
-      m_children.insert(new BoundComponent(child));
+
+      BoundComponent * boundChild = new (std::nothrow) BoundComponent(child);
+      if (boundChild == NULL)
+        libndsCrash("addPrivate(): OOM");
+
+      m_children.insert(boundChild);
       recalcSize();
     }
 };
@@ -180,7 +186,10 @@ BoxLayout::BoxLayout()
 
 void BoxLayout::initBoxes()
 {
-  Box *first(new Box(this));
+  Box *first(new (std::nothrow) Box(this));
+  if (first == NULL)
+    libndsCrash("initBoxes(): OOM");
+
   first->setPosition(m_bounds.x,m_bounds.y);
   m_boxes.push_front(first);
 }
@@ -217,7 +226,9 @@ void BoxLayout::addToLayout(Component *child)
     // Did not fit, so now we need to add the last height on again
     m_bounds.h += lastBox->bounds().h;
     Rectangle lbb(lastBox->bounds());
-    lastBox = new Box(this);
+    lastBox = new (std::nothrow) Box(this);
+    if (lastBox == NULL)
+      libndsCrash("addToLayout(): OOM");
     lastBox->setPosition(lbb.x, lbb.bottom());
     lastBox->tryAdd(child);
     m_boxes.push_front(lastBox);
