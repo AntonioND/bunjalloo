@@ -23,6 +23,8 @@
 #include "Stylus.h"
 #include "WidgetColors.h"
 
+// Space at the right of the ComboBox to draw a small arrow inside a rectangle
+static const int COMBO_DD_BUTTON_WIDTH(3);
 // An offset for the drop down bar.
 static const int COMBO_DD_BAR_WIDTH(8);
 
@@ -40,6 +42,8 @@ ComboBox::ComboBox()
 
 void ComboBox::addItem(const std::string & item)
 {
+  // If the box is empty, add the first element and set the dimensions of the
+  // ComboBox to the size of the first element.
   if (button()->text().empty())
   {
     button()->setText(item);
@@ -55,16 +59,22 @@ void ComboBox::addItem(const std::string & item)
   if (b == NULL)
     return;
 
-  // add callback to button so that the combobox is updated.
-  if (b->preferredSize().w > m_bounds.w)
+  // Calculate the new size of the ComboBox. If this new Button is wider than
+  // the previous ComboBox, expand it. We also need to fit the rectangle with
+  // the small arrow, and a few extra pixels to separate the text from the
+  // rectangle (so that it has a margin similar to the one on the left of the
+  // text).
+  if (b->preferredSize().w + COMBO_DD_BUTTON_WIDTH + 5 > m_bounds.w)
   {
-     m_bounds.w = b->preferredSize().w;
+     m_bounds.w = b->preferredSize().w + COMBO_DD_BUTTON_WIDTH + 5;
   }
+
+  // Add callback to button so that the combobox is updated.
   b->setListener(this);
   b->setDecoration(false);
   b->setBackgroundColor(WidgetColors::COMBOBOX_DROP_DOWN);
   m_items++;
-  scrollPane()->add(b); // It will be freed by the destructor of Component()
+  scrollPane()->add(b); // The button will be freed by the destructor of Component()
   int idealHeight = (m_bounds.h+2)*m_items;
   if (idealHeight > (192/2))
   {
@@ -158,13 +168,14 @@ void ComboBox::paint(const nds::Rectangle & clip)
     ScrollPane::removePopup(scrollPane());
   }
   // draw the little drop down box thing.
-  int headX = m_bounds.right() - 3;
+  int headX = m_bounds.right() - COMBO_DD_BUTTON_WIDTH;
   int headY = m_bounds.top() + m_bounds.h/2-1;
   if (down)
     ScrollBar::drawDownArrow(headX, headY);
   else
     ScrollBar::drawUpArrow(headX, headY);
-  nds::Canvas::instance().verticalLine(headX-3, m_bounds.top(), m_bounds.h, WidgetColors::BUTTON_SHADOW);
+  nds::Canvas::instance().verticalLine(headX-COMBO_DD_BUTTON_WIDTH, m_bounds.top(),
+                                       m_bounds.h, WidgetColors::BUTTON_SHADOW);
 }
 
 void ComboBox::pressed(ButtonI * pressed)
