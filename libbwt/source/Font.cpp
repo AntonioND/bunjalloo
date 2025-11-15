@@ -252,6 +252,8 @@ void Font::printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int colo
   int xbounds = g.image.width;
   if ((xPosition + round_up(g.image.width)) > round_up(clip.right())) {
     xbounds = clip.right() - round_down(xPosition);
+    if (xbounds < 0)
+      xbounds = 0;
   }
   int ybounds = g.image.height;
   if ((yPosition + ybounds) > clip.bottom()) {
