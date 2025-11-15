@@ -17,6 +17,7 @@
 #ifndef Controller_h_seen
 #define Controller_h_seen
 
+#include "Cache.h"
 #include "Config.h"
 #include "Document.h"
 #include "HttpClient.h"
@@ -113,7 +114,7 @@ class Controller
     Document m_document { };
     View * m_view { NULL };
     Config m_config { };
-    Cache * m_cache { NULL };
+    Cache m_cache { m_document, false };
     HttpClient m_httpClient { };
     bool m_wifiInit { false };
     bool m_stop { false };

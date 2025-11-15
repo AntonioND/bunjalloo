@@ -50,9 +50,6 @@ const static char * UNABLE_TO_LOAD = "cannot_load";
 
 Controller::Controller()
 {
-  m_cache = new (std::nothrow) Cache(m_document, false);
-  if (m_cache == NULL)
-    libndsCrash("Controller(): OOM");
 }
 
 void Controller::initialise()
@@ -67,14 +64,14 @@ void Controller::initialise()
 
   bool useCache(false);
   if (m_config.resource(Config::USECACHE, useCache))
-    m_cache->setUseCache(useCache);
+    m_cache.setUseCache(useCache);
 
   bool clearCache(false);
   if (m_config.resource(Config::CLEARCACHE, clearCache))
   {
     if (clearCache)
     {
-      m_cache->clearCache();
+      m_cache.clearCache();
     }
   }
 
@@ -86,7 +83,6 @@ void Controller::initialise()
 Controller::~Controller()
 {
   delete m_view;
-  delete m_cache;
 }
 
 void Controller::showSysInfo()
@@ -190,7 +186,7 @@ void Controller::doUri(const URI & uri)
 
 void Controller::reload()
 {
-  m_cache->remove(m_document.uri());
+  m_cache.remove(m_document.uri());
   doUri(m_document.uri());
 }
 
@@ -222,7 +218,7 @@ void Controller::saveCurrentFileAs(const char * fileName)
 {
   // save the current document as fileName
   // simply copy from the cache.
-  string cachedFile = m_cache->fileName(m_document.uri());
+  string cachedFile = m_cache.fileName(m_document.uri());
   if (nds::File::exists(cachedFile.c_str()) == nds::File::F_REG)
   {
     string path;
@@ -319,7 +315,7 @@ void Controller::configureUrl(const std::string & fileName)
 
 void Controller::checkUpdates()
 {
-  if (not m_cache->useCache())
+  if (not m_cache.useCache())
   {
     return;
   }
@@ -406,7 +402,7 @@ void Controller::fetchHttp(const URI & uri)
   m_httpClient.setUri(uri);
   m_httpClient.reset();
   m_stop = false;
-  if (not m_cache->load(uri))
+  if (not m_cache.load(uri))
   {
     // loop one, if get, then head
     // if that is ok, then get again
@@ -505,7 +501,7 @@ void Controller::stop()
     const URI &uri(m_httpClient.uri());
     if (uri.protocol() == URI::HTTPS_PROTOCOL or uri.protocol() == URI::HTTP_PROTOCOL)
     {
-      m_cache->remove(uri);
+      m_cache.remove(uri);
       while (not m_downloadQ.empty()) {
         m_downloadQ.pop();
       }
@@ -520,7 +516,7 @@ bool Controller::stopped() const
 
 Cache * Controller::cache() const
 {
-  return m_cache;
+  return (Cache *)&m_cache;
 }
 
 void Controller::setReferer(const URI & referer)
