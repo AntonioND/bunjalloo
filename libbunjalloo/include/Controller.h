@@ -17,13 +17,13 @@
 #ifndef Controller_h_seen
 #define Controller_h_seen
 
+#include "Config.h"
 #include "Document.h"
 #include "HttpClient.h"
 #include "URI.h"
 #include <queue>
 
 class View;
-class Config;
 class Cache;
 
 /** Controller maps user actions to model updates. For example, responds to setting the URI.
@@ -112,7 +112,7 @@ class Controller
 
     Document m_document { };
     View * m_view { NULL };
-    Config * m_config { NULL };
+    Config m_config { };
     Cache * m_cache { NULL };
     HttpClient m_httpClient { };
     bool m_wifiInit { false };

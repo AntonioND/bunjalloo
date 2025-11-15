@@ -57,21 +57,20 @@ Controller::Controller()
 
 void Controller::initialise()
 {
-  m_config = new Config();
-  m_config->checkPre();
-  m_config->reload();
-  m_config->checkPost();
-  m_document.cookieJar()->loadAcceptList(*m_config);
+  m_config.checkPre();
+  m_config.reload();
+  m_config.checkPost();
+  m_document.cookieJar()->loadAcceptList(m_config);
   string font;
-  m_config->resource(Config::FONT_STR, font);
+  m_config.resource(Config::FONT_STR, font);
   TextAreaFactory::setFont(FontFactory::create(font.c_str()));
 
   bool useCache(false);
-  if (m_config->resource(Config::USECACHE, useCache))
+  if (m_config.resource(Config::USECACHE, useCache))
     m_cache->setUseCache(useCache);
 
   bool clearCache(false);
-  if (m_config->resource(Config::CLEARCACHE, clearCache))
+  if (m_config.resource(Config::CLEARCACHE, clearCache))
   {
     if (clearCache)
     {
@@ -80,14 +79,13 @@ void Controller::initialise()
   }
 
   m_view = new View(m_document, *this);
-  m_config->resource("redirects", m_maxRedirects);
+  m_config.resource("redirects", m_maxRedirects);
   m_httpClient.setController(this);
 }
 
 Controller::~Controller()
 {
   delete m_view;
-  delete m_config;
   delete m_cache;
 }
 
@@ -112,7 +110,7 @@ void Controller::showSysInfo()
 
 const Config & Controller::config() const
 {
-  return *m_config;
+  return m_config;
 }
 
 void Controller::handleUri(const URI & uri)
@@ -228,7 +226,7 @@ void Controller::saveCurrentFileAs(const char * fileName)
   if (nds::File::exists(cachedFile.c_str()) == nds::File::F_REG)
   {
     string path;
-    m_config->resource(Config::DOWNLOAD, path);
+    m_config.resource(Config::DOWNLOAD, path);
     if (nds::File::exists(path.c_str()) == nds::File::F_NONE)
     {
       nds::File::mkdir(path.c_str());
@@ -303,7 +301,7 @@ void Controller::configureUrl(const std::string & fileName)
     string postedAction = nds::File::base(fileName.substr(0, position).c_str());
     if (postedAction == "config")
     {
-      m_config->postConfiguration(postedUrl);
+      m_config.postConfiguration(postedUrl);
       m_view->endBookmark();
     }
     else if (postedAction == "update")
@@ -340,7 +338,7 @@ void Controller::localConfigFile(const std::string & fileName)
     vector<string> lines;
     uriFile.readlines(lines);
     m_document.reset();
-    ConfigParser configParser(*m_config);
+    ConfigParser configParser(m_config);
     for (vector<string>::iterator it(lines.begin()); it != lines.end(); ++it)
     {
       string & line(*it);
@@ -538,7 +536,7 @@ void Controller::clearReferer()
 void Controller::saveCookieSettings()
 {
   std::string cookieFile;
-  if ( m_config->resource(Config::COOKIE_STR, cookieFile) and not cookieFile.empty())
+  if (m_config.resource(Config::COOKIE_STR, cookieFile) and not cookieFile.empty())
   {
     nds::File allowed;
     allowed.open(cookieFile.c_str(), "w");
