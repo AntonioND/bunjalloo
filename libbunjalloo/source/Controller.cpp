@@ -75,7 +75,10 @@ void Controller::initialise()
     }
   }
 
-  m_view = new View(m_document, *this);
+  m_view = new (std::nothrow) View(m_document, *this);
+  if (m_view == NULL)
+    libndsCrash("initialise(): OOM");
+
   m_config.resource("redirects", m_maxRedirects);
   m_httpClient.setController(this);
 }
@@ -319,7 +322,11 @@ void Controller::checkUpdates()
   {
     return;
   }
-  Updater * updater = new Updater(*this, m_document, *m_view);
+
+  Updater * updater = new (std::nothrow) Updater(*this, m_document, *m_view);
+  if (updater == NULL)
+    libndsCrash("checkUpdates(): OOM");
+
   m_view->setUpdater(updater);
   updater->show();
 }
@@ -360,7 +367,13 @@ void Controller::localFile(const std::string & fileName)
   if (uriFile.is_open())
   {
     int size = uriFile.size();
-    char * data = new char[size+2];
+    char * data = new (std::nothrow) char[size+2];
+    if (data == NULL)
+    {
+      uriFile.close();
+      loadError();
+      return;
+    }
     uriFile.read(data);
     data[size] = 0;
     m_document.reset();
@@ -375,7 +388,6 @@ void Controller::localFile(const std::string & fileName)
     // could not load file.
     loadError();
   }
-
 }
 
 void Controller::fetchHttp(const URI & uri)
