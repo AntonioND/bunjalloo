@@ -282,7 +282,7 @@ void View::showBookmarkPage()
   m_document.setHistoryEnabled(false);
 
   URI bookmarksUrl(Config::BOOKMARK_URL);
-  assert(bookmarksUrl.server() == "bunjalloo");
+  assert(bookmarksUrl.server() == "bunjalloo"); // The file must be in DATADIR
   std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
 
   if (nds::File::exists(bookmarksPath.c_str()) == nds::File::F_NONE)
@@ -313,7 +313,7 @@ void View::bookmarkCurrentPage()
 {
   {
     URI bookmarksUrl(Config::BOOKMARK_URL);
-    assert(bookmarksUrl.server() == "bunjalloo");
+    assert(bookmarksUrl.server() == "bunjalloo"); // The file must be in DATADIR
     std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
 
     nds::File bookmarks;

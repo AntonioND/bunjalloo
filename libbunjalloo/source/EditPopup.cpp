@@ -60,7 +60,7 @@ void EditPopup::delElement()
   // now dump the Bookmark file to disk
   {
     URI bookmarksUrl(Config::BOOKMARK_URL);
-    assert(bookmarksUrl.server() == "bunjalloo");
+    assert(bookmarksUrl.server() == "bunjalloo"); // The file must be in DATADIR
     std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
 
     NodeDumper dumper(bookmarksPath.c_str());
@@ -101,7 +101,7 @@ void EditPopup::postEdit(const std::string & val)
   }
 
   URI bookmarksUrl(Config::BOOKMARK_URL);
-  assert(bookmarksUrl.server() == "bunjalloo");
+  assert(bookmarksUrl.server() == "bunjalloo"); // The file must be in DATADIR
   std::string bookmarksPath(std::string(DATADIR) + bookmarksUrl.fileName());
 
   NodeDumper dumper(bookmarksPath.c_str());
