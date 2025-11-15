@@ -18,13 +18,13 @@
 #define Document_h_seen
 #include <vector>
 #include <string>
+#include "CookieJar.h"
+#include "HtmlDocument.h"
 #include "ViewI.h"
 
 class HeaderParser;
 class HeaderListener;
-class HtmlDocument;
 class HtmlElement;
-class CookieJar;
 
 /** This class represents the Document Model and the model in the MVC pattern. */
 class Document
@@ -154,7 +154,7 @@ class Document
 
     HtmlDocument * htmlDocument() const
     {
-      return m_htmlDocument;
+      return (HtmlDocument *)&m_htmlDocument;
     }
 
     const HeaderParser & headerParser() const;
@@ -187,17 +187,17 @@ class Document
   private:
     //std::string m_uri;
     Status m_status;
-    int m_amount;
+    int m_amount { 0 };
     std::vector<ViewI*> m_views;
-    CookieJar*    m_cookieJar;
-    HtmlDocument* m_htmlDocument;
-    HeaderParser* m_headerParser;
-    HeaderListener * m_headerListener;
+    CookieJar m_cookieJar { };
+    HtmlDocument m_htmlDocument { };
+    HeaderParser* m_headerParser { NULL };
+    HeaderListener * m_headerListener { NULL };
     //! Store history entry as the url and user defined scroll position.
     typedef std::pair<std::string, int> HistoryEntry;
     typedef std::vector<HistoryEntry> HistoryVector;
 
-    bool m_historyEnabled;
+    bool m_historyEnabled { true };
     HistoryVector m_history;
     HistoryVector::iterator m_historyPosition;
 

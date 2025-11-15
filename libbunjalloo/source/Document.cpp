@@ -16,6 +16,7 @@
 */
 #include <algorithm>
 #include <assert.h>
+#include "libnds.h"
 #include "Document.h"
 #include "HtmlDocument.h"
 #include "HtmlConstants.h"
@@ -41,14 +42,18 @@ class DocumentHeaderListener: public HeaderListener
     Document & m_document;
 };
 
-Document::Document():
-  m_amount(0),
-  m_cookieJar(new CookieJar()),
-  m_htmlDocument(new HtmlDocument()),
-  m_headerParser(new HeaderParser(m_htmlDocument,m_cookieJar, new CacheControl())),
-  m_headerListener(new DocumentHeaderListener(*this)),
-  m_historyEnabled(true)
+Document::Document()
 {
+  // This will be owned and freed by the HeaderParser instance
+  CacheControl * cacheControl = new (std::nothrow) CacheControl();
+  if (cacheControl == NULL)
+    libndsCrash("Document: OOM (1)");
+
+  m_headerParser = new (std::nothrow) HeaderParser(&m_htmlDocument, &m_cookieJar, cacheControl);
+  m_headerListener = new (std::nothrow) DocumentHeaderListener(*this);
+  if ((m_headerParser == NULL) or (m_headerListener == NULL))
+    libndsCrash("Document: OOM (2)");
+
   m_history.clear();
   m_historyPosition = m_history.begin();
   reset();
@@ -57,9 +62,7 @@ Document::Document():
 
 Document::~Document()
 {
-  delete m_htmlDocument;
   delete m_headerParser;
-  delete m_cookieJar;
   delete m_headerListener;
 }
 
@@ -107,25 +110,25 @@ const std::string & Document::uri() const
 // const char * Document::asText() const
 const std::string & Document::asText() const
 {
-  return m_htmlDocument->data();
+  return m_htmlDocument.data();
 }
 
 
 void Document::dumpDOM()
 {
-  m_htmlDocument->dumpDOM();
+  m_htmlDocument.dumpDOM();
 }
 
 const HtmlElement * Document::rootNode() const
 {
-  // m_htmlDocument->dumpDOM();
-  return m_htmlDocument->rootNode();
+  // m_htmlDocument.dumpDOM();
+  return m_htmlDocument.rootNode();
 }
 
 const HtmlElement * Document::titleNode() const
 {
   const HtmlElement * title(0);
-  if (m_htmlDocument->mimeType() == HtmlDocument::TEXT_HTML)
+  if (m_htmlDocument.mimeType() == HtmlDocument::TEXT_HTML)
   {
     const HtmlElement * root(rootNode());
     if (root->isa(HtmlConstants::HTML_TAG) and root->hasChildren())
@@ -146,7 +149,7 @@ const HtmlElement * Document::titleNode() const
 void Document::reset()
 {
   m_status = NOTHING;
-  m_htmlDocument->reset();
+  m_htmlDocument.reset();
   m_headerParser->reset();
 }
 
@@ -168,7 +171,7 @@ unsigned int Document::percentLoaded() const
 {
     unsigned int expected = dataExpected();
     if (expected) {
-      return (m_htmlDocument->dataGot()*100) / expected;
+      return (m_htmlDocument.dataGot()*100) / expected;
     }
     return 0;
 }
@@ -196,10 +199,10 @@ void Document::appendData(const char * data, int size)
   if (size) {
     m_headerParser->feed(data,size);
     unsigned int expected(dataExpected());
-    unsigned int dataGot(m_htmlDocument->dataGot());
+    unsigned int dataGot(m_htmlDocument.dataGot());
     if (expected < dataGot)
     {
-      m_htmlDocument->setDataGot(0);
+      m_htmlDocument.setDataGot(0);
     }
     if (not m_headerParser->redirect().empty())
     {
@@ -220,10 +223,10 @@ void Document::flush()
   m_headerParser->flush();
 
   unsigned int expected(dataExpected());
-  unsigned int dataGot(m_htmlDocument->dataGot());
+  unsigned int dataGot(m_htmlDocument.dataGot());
   if (expected < dataGot)
   {
-    m_htmlDocument->setDataGot(0);
+    m_htmlDocument.setDataGot(0);
   }
   if (not m_headerParser->redirect().empty())
   {
@@ -258,8 +261,8 @@ void Document::setStatus(Document::Status status)
   m_status = status;
   if (m_status == LOADED_HTML or m_status == LOADED_ITEM)
   {
-    m_htmlDocument->handleEOF();
-    //m_htmlDocument->dumpDOM();
+    m_htmlDocument.handleEOF();
+    //m_htmlDocument.dumpDOM();
   }
   notifyAll();
 }
@@ -317,12 +320,12 @@ std::string Document::gotoNextHistory()
 
 CookieJar * Document::cookieJar() const
 {
-  return m_cookieJar;
+  return (CookieJar *)&m_cookieJar;
 }
 
 void Document::setCacheFile(const std::string & cacheFile)
 {
-  m_htmlDocument->setCacheFile(cacheFile);
+  m_htmlDocument.setCacheFile(cacheFile);
   if (not cacheFile.empty())
   {
     m_headerParser->setCacheFile(cacheFile+".hdr");
@@ -342,7 +345,7 @@ void Document::magicMimeType(const char * data, int length)
   if (length < 3)
   {
     // assume plain text we only have 2 bytes...
-    m_htmlDocument->parseContentType("text/plain");
+    m_htmlDocument.parseContentType("text/plain");
     return;
   }
   else
@@ -350,28 +353,28 @@ void Document::magicMimeType(const char * data, int length)
     if ((unsigned char)data[0] == 0x89 && (unsigned char)data[1] == 0x50 &&
         (unsigned char)data[2] == 0x4E)
     {
-      m_htmlDocument->parseContentType("image/png");
+      m_htmlDocument.parseContentType("image/png");
       // This could also be an APNG file, but we need to do a more clever
       // parsing to detect it...
     }
     else if ((unsigned char)data[0] == 0x47 && (unsigned char)data[1] == 0x49 &&
              (unsigned char)data[2] == 0x46)
     {
-      m_htmlDocument->parseContentType("image/gif");
+      m_htmlDocument.parseContentType("image/gif");
     }
     else if ((unsigned char)data[0] == 'B' && (unsigned char)data[1] =='M')
     {
-      m_htmlDocument->parseContentType("image/bmp");
+      m_htmlDocument.parseContentType("image/bmp");
     }
     else if ((unsigned char)data[0] == 0xFF && (unsigned char)data[1] == 0xD8)
     {
       // naive check, but if it isn't a jpeg, then the proper
       // isJpeg call will catch it...
-      m_htmlDocument->parseContentType(HtmlParser::IMAGE_JPEG_STR);
+      m_htmlDocument.parseContentType(HtmlParser::IMAGE_JPEG_STR);
     }
     else if (strncmp("PK", data, 2) == 0)
     {
-      m_htmlDocument->parseContentType("application/zip");
+      m_htmlDocument.parseContentType("application/zip");
     }
     // lame hack to get html type
     else
@@ -388,7 +391,7 @@ void Document::magicMimeType(const char * data, int length)
           or (gt == 0)
          )
       {
-        m_htmlDocument->parseContentType("text/html");
+        m_htmlDocument.parseContentType("text/html");
       }
       else
       {
@@ -396,11 +399,11 @@ void Document::magicMimeType(const char * data, int length)
         {
           if (not isascii(*src))
           {
-            m_htmlDocument->parseContentType("application/octet-stream");
+            m_htmlDocument.parseContentType("application/octet-stream");
             return;
           }
         }
-        m_htmlDocument->parseContentType("text/plain");
+        m_htmlDocument.parseContentType("text/plain");
       }
     }
   }
