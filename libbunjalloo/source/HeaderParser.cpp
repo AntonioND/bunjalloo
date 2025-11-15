@@ -41,19 +41,9 @@ HeaderParser::HeaderParser(HtmlParser * htmlParser,
     )
 :
   m_uri(*(new URI())),
-  m_bufferData(NULL),
-  m_bufferSize(0),
-  m_value(0),
-  m_position(0),
-  m_end(0),
-  m_lastPosition(0),
-  m_gzip(false),
-  m_httpStatusCode(200),
-  m_expected(0),
   m_htmlParser(htmlParser),
   m_cookieJar(cookieJar),
-  m_cacheControl(cacheControl),
-  m_headerListener(0),
+  m_cacheControl(cacheControl), // We own this and we will have to delete it
   m_stream(new z_stream_s),
   m_window(new char[WINSIZE])
 {

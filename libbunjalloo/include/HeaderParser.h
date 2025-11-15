@@ -114,29 +114,29 @@ class HeaderParser
     URI & m_uri;
 
     // Buffer that contains all data fed to the HeaderParser instance
-    char * m_bufferData;
-    size_t m_bufferSize;
+    char * m_bufferData { NULL };
+    size_t m_bufferSize { 0 };
 
     // Current position and value read from the buffer
-    unsigned int m_value;
-    const char * m_position;
-    const char * m_end;
-    const char * m_lastPosition;
+    unsigned int m_value { 0 };
+    const char * m_position { NULL };
+    const char * m_end { NULL };
+    const char * m_lastPosition { NULL };
 
     std::string m_field;
     std::string m_headerValue;
     std::string m_redirect;
     bool m_chunked;
-    bool m_gzip;
+    bool m_gzip { false };
     int m_chunkLength;
     std::string m_chunkLengthString;
-    unsigned int m_httpStatusCode;
-    unsigned int m_expected;
+    unsigned int m_httpStatusCode { 200 };
+    unsigned int m_expected { 0 };
 
-    HtmlParser* m_htmlParser;
-    CookieJar * m_cookieJar;
-    CacheControl * m_cacheControl;
-    HeaderListener * m_headerListener;
+    HtmlParser* m_htmlParser { NULL };
+    CookieJar * m_cookieJar { NULL };
+    CacheControl * m_cacheControl { NULL };
+    HeaderListener * m_headerListener { NULL };
 
     std::string m_cacheFile;
     struct z_stream_s * m_stream;
