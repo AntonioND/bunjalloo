@@ -1,6 +1,6 @@
 # Bunjaloo Changelog
 
-## Version DEV
+## Version 0.11.0 (2025-11-16)
 
 When updating to this version you should keep your `data/bunjalloo/user` files
 safe, but you should delete all other files and folders from `data/bunjalloo`.
