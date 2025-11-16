@@ -28,6 +28,15 @@ The icons shown on this menu are, from left to right:
 Clicking on each active icon, apart from the return one of course, takes you to
 a new screen with more self-explanatory options.
 
+## Downloads
+
+You can download a website by pressing the toolbar icon with the shape of a
+floppy disk. It will be saved to the path specified in the preferences. By
+default, this path is `/download/`, but it can be changed by the user.
+
+You can set it to `./` if you want files to be downloaded to the same folder
+Bunjalloo is running from.
+
 ## Quick search
 
 You can do a quick search with different search engines if they are configured

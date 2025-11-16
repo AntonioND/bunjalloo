@@ -49,7 +49,7 @@ language=builtin
 fullref=0
 
 # Default download directory
-download=/
+download=/download/
 
 # Place to look for updates
 update=https://raw.githubusercontent.com/AntonioND/bunjalloo/refs/heads/updates/version.txt
