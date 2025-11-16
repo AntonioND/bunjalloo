@@ -24,6 +24,13 @@ all temporary and user folders automatically.
     certificates now requires the user to use `ndstool` to modify the NitroFS
     files. Also, if `data/bunjalloo` doesn't exist at boot it will be created
     automatically.
+  - The text box used for keyboard input has been made a lot more stable.
+    Sometimes some lines would be too long to fit and they would overflow to the
+    next one displaying the last character. Sometimes deleting a character or
+    adding a character would make the caret go over the line limit and cause a
+    crash. This has been fixed. Also, now it's possible to press the white area
+    after the text and the caret will be set to the last line with text instead
+    of disappearing.
   - A new protocol called `about://` has been added. This protocol is used for
     built-in pages that aren't stored in the filesystem or downloaded. Also, the
     home page `file://licence` has been moved to a file in NitroFS.
@@ -35,13 +42,6 @@ all temporary and user folders automatically.
   - A new internal page called `about://sysinfo` has been added. It shows system
     information such as available RAM. This page can be loaded while browsing a
     website and it will show the memory available after loading that website.
-  - The HTML parser doesn't support partial parsing of data. The code is
-    organized to fed it partial data, but the parser has several loops that
-    assume that there is more data to be used, and they hang if there isn't more
-    data. Instead of modifying the whole parser, a partial fix has been added:
-    the HTML parser is now only called when the full website has been
-    downloaded. This only fixes well-formed websites, and it will still hang on
-    malformed websites.
   - Add missing credits and licenses to the homepage of the browser.
   - Implement option that allows user to decide to clear the cache at boot or
     not. The setting was there, but it was unused.
@@ -69,6 +69,13 @@ all temporary and user folders automatically.
 
 - Dev changes:
 
+  - The HTML parser doesn't support partial parsing of data. The code is
+    organized to fed it partial data, but the parser has several loops that
+    assume that there is more data to be used, and they hang if there isn't more
+    data. Instead of modifying the whole parser, a partial fix has been added:
+    the HTML parser is now only called when the full website has been
+    downloaded. This only fixes well-formed websites, and it will still hang on
+    malformed websites.
   - Codebase reorganized. Different libraries are now in different folders and
     can be built independently as static archives. This makes it possible to
     build tests without rebuilding all the codebase for each tests.
