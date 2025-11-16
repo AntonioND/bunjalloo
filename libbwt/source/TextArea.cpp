@@ -91,7 +91,8 @@ void TextArea::appendText(const std::string &unicodeString)
     if ((size>>8) > width() and word.size() > 1)
     {
       it = backup_it;
-      word = m_font->shorterWordFromLong(&it, end_it, width(), &size);
+      // Leave a small margin on the right
+      word = m_font->shorterWordFromLong(&it, end_it, width() - 2, &size);
     }
 
     // if the word ends with a new line, then increment the height.

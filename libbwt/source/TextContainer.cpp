@@ -77,7 +77,8 @@ void TextContainer::layout()
   std::string::const_iterator it(m_text.begin());
   std::string::const_iterator end_it(m_text.end());
   int size(0);
-  std::string subs(textArea()->font().shorterWordFromLong(&it, end_it, textArea()->width(), &size));
+  // Leave a small margin on the right
+  std::string subs(textArea()->font().shorterWordFromLong(&it, end_it, textArea()->width() - 1, &size));
   textArea()->clearText();
   textArea()->appendText(subs);
   if (width() == 0)
