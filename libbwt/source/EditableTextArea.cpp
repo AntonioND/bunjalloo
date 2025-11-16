@@ -285,11 +285,15 @@ void EditableTextArea::setCaret(int x, int y)
   {
     // next see if the caret can be set.
     m_caretLine = (y - m_bounds.y)/font().height();
+
+    // If the user presses in the empty space after the end of the text (on the
+    // right of the last line or below the last line) set the caret to the last
+    // line.
     if (m_caretLine >= (int)m_document.size())
     {
-      m_caretLine = -1;
-      return;
+      m_caretLine = (int)m_document.size() - 1;
     }
+
     m_caretChar = 0;
     m_caretPixelX = -1;
     const std::string & line(
