@@ -15,7 +15,8 @@ all temporary and user folders automatically.
     removed because they no longer work. The Wikipedia search string has been
     updated, and DuckDuckGo, FrogFind! and GitHub have been added to the list.
   - The URL used by the auto-updater has been fixed, so future versions of
-    Bunjalloo can be downloaded by Bunjalloo itself.
+    Bunjalloo can be downloaded by Bunjalloo itself. Note that auto-update only
+    seems to work if the Bunjalloo ROM is in the root of the SD card.
   - The NDS ROM of Bunjalloo now contains all the files it needs to run, it
     doesn't need to be distributed with a folder with lots of extra files.
     `data/bunjalloo` is now only used as temporary storage and for user

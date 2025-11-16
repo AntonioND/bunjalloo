@@ -115,6 +115,7 @@ void Updater::getZip()
     if (online > current) {
       string update;
       m_controller.config().resource(Config::UPDATE, update);
+      // The URL of the ZIP file can be relative to the TXT file
       m_downloadUrl = URI(update).navigateTo(download);
       m_document.setHistoryEnabled(false);
       m_view.setSaveAsEnabled(false);
