@@ -123,7 +123,7 @@ make tools
 
 Run the `convertftf` tool passing the True Type Font name and the point size
 desired. It should generate 2 files: the map data and the set data. Copy them
-into the `sdroot/data/bunjalloo/fonts` directory.
+into the `data/bunjalloo/fonts` directory.
 
 To add extra ranges of UTF-8 glyphs, then **all** the ranges required must be
 passed on the command line after the size. By default the glyphs included are:
@@ -133,13 +133,13 @@ range 0x1f (31) to 0x7f (127) inclusive". This covers all ASCII characters, the
 extra latin ones (accented a's and e's, etc) and some common symbols - the Euro
 sign, copyright and so on.
 
-The font name is defined in `sdroot/data/bunjalloo/config.ini`. Change the line
-`font=fonts/sans` to indicate the basename of the new font. For example, to
-generate a new 12 point font from the font `MyFont.ttf`, one could do this:
+The font name is defined in `config.ini`. Change the line `font=fonts/sans` to
+indicate the basename of the new font. For example, to generate a new 12 point
+font from the font `MyFont.ttf`, one could do this:
 
 ```
 tools/convertftf/convertftf --map=myfont.map --set=myfont.set --size=12 MyFont.ttf
-mv myfont.* sdroot/data/bunjalloo/fonts/
+mv myfont.* nitrofs/fonts/
 sed -i 's/sans/myfont/' sdroot/data/bunjalloo/config.ini
 ```
 
