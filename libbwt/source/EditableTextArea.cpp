@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <algorithm>
+#include <cassert>
 #include "Canvas.h"
 #include "EditableTextArea.h"
 #include "Palette.h"
@@ -64,6 +65,7 @@ void EditableTextArea::paint(const nds::Rectangle & clip)
       if (m_caretPixelX == -1)
       {
         m_caretPixelX = 0;
+        assert(m_caretLine < (int)m_document.size());
         const std::string & line(
             echoText() ? m_document[m_caretLine] :
             createPasswordMask(characters(m_caretLine)));
@@ -135,12 +137,14 @@ void EditableTextArea::recalculateCaret()
   {
     m_caretChar = 0;
     m_caretLine++;
+    if (m_caretLine >= (int)m_document.size())
+       m_caretLine = (int)m_document.size() - 1;
     m_appendedNewLine = false;
     return;
   }
-  if (m_caretLine == (int)m_document.size())
+  if (m_caretLine >= (int)m_document.size())
   {
-    m_caretLine--;
+    m_caretLine = (int)m_document.size();
     m_caretChar = characters(m_caretLine);
     m_caretPixelX = -1;
   }
@@ -159,6 +163,8 @@ void EditableTextArea::recalculateCaret()
       if (m_caretChar >= newLength)
       {
         m_caretLine++;
+        if (m_caretLine >= m_document.size())
+           m_caretLine = m_document.size() - 1;
         // fix Issue 19 - off by one on wrap around new line.
         m_caretChar = diff;
         m_caretPixelX = -1;
@@ -305,7 +311,6 @@ void EditableTextArea::setCaret(int x, int y)
     m_caretChar = c;
   }
 }
-
 
 void EditableTextArea::setText(const std::string & text)
 {
