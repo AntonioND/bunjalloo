@@ -163,7 +163,7 @@ void EditableTextArea::recalculateCaret()
       if (m_caretChar >= newLength)
       {
         m_caretLine++;
-        if (m_caretLine >= m_document.size())
+        if (m_caretLine >= (int)m_document.size())
            m_caretLine = m_document.size() - 1;
         // fix Issue 19 - off by one on wrap around new line.
         m_caretChar = diff;
