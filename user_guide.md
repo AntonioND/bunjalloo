@@ -37,6 +37,17 @@ default, this path is `/download/`, but it can be changed by the user.
 You can set it to `./` if you want files to be downloaded to the same folder
 Bunjalloo is running from.
 
+## Cookies
+
+By default cookies from all websites are rejected. Only the cookies of websites
+in the `data/bunjalloo/user/ckallow.lst` list are allowed. You can edit this
+list yourself, or you can navigate to a website, open the preferences menu from
+the toolbar, and press on the toolbar icon with the shape of a cookie with a
+plus.
+
+If you want to see the list of allowed cookies and delete some site from the
+list, you can press the icon with the shape of a cookie without a plus.
+
 ## Quick search
 
 You can do a quick search with different search engines if they are configured

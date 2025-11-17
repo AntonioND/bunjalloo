@@ -142,7 +142,7 @@ all temporary and user folders automatically.
 - Migrated to BlocksDS from devkitARM. Now Bunjalloo can take advantage of the
   Wifi driver in DSi mode, with WPA2 support and the additional RAM of DSi.
 - The old versions of libpng, libjpeg and giflib have been replaced by libplum.
-- MatrixSsl isn't currently maintained and it has been replaced by Mbed TLS.
+- MatrixSSL isn't currently maintained and it has been replaced by Mbed TLS.
   Switching between HTTP and HTTPS is still a bit unreliable.
 - The PC port has been fixed. It builds, some infinite loops have been fixed,
   and images are now displayed correctly.
