@@ -95,11 +95,12 @@ void EditableTextArea::text(std::string & returnString) const
   document(returnString);
 }
 
+// Delete a single character left of the caret
 void EditableTextArea::deleteChar()
 {
-  // delete a single character
   if (m_caretLine == -1)
   {
+    // If the caret isn't set, delete the last character in the string
     std::string & line(currentLine());
     if (not line.empty())
     {
@@ -108,92 +109,48 @@ void EditableTextArea::deleteChar()
   }
   else
   {
-    if (m_caretChar == 0) {
-      if (m_caretLine) {
-        m_caretLine--;
-        m_caretChar = characters(m_caretLine);
-      }
-      else
+    if (m_caretChar == 0)
+    {
+      // The caret is at the beginning of a line
+
+      if (m_caretLine == 0)
       {
+        // If this is the first line there's nothing to delete
         return;
       }
-    }
 
-    m_caretChar -= 1;
-    if (m_caretChar == -1)
-    {
-      m_document.erase(m_document.begin()+m_caretLine);
+      // Move to the end of the previous line
+      m_caretLine--;
+      m_caretChar = characters(m_caretLine);
+
+      // Erase the last character in that line
+      m_caretChar--;
+      removeOneCharacter(m_document[m_caretLine], m_caretChar);
     }
     else
     {
+      // Erase the character before the caret
+      m_caretChar--;
       removeOneCharacter(m_document[m_caretLine], m_caretChar);
     }
+
+    // Redo the text layout
+    layoutText();
+
+    // ensure m_document is never empty.
+    currentLine();
+
+    // Recalculate caret coordinates
     recalculateCaret();
   }
+
   resizeParent();
 }
 
 void EditableTextArea::recalculateCaret()
 {
+  // The paint() method will update this the next time it's called
   m_caretPixelX = -1;
-  int oldLength = characters(m_caretLine);
-  int oldPrevLength = -1;
-  if (m_caretLine > 0)
-  {
-    oldPrevLength = characters(m_caretLine-1);
-  }
-  // redo the text layout
-  layoutText();
-  if (m_appendedNewLine)
-  {
-    m_caretChar = 0;
-    m_caretLine++;
-    if (m_caretLine >= (int)m_document.size())
-       m_caretLine = (int)m_document.size() - 1;
-    m_appendedNewLine = false;
-    return;
-  }
-  if (m_caretLine >= (int)m_document.size())
-  {
-    m_caretLine = (int)m_document.size();
-    m_caretChar = characters(m_caretLine);
-    m_caretPixelX = -1;
-  }
-  else
-  {
-    int newLength = characters(m_caretLine);
-
-    // work out if the caret should overflow
-    // also, what if it "underflows"?
-    if (newLength < oldLength)
-    {
-      // word has wrapped to next line. To calculate where we are, work out the
-      // difference from previous to now
-      // Also, if we add a space to separate a word, the word may go to the *previous* line.
-      int diff = oldLength - newLength;
-      if (m_caretChar >= newLength)
-      {
-        m_caretLine++;
-        if (m_caretLine >= (int)m_document.size())
-           m_caretLine = m_document.size() - 1;
-        // fix Issue 19 - off by one on wrap around new line.
-        m_caretChar = diff;
-        m_caretPixelX = -1;
-      }
-    }
-    // check for underflow condition
-    int newPrevLength = -1;
-    if (m_caretLine > 0)
-      newPrevLength = characters(m_caretLine-1);
-    if (oldPrevLength != -1 and newPrevLength != -1 and oldPrevLength < newPrevLength)
-    {
-      // the previous line has eaten some of our text
-      m_caretChar = 0;
-      m_caretPixelX = -1;
-    }
-  }
-  // ensure m_document is never empty.
-  currentLine();
 }
 
 static std::string insertAt(const std::string &line, int position, const std::string &extra)
@@ -218,8 +175,8 @@ void EditableTextArea::appendText(const std::string & unicodeString)
 
   if (m_caretLine == -1)
   {
+    // If the caret hasn't selected any line append text at the end
     TextArea::appendText(unicodeString);
-    // select the end of the text
     if (not listener())
     {
       m_caretLine = m_document.size()-1;
@@ -229,34 +186,61 @@ void EditableTextArea::appendText(const std::string & unicodeString)
   }
   else
   {
-    // caret is on a line.
-    // what if the line goes over the edge?
-    // the m_caretLine should increase by one and reshuffle the line.
-    std::string & line(m_document[m_caretLine]);
-    // Check we don't walk off the edge, just in case...
-    int end = characters(m_caretLine);
-    if (m_caretChar > end)
+    // Caret is on a line, inject it at the caret.
+
+    size_t currentCursor = 0;
+    for (int i = 0; i < (int)m_document.size(); i++)
     {
-      m_caretChar = end;
+      if (m_caretLine == i)
+      {
+        currentCursor += m_caretChar;
+        break;
+      }
+      currentCursor += (int)m_document[i].length();
     }
+
+    size_t newCursor = currentCursor + unicodeString.length();
+
+    std::string & line(m_document[m_caretLine]);
+
     if (line.empty())
     {
       line.append(unicodeString);
     }
-    else {
-      line = insertAt(line, m_caretChar, unicodeString);
-    }
-    if (unicodeString.length() == 1 and unicodeString[0] == '\n')
-    {
-      m_appendedNewLine = true;
-    }
     else
     {
-      m_appendedNewLine = false;
-      m_caretChar += utf8::distance(unicodeString.begin(), unicodeString.end());
+      line = insertAt(line, m_caretChar, unicodeString);
     }
+
+    // Reshuffle text
+    layoutText();
+
+    for (int i = 0; i < (int)m_document.size(); i++)
+    {
+      size_t lineLength = m_document[i].length();
+
+      if (newCursor <= lineLength)
+      {
+        m_caretLine = i;
+        m_caretChar = newCursor;
+        break;
+      }
+
+      newCursor -= lineLength;
+    }
+
+    // If the user has added a new line don't stay in the current line, jump to
+    // the next one.
+    if (unicodeString.length() == 1 and unicodeString[0] == '\n')
+    {
+      m_caretLine++;
+      m_caretChar = 0;
+    }
+
+    // Recalculate caret coordinates
     recalculateCaret();
   }
+
   resizeParent();
 }
 
