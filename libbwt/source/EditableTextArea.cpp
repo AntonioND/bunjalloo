@@ -64,14 +64,21 @@ void EditableTextArea::paint(const nds::Rectangle & clip)
       // draw
       if (m_caretPixelX == -1)
       {
-        m_caretPixelX = 0;
-        assert(m_caretLine < (int)m_document.size());
-        const std::string & line(
-            echoText() ? m_document[m_caretLine] :
-            createPasswordMask(characters(m_caretLine)));
-        unsigned int pix;
-        font().findEnd(line, 0, m_caretChar, &pix, 0);
-        m_caretPixelX = pix >> 8;
+        if (m_caretChar == 0)
+        {
+          m_caretPixelX = 0;
+        }
+        else
+        {
+          m_caretPixelX = 0;
+          assert(m_caretLine < (int)m_document.size());
+          const std::string & line(
+              echoText() ? m_document[m_caretLine] :
+              createPasswordMask(characters(m_caretLine)));
+          unsigned int pix;
+          font().findEnd(line, 0, m_caretChar, &pix, 0);
+          m_caretPixelX = pix >> 8;
+        }
       }
       Canvas::instance().verticalLine(m_caretPixelX + 2, caretLinePos, font().height(), Color(31,0,0));
     }
