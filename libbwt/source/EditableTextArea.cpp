@@ -54,16 +54,18 @@ void EditableTextArea::paint(const nds::Rectangle & clip)
   Canvas::instance().verticalLine(clip.left(), clip.top(), clip.h, WidgetColors::BUTTON_SHADOW);
   Canvas::instance().horizontalLine(clip.x, clip.bottom()-1, clip.w, WidgetColors::SCROLLBAR_ARROW);
   Canvas::instance().verticalLine(clip.right(), clip.top(), clip.h, WidgetColors::SCROLLBAR_ARROW);
-  // now draw the caret too
+
+  // Now draw the caret if the line has been specified
   if (m_caretLine != -1)
   {
-    // see if line is visible
+    // See if the caret line is visible
     int caretLinePos(m_bounds.top() + m_caretLine*font().height());
     if (caretLinePos <= m_bounds.bottom())
     {
-      // draw
+      // If the caret X coordinate is undefined, calculate it now
       if (m_caretPixelX == -1)
       {
+        // Check if we're at the start of the line
         if (m_caretChar == 0)
         {
           m_caretPixelX = 0;
@@ -80,6 +82,8 @@ void EditableTextArea::paint(const nds::Rectangle & clip)
           m_caretPixelX = pix >> 8;
         }
       }
+
+      // Draw caret
       Canvas::instance().verticalLine(m_caretPixelX + 2, caretLinePos, font().height(), Color(31,0,0));
     }
 
