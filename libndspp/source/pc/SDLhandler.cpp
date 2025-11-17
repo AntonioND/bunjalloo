@@ -112,7 +112,6 @@ int SDLhandler::init()
 {
   GAP.h = Uint16(getenv_int("BUNJALLOO_SCREEN_GAP", 0, 0, 100));
 
-  char msg[256];
   int initFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER;
   if (m_hasSound) {
     initFlags |= SDL_INIT_AUDIO;
@@ -120,8 +119,7 @@ int SDLhandler::init()
 
   if (SDL_Init(initFlags) < 0)
   {
-    sprintf (msg, "Couldn't initialize SDL: %s\n", SDL_GetError ());
-    printf("%s", msg);
+    fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
     return 1;
   }
 
@@ -135,9 +133,7 @@ int SDLhandler::init()
   m_screen = SDL_SetVideoMode (m_scale*WIDTH,m_scale*totalHeight(), 32, flags);
   if (m_screen == NULL)
   {
-    sprintf (msg, "Couldn't set 16 bit video mode: %s\n",
-        SDL_GetError ());
-    printf("%s", msg);
+    fprintf(stderr, "Couldn't set 16 bit video mode: %s\n", SDL_GetError());
     return 2;
   }
 
@@ -158,9 +154,7 @@ int SDLhandler::init()
       );
     if (m_layer[i] == NULL)
     {
-      sprintf (msg, "Couldn't create 16 bit video surface: %s\n",
-          SDL_GetError ());
-      printf("%s", msg);
+      fprintf(stderr, "Couldn't create 16 bit video surface: %s\n", SDL_GetError());
       return 2;
     }
   }
@@ -170,9 +164,7 @@ int SDLhandler::init()
   /*
   if (m_hasSound) {
     if (initSound() == 0) {
-      sprintf (msg, "Couldn't start sound: %s\n",
-          SDL_GetError ());
-      printf(msg);
+      fprintf(stderr, "Couldn't start sound: %s\n", SDL_GetError());
     }
   }
   */
@@ -200,10 +192,7 @@ int SDLhandler::initSound(int freq, int format)
   /* Open the audio device and start playing sound! */
   if ( SDL_OpenAudio(&fmt, NULL) < 0 ) {
     soundOK = false;
-    char msg[256];
-    sprintf (msg, "Couldn't start sound: %s\n",
-        SDL_GetError ());
-    printf("%s", msg);
+    fprintf(stderr, "Couldn't start sound: %s\n", SDL_GetError());
   }
   soundOK = true;
   SDL_PauseAudio(0);
