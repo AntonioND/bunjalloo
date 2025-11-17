@@ -57,7 +57,7 @@ static void addBoundary(std::string & processedData, unsigned char boundary[16])
 {
   for (int i = 0; i < 16; ++i) {
     char buffer[3];
-    sprintf_platform(buffer,"%02x",boundary[i]);
+    sprintf(buffer,"%02x",boundary[i]);
     processedData += buffer;
   }
   processedData += "\r\n";
