@@ -304,6 +304,17 @@ void EditableTextArea::setCaret(int x, int y)
     font().findEnd(line, x, 0, &s, &c);
     m_caretPixelX = s >> 8;
     m_caretChar = c;
+
+    // If the last character in a line is a newline character, pick the previous
+    // character instead.
+    if (m_caretChar > 0)
+    {
+      if (m_document[m_caretLine][m_caretChar - 1] == '\n')
+      {
+        m_caretChar--;
+        recalculateCaret();
+      }
+    }
   }
 }
 
