@@ -71,7 +71,9 @@ void RichTextArea::appendText(const std::string & unicodeString)
       and isEmpty(currentLine())
       and isEmpty(m_document[m_document.size()-2]))
   {
-    // avoid duplicate empty lines
+    // Avoid duplicate empty lines. This is required in most websites because
+    // they add a lot of empty lines. However, in simple pages made for
+    // documentation of Bunjalloo it becomes harder to add empty lines.
     return;
   }
   TextArea::appendText(unicodeString);
