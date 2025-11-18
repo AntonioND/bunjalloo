@@ -66,6 +66,11 @@ class HtmlParser
      */
     void parseContentType(const std::string & value);
 
+    /** Parses the provided charset name
+     * @param value the charset name.
+     */
+    void parseCharset(const std::string & value);
+
     /** Parse the content-disposition value and act accordingly.
      * @param value the content-disposition value.
      */

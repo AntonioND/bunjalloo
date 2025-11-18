@@ -1413,6 +1413,18 @@ void HtmlParserImpl::refresh(std::string & refresh, int & time) const
   time = m_refreshTime;
 }
 
+void HtmlParser::parseCharset(const std::string & value)
+{
+  if (value == "iso-8859-1")
+  {
+    setEncoding(HtmlParser::ISO_ENCODING);
+  }
+  else if (value == "utf-8")
+  {
+    setEncoding(HtmlParser::UTF8_ENCODING);
+  }
+}
+
 void HtmlParser::parseContentType(const std::string & value)
 {
   ParameterSet paramSet(value);
@@ -1420,14 +1432,7 @@ void HtmlParser::parseContentType(const std::string & value)
   {
     string charset;
     paramSet.parameter("charset", charset);
-    if (charset == "iso-8859-1")
-    {
-      setEncoding(HtmlParser::ISO_ENCODING);
-    }
-    else if (charset == "utf-8")
-    {
-      setEncoding(HtmlParser::UTF8_ENCODING);
-    }
+    parseCharset(charset);
   }
 
   std::vector<std::string> segments;
@@ -1528,6 +1533,12 @@ void HtmlParser::checkMetaTagHttpEquiv(const HtmlElement * meta)
     {
       parseRefresh(content);
     }
+  }
+
+  string charset =  meta->attribute("charset");
+  if (not charset.empty())
+  {
+    parseCharset(charset);
   }
 }
 

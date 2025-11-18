@@ -28,6 +28,7 @@ class HtmlMetaElement : public HtmlElement
   protected:
     std::string m_httpEquiv;
     std::string m_content;
+    std::string m_charset;
     const std::string * attributePtr(const std::string & name) const;
     void copyAttributes(HtmlElement * copyTo) const;
 };

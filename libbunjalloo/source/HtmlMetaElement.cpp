@@ -37,6 +37,10 @@ const std::string *HtmlMetaElement::attributePtr(const std::string & name) const
   {
     return &m_content;
   }
+  if (name == "charset")
+  {
+    return &m_charset;
+  }
   return 0;
 
 }
@@ -46,6 +50,7 @@ void HtmlMetaElement::copyAttributes(HtmlElement * copyTo) const
   HtmlElement::copyAttributes(copyTo);
   ((HtmlMetaElement*)copyTo)->m_httpEquiv = m_httpEquiv;
   ((HtmlMetaElement*)copyTo)->m_content = m_content;
+  ((HtmlMetaElement*)copyTo)->m_charset = m_charset;
 }
 
 HtmlElement * HtmlMetaElement::clone() const
