@@ -75,7 +75,7 @@ class HtmlParserImpl
 
     HtmlParserImpl(HtmlParser & self)
       : m_self(self) ,
-      m_encoding(HtmlParser::ISO_ENCODING)
+      m_encoding(HtmlParser::UTF8_ENCODING)
     {}
 
     void initialise(const char * data, unsigned int length);
@@ -222,7 +222,7 @@ void HtmlParserImpl::reset()
   m_tagAttributes.clear();
   m_state = BOM;
   m_contentModel = HtmlParser::PCDATA;
-  m_encoding = HtmlParser::ISO_ENCODING;
+  m_encoding = HtmlParser::UTF8_ENCODING;
   m_leftOvers.clear();
   m_contentDisposition.clear();
   m_refresh.clear();
