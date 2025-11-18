@@ -273,7 +273,7 @@ void HttpClient::get(const URI & uri)
       s += "Referer: "; s += m_referer.asString();
       s += "\r\n";
     }
-    s += "Accept-charset: ISO-8859-1,UTF-8\r\n";
+    s += "Accept-charset: UTF-8,ISO-8859-1\r\n";
     //If the Accept-Encoding field-value is empty, then only the "identity" encoding is acceptable.
     // -- RFC2616-sec14
     s += "Accept-encoding: gzip,deflate\r\n";
