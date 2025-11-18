@@ -38,7 +38,7 @@ const unsigned short s_1252[] = {
 
 unsigned short ISO_8859_1::decode(unsigned short value)
 {
-  if ( (value > 0x00 and value <= 0x1F))
+  if ( (value > 0x00 and value < 0x7F))
   {
     return value;
   }
@@ -49,7 +49,7 @@ unsigned short ISO_8859_1::decode(unsigned short value)
   }
   else
   {
-    return value;
+    return 0xFFFD;
   }
 }
 
