@@ -75,8 +75,9 @@ class EditableTextArea: public TextArea, public TextEntryI
 
   private:
     int m_caretLine { -1 };
-    // the character in the current line (not the byte)
+    // The character in the current line (not the byte)
     int m_caretChar { -1 };
+    // X coordinate of the caret. If set to -1 it's calculated by paint().
     int m_caretPixelX { -1 };
     bool m_appendedNewLine { false };
     bool m_echoText { true };

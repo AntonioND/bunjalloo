@@ -49,4 +49,8 @@ void removeLastCharacter(std::string &line);
 
 /** Remove the character at the given position from the string */
 void removeOneCharacter(std::string &line, int pos);
+
+/** Given a UTF-8 string return the number of characters (not bytes). */
+size_t countUtf8Characters(const std::string &line);
+
 #endif

@@ -157,3 +157,15 @@ void removeOneCharacter(std::string &line, int pos)
   }
   line.erase(last, it);
 }
+
+size_t countUtf8Characters(const std::string &line)
+{
+  std::string::const_iterator first(line.begin());
+  std::string::const_iterator last(line.end());
+
+  // TODO: Use utf8::unchecked::distance(first, last);
+  size_t count;
+  for (count = 0; first < last; ++count)
+      utf8::unchecked::next(first);
+  return count;
+}

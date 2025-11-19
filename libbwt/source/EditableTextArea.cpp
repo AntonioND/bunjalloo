@@ -124,8 +124,8 @@ void EditableTextArea::deleteChar()
       m_caretChar = characters(m_caretLine);
 
       // Erase the last character in that line
+      removeLastCharacter(m_document[m_caretLine]);
       m_caretChar--;
-      removeOneCharacter(m_document[m_caretLine], m_caretChar);
     }
     else
     {
@@ -196,10 +196,10 @@ void EditableTextArea::appendText(const std::string & unicodeString)
         currentCursor += m_caretChar;
         break;
       }
-      currentCursor += (int)m_document[i].length();
+      currentCursor += characters(i);
     }
 
-    size_t newCursor = currentCursor + unicodeString.length();
+    size_t newCursor = currentCursor + countUtf8Characters(unicodeString);
 
     std::string & line(m_document[m_caretLine]);
 
@@ -217,7 +217,7 @@ void EditableTextArea::appendText(const std::string & unicodeString)
 
     for (int i = 0; i < (int)m_document.size(); i++)
     {
-      size_t lineLength = m_document[i].length();
+      size_t lineLength = characters(i);
 
       if (newCursor <= lineLength)
       {
