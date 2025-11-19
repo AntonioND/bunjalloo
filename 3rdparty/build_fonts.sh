@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-License-Identifier: CC0-1.0
+#
+# SPDX-FileContributor: Antonio Niño Díaz, 2025
 
 FONTS=dejavu-fonts-ttf-2.37/ttf/
 OUT=../nitrofs/fonts/
