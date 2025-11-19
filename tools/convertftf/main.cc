@@ -260,7 +260,8 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   return 1;
 }
 
-int saveSetToFile(const char *filename, const t_prerenderedSet *prerenderedSet)
+int saveSetToFile(const char *filename, const t_prerenderedSet *prerenderedSet,
+                  int offsetAscender, int offsetDescender)
 {
   FileWrapper fw;
   fw.open(filename, "w");
@@ -271,8 +272,8 @@ int saveSetToFile(const char *filename, const t_prerenderedSet *prerenderedSet)
   // Write header
   fw.write8(prerenderedSet->face);
   fw.write8(prerenderedSet->size);
-  fw.write32(prerenderedSet->minAscender);
-  fw.write32(prerenderedSet->maxDescender);
+  fw.write32(prerenderedSet->minAscender + offsetAscender);
+  fw.write32(prerenderedSet->maxDescender + offsetDescender);
   fw.write32(prerenderedSet->numGlyphs);
 
   // Write glyphs
@@ -366,7 +367,8 @@ void saveCharmap(const char *filename, t_charMap *charMap)
   return;
 }
 
-void check_freetype(const char *filename, const char *mapname, const char *setname, int font_size)
+void check_freetype(const char *filename, const char *mapname, const char *setname,
+                    int font_size, int offsetAscender, int offsetDescender)
 {
   FT_Library ftlib;
   if (FT_Init_FreeType(&ftlib) != 0) return;
@@ -374,7 +376,7 @@ void check_freetype(const char *filename, const char *mapname, const char *setna
   int face = 0;
   t_prerenderedSet set;
   prerenderSet(ftlib, filename, face, font_size, &set);
-  saveSetToFile(setname, &set);
+  saveSetToFile(setname, &set, offsetAscender, offsetDescender);
 
   t_charMap charMap;
   gatherCharmap(ftlib, filename, &charMap);
@@ -388,10 +390,12 @@ void usage(const char *arg0)
 {
   printf("Usage: %s [OPTIONS] FONT_FILE\n\n", arg0);
   printf("OPTIONS:\n");
-  printf(" --map=FILE,-m       map file name (a.map)\n");
-  printf(" --set=FILE,-s       set file name (a.set)\n");
-  printf(" --size=SIZE,-p      font point size (12)\n");
-  printf(" --help,-h           help\n");
+  printf(" --map=FILE,-m           map file name (a.map)\n");
+  printf(" --set=FILE,-s           set file name (a.set)\n");
+  printf(" --size=SIZE,-p          font point size (12)\n");
+  printf(" --offset_ascender=SIZE  value to add to min ascender in pixels (0)\n");
+  printf(" --offset_descender=SIZE value to add to max descender in pixels (0)\n");
+  printf(" --help,-h               help\n");
   exit(0);
 }
 
@@ -399,6 +403,8 @@ int main(int argc, char* const *argv)
 {
   int c;
   int font_size(12);
+  int offset_ascender = 0;
+  int offset_descender = 0;
   const char *map(0);
   const char *set(0);
   const char *font(0);
@@ -409,6 +415,8 @@ int main(int argc, char* const *argv)
       {"set", 1, 0, 0},
       {"size", 1, 0, 0},
       {"help", 1, 0, 0},
+      {"offset_ascender", 1, 0, 0},
+      {"offset_descender", 1, 0, 0},
       {0, 0, 0, 0}
     };
     c = getopt_long(argc, argv, "m:s:p:h", long_options, &option_index);
@@ -430,6 +438,14 @@ int main(int argc, char* const *argv)
           }
           if (strcmp(long_options[option_index].name, "help") == 0) {
             usage(argv[0]);
+          }
+          if (strcmp(long_options[option_index].name, "offset_ascender") == 0) {
+            if (sscanf(optarg, "%d", &offset_ascender) != 1)
+              usage(argv[0]);
+          }
+          if (strcmp(long_options[option_index].name, "offset_descender") == 0) {
+            if (sscanf(optarg, "%d", &offset_descender) != 1)
+              usage(argv[0]);
           }
           break;
         }
@@ -468,6 +484,7 @@ int main(int argc, char* const *argv)
     set = "a.set";
   }
   printf("Set: %s, Map: %s\n", set, map);
-  check_freetype(font, map, set, font_size);
+  printf("Offsets: %d, %d\n", offset_ascender, offset_descender);
+  check_freetype(font, map, set, font_size, offset_ascender, offset_descender);
   return 0;
 }
