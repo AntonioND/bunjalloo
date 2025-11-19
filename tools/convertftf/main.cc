@@ -104,7 +104,7 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
       uint8 chunk, color;
 
       // First pixel in output byte
-      if (*ftbm % 64 >= 32) { color = ((*ftbm) >> 6) + 1; } else { color = (*ftbm) >> 6; }
+      color = ((int)(*ftbm) + 32) >> 6; // Round up the division
       if (color > 0x3) color = 0x3;
       chunk = color << 6;
       ftbm ++;
@@ -112,7 +112,7 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
 
       // Second pixel in output byte
       if (x < ftBitmap.width) {
-        if (*ftbm % 64 >= 32) { color = ((*ftbm) >> 6) + 1; } else { color = (*ftbm) >> 6; }
+        color = ((int)(*ftbm) + 32) >> 6;
         if (color > 0x3) color = 0x3;
         chunk = chunk | (color << 4);
         ftbm ++;
@@ -120,7 +120,7 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
 
         // Third pixel in output byte
         if (x < ftBitmap.width) {
-          if (*ftbm % 64 >= 32) { color = ((*ftbm) >> 6) + 1; } else { color = (*ftbm) >> 6; }
+          color = ((int)(*ftbm) + 32) >> 6;
           if (color > 0x3) color = 0x3;
           chunk = chunk | (color << 2);
           ftbm ++;
@@ -128,7 +128,7 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
 
           // Fourth pixel in output byte
           if (x < ftBitmap.width) {
-            if (*ftbm % 64 >= 32) { color = ((*ftbm) >> 6) + 1; } else { color = (*ftbm) >> 6; }
+            color = ((int)(*ftbm) + 32) >> 6;
             if (color > 0x3) color = 0x3;
             chunk = chunk | color;
             ftbm ++;
