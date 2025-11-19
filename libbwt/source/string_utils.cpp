@@ -169,3 +169,13 @@ size_t countUtf8Characters(const std::string &line)
       utf8::unchecked::next(first);
   return count;
 }
+
+std::string insertAt(const std::string &line, int position, const std::string &extra)
+{
+  std::string::const_iterator it(line.begin());
+  utf8::unchecked::advance(it, position);
+  std::string start(line.begin(), it);
+  start.append(extra);
+  start.append(it, line.end());
+  return start;
+}

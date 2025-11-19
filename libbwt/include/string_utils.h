@@ -53,4 +53,7 @@ void removeOneCharacter(std::string &line, int pos);
 /** Given a UTF-8 string return the number of characters (not bytes). */
 size_t countUtf8Characters(const std::string &line);
 
+/** Inserts substring "extra" at position "position" of string "line". */
+std::string insertAt(const std::string &line, int position, const std::string &extra);
+
 #endif

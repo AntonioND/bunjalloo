@@ -153,16 +153,6 @@ void EditableTextArea::recalculateCaret()
   m_caretPixelX = -1;
 }
 
-static std::string insertAt(const std::string &line, int position, const std::string &extra)
-{
-  std::string::const_iterator it(line.begin());
-  utf8::unchecked::advance(it, position);
-  std::string start(line.begin(), it);
-  start.append(extra);
-  start.append(it, line.end());
-  return start ;
-}
-
 void EditableTextArea::appendText(const std::string & unicodeString)
 {
   /* FIXME - virtual TextArea::appendText
