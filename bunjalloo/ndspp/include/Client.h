@@ -45,8 +45,8 @@ namespace nds {
        */
       Client(const char * ip, int port);
 
-      /*! @brief virtual destructor. Closes the socket (if open) */
-      virtual ~Client();
+      /*! @brief destructor. Closes the socket (if open) */
+      ~Client();
 
       /*! @brief Connect to the given IP addres and port.*/
       void connect();
@@ -137,6 +137,7 @@ namespace nds {
       void connectReadyToConnect();
 
       void mbedtls_print_error(int ret);
+      void mbedtlsDeinit();
 
       DISALLOW_COPY_AND_ASSIGN(Client);
   };

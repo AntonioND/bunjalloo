@@ -84,8 +84,11 @@ Client::Client(const char * ip, int port):
 
 Client::~Client()
 {
-  disconnect();
+  mbedtlsDeinit();
 
+  // The CA certificates aren't freed in mbedtlsDeinit() because that method is
+  // called whenever the socket is disconnected, even if the Client instance
+  // isn't freed.
   mbedtls_x509_crt_free(&cacert);
 
   free(m_ip);
@@ -96,6 +99,21 @@ void Client::setConnection(const char * ip, int port)
   free(m_ip);
   m_ip = strdup(ip);
   m_port = port;
+}
+
+void Client::mbedtlsDeinit()
+{
+  if (m_mbedtlsInitialized)
+  {
+    mbedtls_net_close(&server_fd);
+    mbedtls_net_free(&server_fd);
+    mbedtls_ssl_free(&ssl);
+    mbedtls_ssl_config_free(&conf);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    mbedtls_entropy_free(&entropy);
+
+    m_mbedtlsInitialized = false;
+  }
 }
 
 void Client::disconnect()
@@ -109,17 +127,7 @@ void Client::disconnect()
     m_connectState = CLIENT_CONNECT_INITIAL;
   }
 
-  if (m_mbedtlsInitialized)
-  {
-    mbedtls_net_close(&server_fd);
-    mbedtls_net_free(&server_fd);
-    mbedtls_ssl_free(&ssl);
-    mbedtls_ssl_config_free(&conf);
-    mbedtls_ctr_drbg_free(&ctr_drbg);
-    mbedtls_entropy_free(&entropy);
-
-    m_mbedtlsInitialized = false;
-  }
+  mbedtlsDeinit();
 }
 
 void Client::connectInitial()
