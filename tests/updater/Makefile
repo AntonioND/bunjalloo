@@ -2,6 +2,6 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2025
 
-#AUTO := 1 # TODO: Fix and enable
+AUTO := 1
 
 include ../../make/test_template.make

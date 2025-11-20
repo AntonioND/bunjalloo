@@ -65,30 +65,49 @@ TEST(UpdaterTest, test_updates)
 
   c.m_document.setUri("http://localhost:8000/data/version.txt");
   View v(c.m_document, c);
-  // server needs to run twice, once for the version.txt
-  // then again for the version.zip file.
+
+  // Start server. It needs to run twice, once for the version.txt then again
+  // for the version.zip file.
   runServer(2);
-  // set the configuration...
+
+  // Give one frame to the some class instances to fully initialize and prevent
+  // crashes on cleanup.
+  cothread_yield_irq(IRQ_VBLANK);
+
+  // Set the configuration...
   Config &config(const_cast<Config&>(c.config()));
   config.callback(Config::UPDATE, "http://localhost:8000/data/version.txt");
+
+  // Create updater instance
   Updater updater(c, c.m_document, v);
+
+  // Initialize updater, it should get the INI file
   updater.show();
   EXPECT_EQ(Updater::GOT_INI, updater.m_state);
   EXPECT_EQ(HtmlParser::TEXT_PLAIN, c.m_document.htmlDocument()->mimeType());
   EXPECT_TRUE(c.m_httpClient.hasPage());
   EXPECT_EQ("# update file\nversion=9.9\n\nURL=http://localhost:8000/data/newversion.zip\n",
       c.m_document.htmlDocument()->data());
+  EXPECT_TRUE(updater.m_ok == NULL); // No confirmation dialogue yet
 
-  // need to show again! this time it should get the zip...
+  // Refresh updater, it should get the ZIP, but not create the confirmation
+  // dialogue just yet
   updater.show();
   EXPECT_EQ(Updater::GOT_ZIP, updater.m_state);
   EXPECT_EQ(HtmlParser::ZIP, c.m_document.htmlDocument()->mimeType());
-  EXPECT_TRUE(updater.m_ok != 0);
+  EXPECT_TRUE(updater.m_ok == NULL);
 
-  // once we get the zip, check that pressing the button works
+  // The confirmation dialogue should be been created now
+  updater.show();
+  EXPECT_EQ(Updater::GOT_ZIP, updater.m_state);
+  EXPECT_TRUE(updater.m_ok != NULL);
+
+  // Press OK and check that the update files are found
   updater.pressed(updater.m_ok);
   EXPECT_EQ(Updater::DO_UPDATE, updater.m_state);
   EXPECT_EQ(nds::File::F_REG, nds::File::exists("newversion.txt"));
+
+  // Cleanup
   nds::File::rmrf("newversion.txt");
   nds::File::rmrf("sdroot/data/bunjalloo");
 }
