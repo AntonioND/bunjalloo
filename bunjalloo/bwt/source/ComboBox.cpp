@@ -42,7 +42,7 @@ ComboBox::ComboBox()
 
 ComboBox::~ComboBox()
 {
-  ScrollPane::removePopup(scrollPane());
+  scrollPane()->removePopup(scrollPane());
 }
 
 void ComboBox::addItem(const std::string & item)
