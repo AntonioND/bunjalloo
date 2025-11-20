@@ -1069,10 +1069,15 @@ void HtmlDocument::handleBinaryData(const void * data, unsigned int length)
   m_dataGot += length;
   if (m_mimeType == TEXT_PLAIN)
   {
-    if (encoding() == HtmlParser::UTF8_ENCODING) {
-      m_data += static_cast<const char*>(data);
+    // Important: We can't assume that the data is NULL-terminated
+    if (encoding() == HtmlParser::UTF8_ENCODING)
+    {
+      const char *start(static_cast<const char*>(data));
+      const char *end(start + length);
+      m_data.append(start, end);
     }
-    else {
+    else
+    {
       const char *start(static_cast<const char*>(data));
       const char *end(start + length);
       for (; start != end; ++start) {
