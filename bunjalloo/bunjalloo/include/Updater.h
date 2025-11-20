@@ -43,8 +43,8 @@ class Updater: public ButtonListener
     Document & m_document;
     View & m_view;
     std::string m_newVersion;
-    Button * m_ok;
-    Button * m_cancel;
+    Button * m_ok { NULL };
+    Button * m_cancel { NULL };
 
     URI m_downloadUrl;
     enum UpdaterState
@@ -58,7 +58,7 @@ class Updater: public ButtonListener
       CANCELLED,
       SUCCESS
     };
-    UpdaterState m_state;
+    UpdaterState m_state { START };
 
     void getZip();
     void doUpdate();

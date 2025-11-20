@@ -195,14 +195,14 @@ void Updater::addOk()
 {
   m_ok = new Button(T("ok"));
   m_ok->setListener(this);
-  m_view.renderer()->add(m_ok);
+  m_view.renderer()->add(m_ok); // Delete it in the Controller destructor
 }
 
 void Updater::addCancel()
 {
   m_cancel = new Button(T("cancel"));
   m_cancel->setListener(this);
-  m_view.renderer()->add(m_cancel);
+  m_view.renderer()->add(m_cancel); // Delete it in the Controller destructor
 }
 
 void Updater::pressed(ButtonI * button)
