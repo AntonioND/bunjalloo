@@ -36,8 +36,7 @@ Controller *createController()
 {
   Controller *c(new Controller());
   c->cache()->setUseCache(true);
-  c->m_config = new Config();
-  c->m_httpClient->setController(c);
+  c->m_httpClient.setController(c);
   return c;
 }
 
@@ -47,11 +46,11 @@ TEST(UpdaterTest, test_can_read_server)
   std::auto_ptr<Controller> c(createController());
   URI uri("http://localhost:8000/data/version.txt");
   c->doUri(uri);
-  EXPECT_EQ(HtmlParser::TEXT_PLAIN, c->m_document->htmlDocument()->mimeType());
+  EXPECT_EQ(HtmlParser::TEXT_PLAIN, c->m_document.htmlDocument()->mimeType());
 
-  EXPECT_TRUE(c->m_httpClient->hasPage());
+  EXPECT_TRUE(c->m_httpClient.hasPage());
   EXPECT_EQ("# update file\nversion=9.9\n\nURL=http://localhost:8000/data/newversion.zip\n",
-      c->m_document->htmlDocument()->data());
+      c->m_document.htmlDocument()->data());
 }
 
 TEST(UpdaterTest, test_updates)
@@ -60,26 +59,26 @@ TEST(UpdaterTest, test_updates)
         (unsigned char*)_binary_sans_set_start,
         (unsigned char*)_binary_sans_map_start));
   std::auto_ptr<Controller> c(createController());
-  c->m_document->setUri("http://localhost:8000/data/version.txt");
-  View v(*c->m_document, *c.get());
+  c->m_document.setUri("http://localhost:8000/data/version.txt");
+  View v(c->m_document, *c.get());
   // server needs to run twice, once for the version.txt
   // then again for the version.zip file.
   runServer(2);
   // set the configuration...
   Config &config(const_cast<Config&>(c->config()));
   config.callback(Config::UPDATE, "http://localhost:8000/data/version.txt");
-  Updater updater(*c.get(), *c->m_document, v);
+  Updater updater(*c.get(), c->m_document, v);
   updater.show();
   EXPECT_EQ(Updater::GOT_INI, updater.m_state);
-  EXPECT_EQ(HtmlParser::TEXT_PLAIN, c->m_document->htmlDocument()->mimeType());
-  EXPECT_TRUE(c->m_httpClient->hasPage());
+  EXPECT_EQ(HtmlParser::TEXT_PLAIN, c->m_document.htmlDocument()->mimeType());
+  EXPECT_TRUE(c->m_httpClient.hasPage());
   EXPECT_EQ("# update file\nversion=9.9\n\nURL=http://localhost:8000/data/newversion.zip\n",
-      c->m_document->htmlDocument()->data());
+      c->m_document.htmlDocument()->data());
 
   // need to show again! this time it should get the zip...
   updater.show();
   EXPECT_EQ(Updater::GOT_ZIP, updater.m_state);
-  EXPECT_EQ(HtmlParser::ZIP, c->m_document->htmlDocument()->mimeType());
+  EXPECT_EQ(HtmlParser::ZIP, c->m_document.htmlDocument()->mimeType());
   EXPECT_TRUE(updater.m_ok != 0);
 
   // once we get the zip, check that pressing the button works
