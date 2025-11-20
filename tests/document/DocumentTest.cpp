@@ -565,11 +565,11 @@ TEST_F(DocumentTest, ActiveFormatters)
   EXPECT_TRUE(bold->isa("b"));
 
   ElementList pNodes = bold->elementsByTagName("p");
-  EXPECT_EQ(2, pNodes.size());
+  EXPECT_EQ(2, (int)pNodes.size());
 
   // now see if the 2nd p node has multiple children
   const HtmlElement * p = pNodes.back();
-  EXPECT_EQ(1, p->children().size());
+  EXPECT_EQ(1, (int)p->children().size());
 
 
   const HtmlElement * child = p->firstChild();
@@ -700,7 +700,7 @@ TEST_F(DocumentTest, issue112_no_space_after_link)
   const ElementList &nodes = body->children();
   std::vector<const HtmlElement*> elements;
   copy(nodes.begin(), nodes.end(), back_inserter(elements));
-  EXPECT_EQ(3, elements.size());
+  EXPECT_EQ(3, (int)elements.size());
   const HtmlElement *a(elements[0]);
   EXPECT_EQ("a", a->tagName());
   const HtmlElement *text(elements[1]);
@@ -746,11 +746,11 @@ TEST_F(DocumentTest, lists_on_new_line)
   EXPECT_TRUE(body->isa("body"));
   EXPECT_TRUE(body->hasChildren());
   ElementList children(body->children());
-  EXPECT_EQ(2, children.size());
+  EXPECT_EQ(2, (int)children.size());
   HtmlElement *ul(body->lastChild());
   EXPECT_TRUE(ul->isa("ul"));
   ElementList listItems(ul->children());
-  EXPECT_EQ(2, listItems.size());
+  EXPECT_EQ(2, (int)listItems.size());
 
 }
 
@@ -771,11 +771,11 @@ TEST_F(DocumentTest, textarea)
   EXPECT_TRUE(body->isa("body"));
   EXPECT_TRUE(body->hasChildren());
   ElementList children(body->children());
-  EXPECT_EQ(1, children.size());
+  EXPECT_EQ(1, (int)children.size());
   HtmlElement *form(body->lastChild());
   EXPECT_TRUE(form->isa("form"));
   ElementList listItems(form->children());
-  EXPECT_EQ(1, listItems.size());
+  EXPECT_EQ(1, (int)listItems.size());
   HtmlElement *textarea(form->lastChild());
   EXPECT_TRUE(textarea->isa("textarea"));
   HtmlElement *text(textarea->firstChild());
