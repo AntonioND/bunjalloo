@@ -26,7 +26,6 @@
 #include <libplum.h>
 
 using nds::Image;
-using std::auto_ptr;
 
 unsigned int Image::MAX_HEIGHT(SCREEN_HEIGHT * 2);
 unsigned int Image::MAX_WIDTH(SCREEN_WIDTH - 7);
