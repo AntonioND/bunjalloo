@@ -15,7 +15,9 @@ NAME		?= test
 
 SOURCEDIRS	?= .
 
-INCLUDEDIRS += ../../libbunjalloo/include/ \
+INCLUDEDIRS += ../../bunjalloo/bunjalloo/include/ \
+               ../../bunjalloo/bwt/include/ \
+               ../../bunjalloo/ndspp/include/ \
                ../../libvera/include/ \
                ../../3rdparty/googletest-1.17.0/googletest/include/ \
 
@@ -30,14 +32,12 @@ DEFINES		:=
 # Libraries
 # ---------
 
-LIBS    := -lbunjalloo_sdl -lbwt_sdl -lndspp_sdl -lvera_sdl \
+LIBS    := -lbunjalloo_sdl -lvera_sdl \
            -lgoogletest_sdl -lz_sdl -lplum_sdl -lmbedtls_sdl \
            -lSDL -lGL -lGLU -lm
 
 LIBDIRS += ../../3rdparty \
-           ../../libbunjalloo \
-           ../../libbwt \
-           ../../libndspp \
+           ../../bunjalloo \
            ../../libvera \
 
 # Build artifacts

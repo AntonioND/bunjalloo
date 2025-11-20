@@ -6,43 +6,23 @@
 
 all: nds sdl
 
-.PHONY: 3rdparty-nds bunjalloo-nds libbunjalloo-nds libbwt-nds libndspp-sdl
+.PHONY: 3rdparty-nds 3rdparty-sdl bunjalloo-nds bunjalloo-sdl
 
 nds: bunjalloo-nds
+
+sdl: bunjalloo-sdl
 
 3rdparty-nds:
 	make -C 3rdparty -j`nproc` nds
 
-bunjalloo-nds: libbunjalloo-nds
-	PLAT=NDS make -C bunjalloo -j`nproc`
-
-libbunjalloo-nds: libbwt-nds libndspp-nds
-	PLAT=NDS make -C libbunjalloo -j`nproc`
-
-libbwt-nds: 3rdparty-nds libndspp-nds
-	PLAT=NDS make -C libbwt -j`nproc`
-
-libndspp-nds: 3rdparty-nds
-	PLAT=NDS make -C libndspp -j`nproc`
-
-.PHONY: 3rdparty-sdl bunjalloo-sdl libbunjalloo-sdl libbwt-sdl libndspp-sdl
-
-sdl: bunjalloo-sdl
-
 3rdparty-sdl:
 	make -C 3rdparty -j`nproc` sdl
 
-bunjalloo-sdl: libbunjalloo-sdl
+bunjalloo-nds: 3rdparty-nds
+	PLAT=NDS make -C bunjalloo -j`nproc`
+
+bunjalloo-sdl: 3rdparty-sdl
 	PLAT=SDL make -C bunjalloo -j`nproc`
-
-libbunjalloo-sdl: libbwt-sdl libndspp-sdl
-	PLAT=SDL make -C libbunjalloo -j`nproc`
-
-libbwt-sdl: 3rdparty-sdl libndspp-sdl
-	PLAT=SDL make -C libbwt -j`nproc`
-
-libndspp-sdl: 3rdparty-sdl
-	PLAT=SDL make -C libndspp -j`nproc`
 
 .PHONY: libvera-nds libvera-sdl
 
@@ -57,13 +37,10 @@ libvera-sdl:
 clean:
 	PLAT=NDS make -C 3rdparty -j`nproc` clean
 	PLAT=NDS make -C bunjalloo -j`nproc` clean
-	PLAT=NDS make -C libbunjalloo -j`nproc` clean
-	PLAT=NDS make -C libbwt -j`nproc` clean
-	PLAT=NDS make -C libndspp -j`nproc` clean
 	PLAT=NDS make -C tests -j`nproc` clean
 	make -C tools -j`nproc` clean
 
-tests: libbunjalloo-sdl libbunjalloo-nds libvera-sdl libvera-nds
+tests: bunjalloo-sdl bunjalloo-nds libvera-sdl libvera-nds
 	make -C tests -j`nproc`
 
 tools:

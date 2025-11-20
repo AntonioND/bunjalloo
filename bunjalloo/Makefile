@@ -14,6 +14,7 @@ ARM_NONE_EABI_PATH	?= $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/bin/
 ifeq ($(PLAT),NDS)
 
     NAME		:= bunjalloo
+    ARCHIVE		:= lib/lib$(NAME)_nds.a
 
     GAME_TITLE	:= Bunjalloo 0.11.0
     GAME_SUBTITLE	:= Web Browser
@@ -23,6 +24,7 @@ ifeq ($(PLAT),NDS)
 else ifeq ($(PLAT),SDL)
 
     NAME		:= bunjalloo_sdl
+    ARCHIVE		:= lib/lib$(NAME).a
 
 endif
 
@@ -37,12 +39,29 @@ SDIMAGE		:= image.bin
 # Source code paths
 # -----------------
 
-SOURCEDIRS	:= source
+SOURCEDIRS  := bunjalloo/source \
+               bwt/source \
+               main \
 
-INCLUDEDIRS	:= ../libbunjalloo/include/ \
-			   ../3rdparty/mbedtls-3.6.4/include/
+INCLUDEDIRS := ../3rdparty/libplum/include \
+               ../3rdparty/mbedtls-3.6.4/include \
+               ../3rdparty/zlib-1.3.1/ \
+               ../3rdparty/zlib-1.3.1/contrib/minizip/ \
+               bunjalloo/include/ \
+               bwt/include/ \
+               ndspp/include \
 
-GFXDIRS		:=
+ifeq ($(PLAT),SDL)
+    SOURCEDIRS  += ndspp/source/pc ndspp/source/common
+    INCLUDEDIRS += ndspp/source/pc/
+
+else ifeq ($(PLAT),NDS)
+    SOURCEDIRS  += ndspp/source/arm9 ndspp/source/common
+    INCLUDEDIRS += ndspp/source/arm9/
+endif
+
+GFXDIRS		:= bwt/img/ ndspp/img
+
 BINDIRS		:=
 AUDIODIRS	:=
 # List of folders to combine into the root of NitroFS:
@@ -51,22 +70,23 @@ NITROFSDIR	:= ../nitrofs/
 # Defines passed to all files
 # ---------------------------
 
-DEFINES		:=
+# Declare timegm() in <time.h>
+DEFINES     += -D_GNU_SOURCE=1
+# Declare strptime() in <time.h>
+DEFINES     += -D_XOPEN_SOURCE=1
 
 # Libraries
 # ---------
 
 ifeq ($(PLAT),SDL)
 
-    LIBS    := -lbunjalloo_sdl -lbwt_sdl -lndspp_sdl \
-               -lz_sdl -lplum_sdl -lmbedtls_sdl -lSDL -lGL -lGLU
+    LIBS    := -lz_sdl -lplum_sdl -lmbedtls_sdl -lSDL -lGL -lGLU
 
 else ifeq ($(PLAT),NDS)
 
     ARM7ELF := $(BLOCKSDS)/sys/arm7/main_core/arm7_dswifi.elf
 
-    LIBS    := -lbunjalloo_nds -lbwt_nds -lndspp_nds \
-               -lz_nds -lplum_nds -lmbedtls_nds \
+    LIBS    := -lz_nds -lplum_nds -lmbedtls_nds \
                -ldswifi9 -lnds9
 
     LIBDIRS := $(BLOCKSDS)/libs/libnds \
@@ -74,10 +94,7 @@ else ifeq ($(PLAT),NDS)
 
 endif
 
-LIBDIRS += ../3rdparty \
-           ../libbunjalloo \
-           ../libbwt \
-           ../libndspp \
+LIBDIRS += ../3rdparty/
 
 # Build artifacts
 # ---------------
@@ -117,6 +134,7 @@ endif
 
 CC		:= $(PREFIX)gcc
 CXX		:= $(PREFIX)g++
+AR		:= $(PREFIX)gcc-ar
 LD		:= $(PREFIX)gcc
 OBJDUMP		:= $(PREFIX)objdump
 MKDIR		:= mkdir
@@ -229,11 +247,11 @@ DEPS		:= $(OBJS:.o=.d)
 
 ifeq ($(PLAT),SDL)
 
-all: $(ELF)
+all: $(ELF) $(ARCHIVE)
 
 else ifeq ($(PLAT),NDS)
 
-all: $(ROM)
+all: $(ROM) $(ARCHIVE)
 
 ifneq ($(strip $(NITROFSDIR)),)
 # Additional arguments for ndstool
@@ -278,9 +296,15 @@ $(ELF): $(OBJS)
 	@echo "  LD      $@"
 	$(V)$(LD) -o $@ $(OBJS) $(LDFLAGS)
 
+# Exclude the file that contains the main() function
+$(ARCHIVE): $(filter-out %/main/Main.cpp.o,$(OBJS))
+	@echo "  AR      $@"
+	@$(MKDIR) -p $(@D)
+	$(V)$(AR) rcs $@ $^
+
 clean:
 	@echo "  CLEAN"
-	$(V)$(RM) $(ROM) build $(SDIMAGE)
+	$(V)$(RM) $(ROM) $(ELF) lib/ build/ $(SDIMAGE)
 
 sdimage:
 	@echo "  MKFATIMG $(SDIMAGE) $(SDROOT)"
