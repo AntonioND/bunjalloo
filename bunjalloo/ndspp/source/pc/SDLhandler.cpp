@@ -120,7 +120,7 @@ int SDLhandler::init()
   if (SDL_Init(initFlags) < 0)
   {
     fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-    return 1;
+    exit(EXIT_FAILURE);
   }
 
   atexit (SDL_Quit);
@@ -134,7 +134,7 @@ int SDLhandler::init()
   if (m_screen == NULL)
   {
     fprintf(stderr, "Couldn't set 16 bit video mode: %s\n", SDL_GetError());
-    return 2;
+    exit(EXIT_FAILURE);
   }
 
   for (int i = 0; i < 2; ++i)
@@ -155,7 +155,7 @@ int SDLhandler::init()
     if (m_layer[i] == NULL)
     {
       fprintf(stderr, "Couldn't create 16 bit video surface: %s\n", SDL_GetError());
-      return 2;
+      exit(EXIT_FAILURE);
     }
   }
 
