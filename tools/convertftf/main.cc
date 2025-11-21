@@ -155,7 +155,11 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   ftoa.pathname = const_cast<char*>(sourceFaceFilename);
   ftoa.flags = FT_OPEN_PATHNAME;
 
-  if (FT_Open_Face(ftlib, &ftoa, 0, &ftFace) != 0) return 0;
+  if (FT_Open_Face(ftlib, &ftoa, 0, &ftFace) != 0)
+  {
+    printf("FT_Open_Face() error\n");
+    exit(EXIT_FAILURE);
+  }
 
   // Record some information
   prerenderedSet->face = face;
@@ -173,7 +177,8 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   if ((prerenderedSet->glyphs =
         static_cast<t_prerenderedGlyph*>(malloc(prerenderedSet->numGlyphs *
             sizeof(t_prerenderedGlyph)))) == NULL) {
-    return 0;
+    printf("Failed to allocate glyph vector\n");
+    exit(EXIT_FAILURE);
   }
 
   // Set font size
@@ -188,19 +193,25 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   for (i = 0; i < prerenderedSet->numGlyphs; i ++) {
 
     // Load glyph
-    if (FT_Load_Glyph(ftFace, i, FT_LOAD_DEFAULT) != 0) {
-      return 0;
+    if (FT_Load_Glyph(ftFace, i, FT_LOAD_DEFAULT) != 0)
+    {
+      printf("FT_Load_Glyph(%d) error\n", i);
+      exit(EXIT_FAILURE);
     }
 
     glyph = NULL;
 
-    if (FT_Get_Glyph(ftFace->glyph, &glyph) != 0) {
-      return 0;
+    if (FT_Get_Glyph(ftFace->glyph, &glyph) != 0)
+    {
+      printf("FT_Get_Glyph(%d) error\n", i);
+      exit(EXIT_FAILURE);
     }
 
     // Render glyph
-    if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1) != 0) {
-      return 0;
+    if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1) != 0)
+    {
+      printf("FT_Glyph_To_Bitmap(%d) error\n", i);
+      exit(EXIT_FAILURE);
     }
 
     // Prepare output bitmap
@@ -222,9 +233,12 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
     assert(bitmapGlyph->bitmap.rows < 256);
     image->height = bitmapGlyph->bitmap.rows;
 
-    if (image->width > 0 && image->height > 0) {
-      if ((image->bitmap = static_cast<uint8*>(malloc((image->width * image->height) / 4))) == NULL) {
-        return 0;
+    if (image->width > 0 && image->height > 0)
+    {
+      if ((image->bitmap = static_cast<uint8*>(malloc((image->width * image->height) / 4))) == NULL)
+      {
+        printf("Failed to allocate glyph bitmap (%d)\n", i);
+        exit(EXIT_FAILURE);
       }
       allocated += (image->width * image->height) / 4;
 
@@ -267,7 +281,10 @@ int saveSetToFile(const char *filename, const t_prerenderedSet *prerenderedSet,
   fw.open(filename, "w");
 
   if (not fw.is_open())
-    return 0;
+  {
+    printf("Failed to open file for writing: %s\n", filename);
+    exit(EXIT_FAILURE);
+  }
 
   // Write header
   fw.write8(prerenderedSet->face);
@@ -305,7 +322,11 @@ int gatherCharmap(FT_Library ftlib, const char *sourceFaceFilename, t_charMap *c
   ftoa.pathname = const_cast<char*>(sourceFaceFilename);
   ftoa.flags = FT_OPEN_PATHNAME;
 
-  if (FT_Open_Face(ftlib, &ftoa, 0, &ftFace) != 0) return 0;
+  if (FT_Open_Face(ftlib, &ftoa, 0, &ftFace) != 0)
+  {
+    printf("FT_Open_Face() error\n");
+    exit(EXIT_FAILURE);
+  }
 
   // Initialize output charmap
   charMap->entries = NULL;
@@ -326,6 +347,11 @@ int gatherCharmap(FT_Library ftlib, const char *sourceFaceFilename, t_charMap *c
   charMap->size = size;
   printf("There are this many chars: %d\n", charMap->size);
   charMap->entries = static_cast<t_charMapEntry*>(malloc(charMap->size * sizeof(t_charMapEntry)));
+  if (charMap->entries == NULL)
+  {
+    printf("Failed to allocate charMap entries\n");
+    exit(EXIT_FAILURE);
+  }
 
   t_charMapEntry *charMapEntry = charMap->entries;
   t_charMapEntry last = {0, 0};
@@ -353,7 +379,10 @@ void saveCharmap(const char *filename, t_charMap *charMap)
   FileWrapper fw;
   fw.open(filename, "w");
   if (not fw.is_open())
-    return;
+  {
+    printf("Failed to open file for writing: %s\n", filename);
+    exit(EXIT_FAILURE);
+  }
 
   fw.write16(charMap->size);
 
@@ -371,7 +400,11 @@ void check_freetype(const char *filename, const char *mapname, const char *setna
                     int font_size, int offsetAscender, int offsetDescender)
 {
   FT_Library ftlib;
-  if (FT_Init_FreeType(&ftlib) != 0) return;
+  if (FT_Init_FreeType(&ftlib) != 0)
+  {
+    printf("FT_Init_FreeType() error\n");
+    exit(EXIT_FAILURE);
+  }
 
   int face = 0;
   t_prerenderedSet set;
