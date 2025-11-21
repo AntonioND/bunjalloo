@@ -78,6 +78,9 @@ unsigned int HtmlBodyElement::bgColor() const
   std::string bgcol = m_bgcolor;
   if (bgcol[0] == '#')
   {
+    // If we have a 3 character color we need to duplicate each digit
+    bool isShort = bgcol.length() == 4;
+
     // get next 6 letters
     std::string::const_iterator it(bgcol.begin());
     // skip #
@@ -87,6 +90,8 @@ unsigned int HtmlBodyElement::bgColor() const
     for (; it != bgcol.end() and count < 6; ++it,++count)
     {
       color += *it;
+      if (isShort)
+        color += *it;
     }
     return strtol(color.c_str(), 0, 0);
   }
