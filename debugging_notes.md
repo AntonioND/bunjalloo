@@ -1,22 +1,17 @@
-# Debugging Notes
+# Debugging notes
 
-## GDB and Desmume
+## Debugging NDS ROM
 
-```
-$ desmume-cli --arm9gdb=55555 file.nds
-```
+melonDS can run Bunjallo pretty well, including WiFi, SD cards and Slot-2 RAM
+expansion cartridges. You can find several ways to debug programs in the
+[documentation of BlocksDS](https://blocksds.skylyrac.net/docs/usage/debugging/).
 
-```
-$ $DEVKITARM/bin/arm-eabi-gdb file-arm9.elf
-```
+Bunjalloo enables the default exception handler, you don't need to enable it
+manually.
 
-```
-(gdb) target remote localhost:55555
-Remote debugging using localhost:55555 0x02000000 in _start ()
-(gdb) b main
-```
+## Notes about GDB
 
-Create a file "gdb.script" that contains this:
+You can create a file called "gdb.script" that contains this:
 
 ```
 b main
@@ -27,51 +22,14 @@ c
 Then run the file as follows:
 
 ```
-$ $DEVKITARM/bin/arm-eabi-gdb file-arm9.elf -x gdb.script
+gdb-multiarch file-arm9.elf -x gdb.script
 ```
 
 This saves on a few steps each time you restart the debugging session.
 
-## Add exception handler
-
-Add the following code:
-
-```
-ifdef ARM9
-defaultExceptionHandler();
-endif
-```
-
-Then start the program on hardware and wait for a crash.
-
-```
-Guru Meditation Error! data abort!
-
-pc:0200D3C4 addr:03000000
-```
-
-Copy the pc value and start gdb:
-
-```
-$DEVKITARM/bin/arm-eabi-gdb file.elf
-```
-
-```
-(gdb) b *0x0200D3C4
-Breakpoint 1 at 0x200d3c4: file arm9/Somefile.cpp, line 99.
-```
-
-or even easier
-
-```
-arm-eabi-addr2line -e file.elf 0x0200D3C4
-
-arm9/Somefile.cpp:99
-```
-
-Now open the file and see what has gone wrong.
-
 ## Test Coverage
+
+**Note: This section is outdated**
 
 These are my notes on how to check the coverage of test programs using gcov in
 Bunjalloo (can be applied to any Linux program really). First, compile the code
