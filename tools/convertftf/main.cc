@@ -88,19 +88,17 @@ struct t_prerenderedSet {
 
 void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitmap)
 {
-  unsigned int x, y;
-
   // Initialize pointers to both bitmaps
   uint8 *gfxbm = gfxBitmap->bitmap;
   unsigned char * ftbm = ftBitmap.buffer;
 
   // Transform bitmaps
 
-  for (y = 0; y < ftBitmap.rows; y ++) {
-
-    x = 0;
-    while (x < ftBitmap.width) {
-
+  for (unsigned int y = 0; y < ftBitmap.rows; y ++)
+  {
+    unsigned int x = 0;
+    while (x < ftBitmap.width)
+    {
       uint8 chunk, color;
 
       // First pixel in output byte
@@ -111,7 +109,8 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
       x ++;
 
       // Second pixel in output byte
-      if (x < ftBitmap.width) {
+      if (x < ftBitmap.width)
+      {
         color = ((int)(*ftbm) + 32) >> 6;
         if (color > 0x3) color = 0x3;
         chunk = chunk | (color << 4);
@@ -119,7 +118,8 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
         x ++;
 
         // Third pixel in output byte
-        if (x < ftBitmap.width) {
+        if (x < ftBitmap.width)
+        {
           color = ((int)(*ftbm) + 32) >> 6;
           if (color > 0x3) color = 0x3;
           chunk = chunk | (color << 2);
@@ -127,7 +127,8 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
           x ++;
 
           // Fourth pixel in output byte
-          if (x < ftBitmap.width) {
+          if (x < ftBitmap.width)
+          {
             color = ((int)(*ftbm) + 32) >> 6;
             if (color > 0x3) color = 0x3;
             chunk = chunk | color;
@@ -145,7 +146,8 @@ void convertFTBitmapToOwnGlyphBitmap(FT_Bitmap ftBitmap, t_glyphBitmap *gfxBitma
   }
 }
 
-int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int size, t_prerenderedSet *prerenderedSet)
+int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face,
+                 int size, t_prerenderedSet *prerenderedSet)
 {
   FT_Face ftFace;
   // Let FreeType load source font
@@ -176,7 +178,8 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   // Allocate memory for glyph vector
   if ((prerenderedSet->glyphs =
         static_cast<t_prerenderedGlyph*>(malloc(prerenderedSet->numGlyphs *
-            sizeof(t_prerenderedGlyph)))) == NULL) {
+            sizeof(t_prerenderedGlyph)))) == NULL)
+  {
     printf("Failed to allocate glyph vector\n");
     exit(EXIT_FAILURE);
   }
@@ -185,13 +188,12 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
   FT_Set_Pixel_Sizes(ftFace, 0, prerenderedSet->size);
 
   // Render each glyph
-  int i;
   t_prerenderedGlyph *prerenderedGlyph = prerenderedSet->glyphs;
   FT_Glyph glyph;
   unsigned int allocated = 0;
 
-  for (i = 0; i < prerenderedSet->numGlyphs; i ++) {
-
+  for (int i = 0; i < prerenderedSet->numGlyphs; i ++)
+  {
     // Load glyph
     if (FT_Load_Glyph(ftFace, i, FT_LOAD_DEFAULT) != 0)
     {
@@ -244,8 +246,9 @@ int prerenderSet(FT_Library ftlib, const char *sourceFaceFilename, int face, int
 
       // Convert FreeType bitmap to our own format
       convertFTBitmapToOwnGlyphBitmap(bitmapGlyph->bitmap, image);
-
-    } else {
+    }
+    else
+    {
       image->bitmap = NULL;
     }
 
@@ -333,8 +336,8 @@ int gatherCharmap(FT_Library ftlib, const char *sourceFaceFilename, t_charMap *c
   charMap->size = 0;
 
   // Process all character codes
-  FT_ULong charCode;
-  FT_UInt gIndex;
+  FT_ULong charCode = 0;
+  FT_UInt gIndex = 0;
 
   // see how many chars there are
   charCode = FT_Get_First_Char(ftFace, &gIndex);
@@ -412,6 +415,7 @@ void check_freetype(const char *filename, const char *mapname, const char *setna
   saveSetToFile(setname, &set, offsetAscender, offsetDescender);
 
   t_charMap charMap;
+  memset(&charMap, 0, sizeof(charMap));
   gatherCharmap(ftlib, filename, &charMap);
 
   saveCharmap(mapname, &charMap);
@@ -429,19 +433,20 @@ void usage(const char *arg0)
   printf(" --offset_ascender=SIZE  value to add to min ascender in pixels (0)\n");
   printf(" --offset_descender=SIZE value to add to max descender in pixels (0)\n");
   printf(" --help,-h               help\n");
-  exit(0);
+  exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char* const *argv)
 {
-  int c;
   int font_size(12);
   int offset_ascender = 0;
   int offset_descender = 0;
   const char *map(0);
   const char *set(0);
   const char *font(0);
-  while (1) {
+
+  while (1)
+  {
     int option_index = 0;
     static struct option long_options[] = {
       {"map", 1, 0, 0},
@@ -452,9 +457,11 @@ int main(int argc, char* const *argv)
       {"offset_descender", 1, 0, 0},
       {0, 0, 0, 0}
     };
-    c = getopt_long(argc, argv, "m:s:p:h", long_options, &option_index);
+
+    int c = getopt_long(argc, argv, "m:s:p:h", long_options, &option_index);
     if (c == -1)
       break;
+
     switch (c)
     {
       case 0:
@@ -502,6 +509,7 @@ int main(int argc, char* const *argv)
         break;
     }
   }
+
   if (optind < argc) {
     font = argv[optind];
   }
@@ -516,6 +524,7 @@ int main(int argc, char* const *argv)
   if (!set) {
     set = "a.set";
   }
+
   printf("Set: %s, Map: %s\n", set, map);
   printf("Offsets: %d, %d\n", offset_ascender, offset_descender);
   check_freetype(font, map, set, font_size, offset_ascender, offset_descender);
