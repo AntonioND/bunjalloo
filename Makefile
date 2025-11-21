@@ -24,13 +24,13 @@ bunjalloo-nds: 3rdparty-nds
 bunjalloo-sdl: 3rdparty-sdl
 	PLAT=SDL make -C bunjalloo -j`nproc`
 
-.PHONY: libvera-nds libvera-sdl
+.PHONY: libfont-nds libfont-sdl
 
-libvera-nds:
-	PLAT=NDS make -C libvera -j`nproc`
+libfont-nds:
+	PLAT=NDS make -C libfont -j`nproc`
 
-libvera-sdl:
-	PLAT=SDL make -C libvera -j`nproc`
+libfont-sdl:
+	PLAT=SDL make -C libfont -j`nproc`
 
 .PHONY: clean tests tools
 
@@ -40,7 +40,7 @@ clean:
 	PLAT=NDS make -C tests -j`nproc` clean
 	make -C tools -j`nproc` clean
 
-tests: bunjalloo-sdl bunjalloo-nds libvera-sdl libvera-nds
+tests: bunjalloo-sdl bunjalloo-nds libfont-sdl libfont-nds
 	make -C tests -j`nproc`
 
 tools:

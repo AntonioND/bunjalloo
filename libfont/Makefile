@@ -6,10 +6,10 @@ export WONDERFUL_TOOLCHAIN	?= /opt/wonderful
 ARM_NONE_EABI_PATH	?= $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/bin/
 
 ifeq ($(PLAT),NDS)
-    ARCHIVE  := lib/libvera_nds.a
+    ARCHIVE  := lib/libfont_nds.a
     BUILDDIR := build/nds
 else ifeq ($(PLAT),SDL)
-    ARCHIVE	:= lib/libvera_sdl.a
+    ARCHIVE	:= lib/libfont_sdl.a
     BUILDDIR := build/sdl
 endif
 
