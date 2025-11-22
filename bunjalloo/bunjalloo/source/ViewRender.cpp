@@ -622,16 +622,43 @@ void ViewRender::begin(HtmlElement & element)
 {
   if (element.isa(HtmlConstants::UL_TAG) or element.isa(HtmlConstants::OL_TAG))
   {
-    // FIXME!!
-    /** m_self->m_textArea->increaseIndent(); */
+    // This is the beginning of a list.
+
+    // TODO: textArea()->increaseIndentation();
+
     //if (not element.isBlock() and element.parent()->isa(HtmlConstants::LI_TAG))
     textArea()->insertNewline();
   }
-  else if (element.isa(HtmlConstants::LI_TAG)) {
+  else if (element.isa(HtmlConstants::LI_TAG))
+  {
+    // This is an entry in a list
+
     const HtmlElement * prev(element.parent()->previousSibling(&element));
     if (prev and prev->isa(HtmlConstants::TEXT)) // TODO - remove #TEXT and so forth
     {
       textArea()->insertNewline();
+    }
+
+    if (element.parent()->isa(HtmlConstants::UL_TAG))
+    {
+      // This is an unordered list, print a bullet point and that's it
+      textArea()->appendText("• ");
+    }
+    else if (element.parent()->isa(HtmlConstants::OL_TAG))
+    {
+      // This is an ordered list, count how many LI_TAG siblings exist before
+      // this one.
+      int count = 1;
+      const HtmlElement * el = element.parent()->firstChild();
+      while (el != &element)
+      {
+        if (el->isa(HtmlConstants::LI_TAG))
+          count++;
+        el = element.parent()->nextSibling(el);
+      }
+
+      std::string s = std::to_string(count) + std::string(". ");
+      textArea()->appendText(s.c_str());
     }
   }
 }
@@ -651,7 +678,11 @@ bool ViewRender::visit(HtmlElement & element)
 }
 void ViewRender::end(HtmlElement & element)
 {
-  if (element.isa(HtmlConstants::LI_TAG))
+  if (element.isa(HtmlConstants::OL_TAG) || element.isa(HtmlConstants::UL_TAG))
+  {
+    // TODO: textArea()->decreaseIndentation();
+  }
+  else if (element.isa(HtmlConstants::LI_TAG))
   {
     ElementList::const_iterator it(element.children().begin());
     ElementList::const_iterator end(element.children().end());
