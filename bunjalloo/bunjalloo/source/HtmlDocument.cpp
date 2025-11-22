@@ -333,7 +333,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
     }
     HtmlElement * element = ElementFactory::create(tag, attrs);
     insertElement(element);
-    if (tag == HtmlConstants::OL_TAG or tag == "ul")
+    if (tag == HtmlConstants::OL_TAG or tag == HtmlConstants::UL_TAG)
     {
       HtmlElement * parent = element->parent();
       if (not (parent->isa(HtmlConstants::OL_TAG) or parent->isa(HtmlConstants::UL_TAG) or parent->isa(HtmlConstants::LI_TAG)))
