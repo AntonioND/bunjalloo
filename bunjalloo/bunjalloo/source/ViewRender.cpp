@@ -93,7 +93,8 @@ void ViewRender::setBgColor(const HtmlElement * body)
     m_self->m_textArea->setBackgroundColor(col);
     - semi fixed, but not perfect
     */
-    m_self->m_scrollPane.setBackgroundColor(col);
+    //textArea()->setBackgroundColor(col);
+    //m_self->m_scrollPane.setBackgroundColor(col);
   }
 }
 
@@ -237,6 +238,11 @@ bool ViewRender::hasImage()
 
 void ViewRender::render()
 {
+  // TODO Reset background color when we support background color changes
+  //nds::Color col(31, 31, 31);
+  //textArea()->setBackgroundColor(col);
+  //m_self->m_scrollPane.setBackgroundColor(col);
+
   const HtmlElement * root = m_self->m_document.rootNode();
   bool useScrollPane(false);
 
@@ -600,6 +606,9 @@ void ViewRender::end(HtmlBlockElement & element)
 
 void ViewRender::begin(HtmlBodyElement & element)
 {
+  // Attribute "bgcolor" is deprecated, but handle it anyway
+  //setBgColor((const HtmlElement *)&element);
+  // TODO: We need to propagate this attribute to all children
 }
 bool ViewRender::visit(HtmlBodyElement & element)
 {
