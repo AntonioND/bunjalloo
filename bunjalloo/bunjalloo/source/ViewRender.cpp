@@ -587,9 +587,19 @@ void ViewRender::end(HtmlAnchorElement & element)
 
 void ViewRender::begin(HtmlBlockElement & element)
 {
-  if (element.isBlock())
+  if (element.isa(HtmlConstants::P_TAG) or element.isa(HtmlConstants::DIV_TAG))
   {
-    textArea()->insertNewline();
+    const HtmlElement * prev(element.parent()->previousSibling(&element));
+    if (prev)
+    {
+      textArea()->insertNewline();
+      textArea()->insertNewline();
+    }
+  }
+  else
+  {
+    std::string error = "HtmlBlockElement begin: Invalid tag " + element.tagName();
+    libndsCrash(error.c_str());
   }
 }
 bool ViewRender::visit(HtmlBlockElement & element)
@@ -598,10 +608,6 @@ bool ViewRender::visit(HtmlBlockElement & element)
 }
 void ViewRender::end(HtmlBlockElement & element)
 {
-  if (element.isBlock())
-  {
-    textArea()->insertNewline();
-  }
 }
 
 void ViewRender::begin(HtmlBodyElement & element)
@@ -616,27 +622,75 @@ bool ViewRender::visit(HtmlBodyElement & element)
 }
 void ViewRender::end(HtmlBodyElement & element)
 {
+  // Add an additional newline so that the toolbar doesn't cover the last line
+  // of text of the website.
+  textArea()->insertNewline();
 }
 
 void ViewRender::begin(HtmlElement & element)
 {
+  bool elementIsHeading = element.tagName()[0] == 'h' and
+            (element.tagName()[1] >= '1' and element.tagName()[1] <= '6');
+
+  if (element.isa(HtmlConstants::TEXT) or elementIsHeading)
+  {
+    const HtmlElement * prev(element.parent()->previousSibling(&element));
+    if (prev)
+    {
+      bool prevIsHeading = prev->tagName()[0] == 'h' and
+            (prev->tagName()[1] >= '1' and prev->tagName()[1] <= '6');
+
+      if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG) or
+          prevIsHeading)
+      {
+        textArea()->insertNewline();
+        textArea()->insertNewline();
+      }
+      else if (prev->isa(HtmlConstants::UL_TAG) or prev->isa(HtmlConstants::OL_TAG))
+      {
+        textArea()->insertNewline();
+      }
+    }
+  }
   if (element.isa(HtmlConstants::UL_TAG) or element.isa(HtmlConstants::OL_TAG))
   {
     // This is the beginning of a list.
 
-    // TODO: textArea()->increaseIndentation();
+    const HtmlElement * prev(element.parent()->previousSibling(&element));
+    if (prev)
+    {
+      if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG))
+      {
+        textArea()->insertNewline();
+        textArea()->insertNewline();
+      }
+      else
+      {
+        textArea()->insertNewline();
+      }
+    }
+    else
+    {
+    }
 
-    //if (not element.isBlock() and element.parent()->isa(HtmlConstants::LI_TAG))
-    textArea()->insertNewline();
+    // TODO: textArea()->increaseIndentation();
   }
   else if (element.isa(HtmlConstants::LI_TAG))
   {
     // This is an entry in a list
 
     const HtmlElement * prev(element.parent()->previousSibling(&element));
-    if (prev and prev->isa(HtmlConstants::TEXT)) // TODO - remove #TEXT and so forth
+    if (prev)
     {
-      textArea()->insertNewline();
+      if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG))
+      {
+        textArea()->insertNewline();
+        textArea()->insertNewline();
+      }
+      else
+      {
+        textArea()->insertNewline();
+      }
     }
 
     if (element.parent()->isa(HtmlConstants::UL_TAG))
@@ -681,25 +735,6 @@ void ViewRender::end(HtmlElement & element)
   if (element.isa(HtmlConstants::OL_TAG) || element.isa(HtmlConstants::UL_TAG))
   {
     // TODO: textArea()->decreaseIndentation();
-  }
-  else if (element.isa(HtmlConstants::LI_TAG))
-  {
-    ElementList::const_iterator it(element.children().begin());
-    ElementList::const_iterator end(element.children().end());
-    bool hasBlock(false);
-    for (; it != end; ++it)
-    {
-      if ( (*it)->isa(HtmlConstants::UL_TAG) or (*it)->isBlock()) {
-        hasBlock = true;
-        break;
-      }
-    }
-    if (not hasBlock)
-      textArea()->insertNewline();
-  }
-  else if (element.isa(HtmlConstants::P_TAG) or (element.tagName()[0] == 'h' and (element.tagName()[1] >= '1' and element.tagName()[1] <= '6')))
-  {
-    textArea()->insertNewline();
   }
 }
 
