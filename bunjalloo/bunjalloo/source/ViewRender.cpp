@@ -554,7 +554,8 @@ void ViewRender::notify()
   }
 }
 
-// Visitor implementation
+// =================== HtmlAnchorElement ===================
+
 void ViewRender::begin(HtmlAnchorElement & element)
 {
   const std::string & href(element.attribute("href"));
@@ -585,6 +586,8 @@ void ViewRender::end(HtmlAnchorElement & element)
   m_hrefForLink.clear();
 }
 
+// =================== HtmlBlockElement ===================
+
 void ViewRender::begin(HtmlBlockElement & element)
 {
   if (element.isa(HtmlConstants::P_TAG) or element.isa(HtmlConstants::DIV_TAG))
@@ -610,6 +613,8 @@ void ViewRender::end(HtmlBlockElement & element)
 {
 }
 
+// =================== HtmlBodyElement ===================
+
 void ViewRender::begin(HtmlBodyElement & element)
 {
   // Attribute "bgcolor" is deprecated, but handle it anyway
@@ -626,6 +631,8 @@ void ViewRender::end(HtmlBodyElement & element)
   // of text of the website.
   textArea()->insertNewline();
 }
+
+// =================== HtmlElement ===================
 
 void ViewRender::begin(HtmlElement & element)
 {
@@ -738,6 +745,8 @@ void ViewRender::end(HtmlElement & element)
   }
 }
 
+// =================== HtmlFormElement ===================
+
 void ViewRender::begin(HtmlFormElement & element)
 {
   pushTextArea();
@@ -751,6 +760,8 @@ bool ViewRender::visit(HtmlFormElement & element)
 void ViewRender::end(HtmlFormElement & element)
 {
 }
+
+// =================== HtmlImageElement ===================
 
 void ViewRender::begin(HtmlImageElement & element)
 {
@@ -770,6 +781,8 @@ bool ViewRender::visit(HtmlImageElement & element)
 void ViewRender::end(HtmlImageElement & element)
 {
 }
+
+// =================== HtmlInputElement ===================
 
 void ViewRender::begin(HtmlInputElement & element)
 {
@@ -791,6 +804,8 @@ void ViewRender::end(HtmlInputElement & element)
 {
 }
 
+// =================== HtmlMetaElement ===================
+
 void ViewRender::begin(HtmlMetaElement & element)
 {
 }
@@ -802,6 +817,8 @@ void ViewRender::end(HtmlMetaElement & element)
 {
 }
 
+// =================== HtmlOptionElement ===================
+
 void ViewRender::begin(HtmlOptionElement & element)
 {
 }
@@ -812,6 +829,8 @@ bool ViewRender::visit(HtmlOptionElement & element)
 void ViewRender::end(HtmlOptionElement & element)
 {
 }
+
+// =================== HtmlPreElement ===================
 
 void ViewRender::begin(HtmlPreElement & element)
 {
@@ -825,6 +844,8 @@ void ViewRender::end(HtmlPreElement & element)
 {
   textArea()->setParseNewline(false);
 }
+
+// =================== HtmlTextAreaElement ===================
 
 void ViewRender::begin(HtmlTextAreaElement & element)
 {
