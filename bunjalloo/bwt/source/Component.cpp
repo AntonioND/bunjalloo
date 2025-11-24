@@ -58,6 +58,17 @@ void Component::add(Component * child, bool isDynamic)
   }
 }
 
+void Component::setIndentation(int x)
+{
+  // TODO: Don't allow indentation over a certain limit?
+  m_indentation = x;
+}
+
+int Component::indentation()
+{
+  return m_indentation;
+}
+
 void Component::setSize(unsigned int w, unsigned int h)
 {
   m_bounds.w = w;

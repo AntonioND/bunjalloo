@@ -61,6 +61,13 @@ class Component: public StylusListener
      * @param h the height.
      */
     virtual void setSize(unsigned int w, unsigned int h);
+
+    /** Set the preferred indentation of this component */
+    virtual void setIndentation(int x);
+
+    /** Returns the preferred indentation of this component */
+    int indentation();
+
     /** Get the position and size.
      * @return a Rectangle that holds the horizontal and vertical coordinates
      * as well as the width and height of the Component.
@@ -126,6 +133,9 @@ class Component: public StylusListener
 
     /** The height that this component would like to be. */
     int m_preferredHeight;
+
+    /** The preferred indentation of this component */
+    int m_indentation { -1 }; // Start as undefined
 
     /** The visibility. */
     bool m_visible;
