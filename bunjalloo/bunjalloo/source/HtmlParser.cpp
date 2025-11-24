@@ -209,7 +209,14 @@ void HtmlParserImpl::next()
 {
   m_lastPosition = m_position;
   if (m_encoding == HtmlParser::UTF8_ENCODING) {
+    // Get a UTF-8 codepoint. If there is a decoding error and the pointer
+    // doesn't advance, advance it by one character to prevent hangs.
+    // TODO: Ideally this would be in a thread and it would just wait for more
+    // bytes to be available.
+    const char *lastPosition = m_position;
     m_value = utf8::next(m_position, m_end);
+    if (lastPosition == m_position)
+      m_position++;
   } else {
     m_value = ISO_8859_1::decode((*m_position)&0xff);
     m_position++;
