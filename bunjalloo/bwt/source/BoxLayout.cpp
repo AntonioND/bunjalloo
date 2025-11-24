@@ -22,6 +22,7 @@
 #include "Canvas.h"
 #include "BoxLayout.h"
 #include "Delete.h"
+#include "Palette.h"
 
 using nds::Rectangle;
 
@@ -268,6 +269,15 @@ void BoxLayout::paint(const nds::Rectangle & clip)
       continue;
     c->paint(thisClip);
     nds::Canvas::instance().setClip(clip);
+
+#if 0
+    // Draw boxes around each Component to help debugging
+    nds::Color col(31, 0, 0);
+    nds::Canvas::instance().horizontalLine(thisClip.x, thisClip.top(), thisClip.w, col);
+    nds::Canvas::instance().verticalLine(thisClip.left(), thisClip.top(), thisClip.h, col);
+    nds::Canvas::instance().horizontalLine(thisClip.x, thisClip.bottom()-1, thisClip.w, col);
+    nds::Canvas::instance().verticalLine(thisClip.right(), thisClip.top(), thisClip.h, col);
+#endif
   }
 }
 
