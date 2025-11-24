@@ -717,9 +717,7 @@ void ViewRender::begin(HtmlElement & element)
   {
     // This is an entry in a list
 
-    m_pendingNewline = false;
     pushTextArea();
-    m_box->insertNewline();
 
     setTextAreaIndentation();
 
@@ -767,7 +765,6 @@ void ViewRender::end(HtmlElement & element)
   {
     // We need to create a new text area so that we can reduce the indentation
     pushTextArea();
-    m_box->insertNewline();
 
     decreaseIndentation();
 
