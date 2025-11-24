@@ -32,7 +32,7 @@ DEFINES		:=
 # Libraries
 # ---------
 
-LIBS    := -lbunjalloo_sdl -lvera_sdl \
+LIBS    := -lbunjalloo_sdl -lfont_sdl \
            -lgoogletest_sdl -lz_sdl -lplum_sdl -lmbedtls_sdl \
            -lSDL -lGL -lGLU -lm
 
