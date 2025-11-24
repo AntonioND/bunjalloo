@@ -182,6 +182,7 @@ void ViewRender::clearRadioGroups()
 
 void ViewRender::clear()
 {
+  m_indentation = 0;
   m_self->m_scrollPane.removeChildren();
   clearRadioGroups();
   m_textArea = 0;
@@ -380,10 +381,35 @@ void ViewRender::renderSelect(const HtmlElement * selectElement)
 
 void ViewRender::pushTextArea()
 {
-  if (m_textArea) {
+  if (m_textArea)
+  {
     m_box->add(m_textArea);
     m_textArea = 0;
   }
+
+  // Create a new TextArea
+  textArea();
+}
+
+void ViewRender::setTextAreaIndentation()
+{
+  m_textArea->setIndentation(m_indentation);
+  m_textArea->setSize(nds::Canvas::instance().width()-7-m_indentation,
+                      m_textArea->font().height());
+}
+
+void ViewRender::increaseIndentation(void)
+{
+  m_indentation += 16;
+  if (m_indentation > 144)
+    m_indentation = 144;
+}
+
+void ViewRender::decreaseIndentation(void)
+{
+  m_indentation -= 16;
+  if (m_indentation < 0)
+    m_indentation = 0;
 }
 
 void ViewRender::insertNewline()
@@ -595,8 +621,17 @@ void ViewRender::begin(HtmlBlockElement & element)
     const HtmlElement * prev(element.parent()->previousSibling(&element));
     if (prev)
     {
-      textArea()->insertNewline();
-      textArea()->insertNewline();
+      pushTextArea();
+
+      if (prev->isa(HtmlConstants::OL_TAG) or prev->isa(HtmlConstants::UL_TAG))
+      {
+      }
+      else
+      {
+        m_box->insertNewline();
+        pushTextArea();
+        setTextAreaIndentation();
+      }
     }
   }
   else
@@ -650,12 +685,11 @@ void ViewRender::begin(HtmlElement & element)
       if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG) or
           prevIsHeading)
       {
-        textArea()->insertNewline();
-        textArea()->insertNewline();
+        m_box->insertNewline();
       }
       else if (prev->isa(HtmlConstants::UL_TAG) or prev->isa(HtmlConstants::OL_TAG))
       {
-        textArea()->insertNewline();
+        m_box->insertNewline();
       }
     }
   }
@@ -663,42 +697,31 @@ void ViewRender::begin(HtmlElement & element)
   {
     // This is the beginning of a list.
 
+    increaseIndentation();
+
     const HtmlElement * prev(element.parent()->previousSibling(&element));
     if (prev)
     {
       if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG))
       {
         textArea()->insertNewline();
-        textArea()->insertNewline();
+        m_box->insertNewline();
       }
       else
       {
-        textArea()->insertNewline();
+        m_box->insertNewline();
       }
     }
-    else
-    {
-    }
-
-    // TODO: textArea()->increaseIndentation();
   }
   else if (element.isa(HtmlConstants::LI_TAG))
   {
     // This is an entry in a list
 
-    const HtmlElement * prev(element.parent()->previousSibling(&element));
-    if (prev)
-    {
-      if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG))
-      {
-        textArea()->insertNewline();
-        textArea()->insertNewline();
-      }
-      else
-      {
-        textArea()->insertNewline();
-      }
-    }
+    m_pendingNewline = false;
+    pushTextArea();
+    m_box->insertNewline();
+
+    setTextAreaIndentation();
 
     if (element.parent()->isa(HtmlConstants::UL_TAG))
     {
@@ -733,7 +756,8 @@ bool ViewRender::visit(HtmlElement & element)
   }
   else if (element.isa(HtmlConstants::BR_TAG))
   {
-    insertNewline();
+    pushTextArea();
+    m_box->insertNewline();
   }
   return true;
 }
@@ -741,7 +765,13 @@ void ViewRender::end(HtmlElement & element)
 {
   if (element.isa(HtmlConstants::OL_TAG) || element.isa(HtmlConstants::UL_TAG))
   {
-    // TODO: textArea()->decreaseIndentation();
+    // We need to create a new text area so that we can reduce the indentation
+    pushTextArea();
+    m_box->insertNewline();
+
+    decreaseIndentation();
+
+    setTextAreaIndentation();
   }
 }
 

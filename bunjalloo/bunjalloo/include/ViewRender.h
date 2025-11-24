@@ -108,6 +108,11 @@ class ViewRender: public Visitor, public ViewI
     typedef std::map<std::string, FormRadio*> FormGroupMap;
     FormGroupMap m_radioGroup;
 
+    // Used to keep track of the indentation caused by lists
+    void increaseIndentation(void);
+    void decreaseIndentation(void);
+    signed short m_indentation { 0 };
+
     void setBgColor(const HtmlElement * body);
     void renderSelect(const HtmlElement * body);
     void doImage(const std::string & unicode,
@@ -120,6 +125,7 @@ class ViewRender: public Visitor, public ViewI
     bool hasImage();
     void renderImage();
     void pushTextArea();
+    void setTextAreaIndentation();
 
     template<typename T, typename A>
       void addLink(T *component, A &a);
