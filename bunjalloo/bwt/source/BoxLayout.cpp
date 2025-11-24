@@ -66,6 +66,12 @@ class BoxLayout::Box
       m_bounds.y = y;
     }
 
+    void setSize(int w, int h)
+    {
+      m_bounds.w = w;
+      m_bounds.h = h;
+    }
+
     Rectangle bounds() const
     {
       return m_bounds;
@@ -108,6 +114,8 @@ class BoxLayout::Box
       BoundComponent *bc(*m_children.rbegin());
       return bc->component();
     }
+
+    int m_indentation { -1 };
 
   private:
     BoxLayout *m_parent;
@@ -222,7 +230,13 @@ void BoxLayout::addToLayout(Component *child)
   {
     m_bounds.h = 0;
   }
-  if (not lastBox->tryAdd(child))
+
+  bool added = false;
+  // If no indentation has been specified, try to append  to previous element
+  if (child->indentation() == -1)
+    added = lastBox->tryAdd(child);
+
+  if (not added)
   {
     // Did not fit, so now we need to add the last height on again
     m_bounds.h += lastBox->bounds().h;
@@ -230,7 +244,17 @@ void BoxLayout::addToLayout(Component *child)
     lastBox = new (std::nothrow) Box(this);
     if (lastBox == NULL)
       libndsCrash("addToLayout(): OOM");
-    lastBox->setPosition(lbb.x, lbb.bottom());
+
+    if (child->indentation() == -1)
+      lastBox->setPosition(lbb.x, lbb.bottom());
+    else
+      lastBox->setPosition(child->indentation(), lbb.bottom());
+
+    int right = lastBox->bounds().x + lastBox->bounds().w;
+    if (right > m_bounds.w) {
+      lastBox->setSize(m_bounds.w - lastBox->bounds().x, lastBox->bounds().h);
+    }
+
     lastBox->tryAdd(child);
     m_boxes.push_front(lastBox);
   }
