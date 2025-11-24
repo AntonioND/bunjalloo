@@ -779,9 +779,20 @@ void ViewRender::end(HtmlElement & element)
 
 void ViewRender::begin(HtmlFormElement & element)
 {
-  pushTextArea();
-  m_box->insertNewline();
-  m_pendingNewline = false;
+  const HtmlElement * prev(element.parent()->previousSibling(&element));
+  if (prev)
+  {
+    bool prevIsHeading = prev->tagName()[0] == 'h' and
+          (prev->tagName()[1] >= '1' and prev->tagName()[1] <= '6');
+
+    if (prev->isa(HtmlConstants::P_TAG) or prev->isa(HtmlConstants::DIV_TAG) or
+        prevIsHeading)
+    {
+      pushTextArea();
+      m_box->insertNewline();
+      m_pendingNewline = false;
+    }
+  }
 }
 bool ViewRender::visit(HtmlFormElement & element)
 {
