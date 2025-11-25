@@ -165,8 +165,8 @@ void HtmlDocument::beforeHead(const std::string & tag)
 void HtmlDocument::inHead(const std::string & tag, const AttributeVector & attrs)
 {
 
-  if (   tag == "script"
-      or tag == "style"
+  if (   tag == HtmlConstants::SCRIPT_TAG
+      or tag == HtmlConstants::STYLE_TAG
       or tag == HtmlConstants::TITLE_TAG
      )
   {
@@ -175,7 +175,9 @@ void HtmlDocument::inHead(const std::string & tag, const AttributeVector & attrs
     if (tag == HtmlConstants::TITLE_TAG) {
       setContentModel(RCDATA);
     }
-    if (tag == "style" or tag == "script") {
+    if (   tag == HtmlConstants::STYLE_TAG
+        or tag == HtmlConstants::SCRIPT_TAG)
+    {
       setContentModel(CDATA);
     }
     // collect all character tokens until a non character one is returned.
@@ -254,8 +256,8 @@ void HtmlDocument::afterHead(const std::string & tag, const AttributeVector & at
   else if (   tag == "base"
       or tag == "link"
       or tag == HtmlConstants::META_TAG
-      or tag == "script"
-      or tag == "style"
+      or tag == HtmlConstants::SCRIPT_TAG
+      or tag == HtmlConstants::STYLE_TAG
       or tag == HtmlConstants::TITLE_TAG
      )
   {
@@ -293,8 +295,8 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
   if (   tag == "base"
       or tag == "link"
       or tag == HtmlConstants::META_TAG
-      or tag == "script"
-      or tag == "style"
+      or tag == HtmlConstants::SCRIPT_TAG
+      or tag == HtmlConstants::STYLE_TAG
       or tag == HtmlConstants::TITLE_TAG
      )
   {
