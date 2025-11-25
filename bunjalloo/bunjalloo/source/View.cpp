@@ -298,7 +298,7 @@ void View::showBookmarkPage()
       // that's unpossible!
       return;
     }
-    const static string header("<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=UTF-8'><TITLE>Bookmarks</TITLE>\n");
+    const static string header("<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>Bookmarks</title>\n");
     bookmarks.write(header.c_str(), header.length());
   }
   m_controller.doUri(bookmarksUrl);
