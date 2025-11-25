@@ -105,12 +105,43 @@ TEST(UriTest, Navigate)
   EXPECT_EQ( expectedServer, uri.server());
   EXPECT_EQ( expectedFile, uri.fileName());
 
+  // Make sure that the last "/" in a directory is preserved
+
   uri = uri.navigateTo("/directory/");
   expectedFile = "/directory/";
   expectedServer = "server";
   EXPECT_EQ( expectedServer, uri.server());
   EXPECT_EQ( expectedFile, uri.fileName());
+
+  // Test relative address that starts with ".."
+
+  uri.setUri("http://server/directory/file/");
+  uri = uri.navigateTo("../newfile/");
+  expectedFile = "/directory/newfile/";
+  expectedServer = "server";
+  EXPECT_EQ( expectedServer, uri.server());
   EXPECT_EQ( expectedFile, uri.fileName());
+
+  // Test absolute addresses that preserves the schema. The first navigate call
+  // should remain HTTP and the second one should remain HTTPS
+
+  uri.setUri("http://server/file");
+  uri = uri.navigateTo("//newserver/newfile");
+
+  expectedFile = "/newfile";
+  expectedServer = "newserver";
+  EXPECT_EQ( expectedServer, uri.server());
+  EXPECT_EQ( expectedFile, uri.fileName());
+  EXPECT_EQ( URI::HTTP_PROTOCOL, uri.protocol());
+
+  uri.setUri("https://server/file");
+  uri = uri.navigateTo("//newserver/newfile");
+
+  expectedFile = "/newfile";
+  expectedServer = "newserver";
+  EXPECT_EQ( expectedServer, uri.server());
+  EXPECT_EQ( expectedFile, uri.fileName());
+  EXPECT_EQ( URI::HTTPS_PROTOCOL, uri.protocol());
 }
 
 TEST(UriTest, ToString)
@@ -162,6 +193,17 @@ TEST(UriTest, NavigateFile)
   relUri = relUri.navigateTo("/root/index.txt");
   expectedFile = "/root/index.txt";
   EXPECT_EQ( expectedFile, relUri.fileName());
+
+  // Test absolute addresses that preserves the schema.
+
+  URI uri("file://server/file");
+  uri = uri.navigateTo("//newserver/newfile");
+
+  expectedFile = "/newfile";
+  string expectedServer("newserver");
+  EXPECT_EQ( expectedServer, uri.server());
+  EXPECT_EQ( expectedFile, uri.fileName());
+  EXPECT_EQ( URI::FILE_PROTOCOL, uri.protocol());
 }
 
 TEST(UriTest, NavigateDots)

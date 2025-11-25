@@ -245,6 +245,12 @@ const std::string URI::fileName() const
   return file;
 }
 
+// Types of links that can be passed to this function:
+//
+// Absolute URL with schema:        http://yourdomain.example/images/example.png
+// Absolute URL preserving schema:  //yourdomain.example/images/example.png
+// URL relative to the server:      /images/example.png
+// URL relative to the resource:    images/example.png
 URI URI::navigateTo(const std::string & newFile ) const
 {
   if (newFile.length() == 0)
@@ -271,51 +277,72 @@ URI URI::navigateTo(const std::string & newFile ) const
     return tmp;
   }
   tmp = *this;
-  // first change this: www.server.com/foo/bar -> navigateTo("/path/to/file")
-  // should go to www.server.com/path/to/file
-  // string newURI(m_protocol);
-  // newURI += "://";
-  string newURI;
-  if (newFile[0] == '/')
+
+  // Remove trailing information from original link
+  // ----------------------------------------------
+
+  size_t lastHash(tmp.m_address.find("#"));
+  if (lastHash != string::npos)
   {
-    // Absolute path
+    tmp.m_address = tmp.m_address.substr(0,lastHash);
+  }
+
+  size_t firstQuestionMark(tmp.m_address.find("?")); // Passed values
+  if (firstQuestionMark != string::npos)
+  {
+    tmp.m_address = tmp.m_address.substr(0,firstQuestionMark);
+  }
+
+  // Save trailing information from the new link
+  // -------------------------------------------
+
+  string newURI = newFile;
+  string bookmark = "";
+  string passedValues = "";
+
+  lastHash = newURI.find("#"); // The bookmark goes last, remove it first
+  if (lastHash != string::npos)
+  {
+    bookmark = newURI.substr(lastHash);
+    newURI = newURI.substr(0,lastHash);
+  }
+
+  firstQuestionMark = newURI.find("?"); // Passed values
+  if (firstQuestionMark != string::npos)
+  {
+    passedValues = newURI.substr(firstQuestionMark);
+    newURI = newURI.substr(0,firstQuestionMark);
+  }
+
+  // Generate the final URI (with ".." and ".")
+  // ------------------------------------------
+
+  if (newURI.length() == 0)
+  {
+    // If the provided URI was just a bookmark or passsed values, do nothing
+    newURI = tmp.m_address;
+  }
+  else if ((newURI.length() > 1) and (newURI[0] == '/') and (newURI[1] == '/'))
+  {
+    // Absolute URI like "//newserver/file.html". They preserve the schema
+    // but replace the server and file path.
+
+    newURI = newURI.substr(2); // Remove the first two slashes
+  }
+  else if (newURI[0] == '/')
+  {
+    // Absolute URI for the current server. It preserves schema and server.
 
     // Strip off everything after the first / and go to the new URI:
     // www.example.com/about/me + you/name -> www.example.com/you/name
     size_t firstSlash(tmp.m_address.find("/"));
     if (firstSlash == string::npos)
     {
-      newURI += tmp.m_address + newFile;
+      newURI = tmp.m_address + newURI;
     }
     else
     {
-      newURI += tmp.m_address.substr(0,firstSlash) + newFile;
-    }
-  }
-  else if (newFile[0] == '#')
-  {
-    // internal link, add newFile to the existing address
-    size_t lastHash(tmp.m_address.rfind("#"));
-    if (lastHash == string::npos)
-    {
-      newURI = tmp.m_address + newFile;
-    }
-    else
-    {
-      newURI += tmp.m_address.substr(0,lastHash) + newFile;
-    }
-  }
-  else if (newFile[0] == '?')
-  {
-    // internal link, add newFile to the existing address
-    size_t lastQuestionMark(tmp.m_address.rfind("?"));
-    if (lastQuestionMark == string::npos)
-    {
-      newURI = tmp.m_address.substr(0,tmp.m_address.rfind("#")) + newFile;
-    }
-    else
-    {
-      newURI += tmp.m_address.substr(0,lastQuestionMark) + newFile;
+      newURI = tmp.m_address.substr(0,firstSlash) + "/" + newURI;
     }
   }
   else
@@ -327,14 +354,17 @@ URI URI::navigateTo(const std::string & newFile ) const
     size_t lastSlash(tmp.m_address.rfind("/"));
     if (lastSlash == string::npos)
     {
-      newURI += tmp.m_address + "/" + newFile;
+      newURI = tmp.m_address + "/" + newURI;
     }
     else
     {
-      newURI += tmp.m_address.substr(0,lastSlash) +"/"+ newFile;
+      newURI = tmp.m_address.substr(0,lastSlash) + "/" + newURI;
     }
   }
-  // if contains dots -> strip them out
+
+  // Remove all ".." and "."
+  // -----------------------
+
   vector<string> pathElements;
   vector<string> newPath;
   split(newURI, pathElements, string("/"));
@@ -349,18 +379,22 @@ URI URI::navigateTo(const std::string & newFile ) const
       emptyServerName = true;
   }
 
-  vector<string>::const_iterator it(pathElements.begin());
-
-  // skip empties at the start
-  for (; it != pathElements.end(); ++it)
+  bool pathIsDirectory = false;
+  if (newURI.back() == '/')
   {
-    if (not it->empty())
-      break;
+    pathIsDirectory = true;
   }
+
+  vector<string>::const_iterator it(pathElements.begin());
 
   for (; it != pathElements.end();++it)
   {
-    if ( (*it) == "..")
+    if ( (*it) == "")
+    {
+      // Skip empty elements
+      continue;
+    }
+    else if ( (*it) == "..")
     {
       // don't pop the last segment (servername)
       if (newPath.size() > 1)
@@ -390,11 +424,17 @@ URI URI::navigateTo(const std::string & newFile ) const
     newURI += *it;
     needSep = true;
   }
-  // Make sure not to lose trailing slash
-  /*if (newFile[newFile.length()-1] == '/')
-  {
+
+  if (pathIsDirectory)
     newURI += "/";
-  }*/
+
+  // Append the passed values and bookmark
+  // -------------------------------------
+
+  newURI += passedValues + bookmark;
+
+  // Done
+  // ----
 
   tmp.setUri(newURI);
   return tmp;
