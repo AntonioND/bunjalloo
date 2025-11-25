@@ -277,7 +277,7 @@ void HttpClient::get(const URI & uri)
     //If the Accept-Encoding field-value is empty, then only the "identity" encoding is acceptable.
     // -- RFC2616-sec14
     s += "Accept-encoding: gzip,deflate\r\n";
-    s += "Accept: text/html,image/png,image/jpeg,image/gif,image/bmp,image/apng,text/plain\r\n";
+    s += "Accept: text/html,text/xhtml,image/png,image/jpeg,image/gif,image/bmp,image/apng,text/plain\r\n";
 
     s += "User-Agent: ";
     s += userAgent();

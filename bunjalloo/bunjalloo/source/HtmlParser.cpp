@@ -1478,6 +1478,7 @@ void HtmlParser::setMimeType(const std::string &mt)
     m_mimeType = TEXT_PLAIN;
   }
   else if (mt == "text/html"
+      or mt == "text/xhtml"
       or mt == "application/xhtml+xml"
       or mt == "text/vnd.wap.wml"
       or mt == "application/xhtml") {
