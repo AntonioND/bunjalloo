@@ -50,6 +50,8 @@ class Controller
 
     void queueUri(const URI & uri);
 
+    bool downloadQueueIsEmpty();
+
     /** Set the HTTP Referer URI.
      * @param referer the referring site.
      */

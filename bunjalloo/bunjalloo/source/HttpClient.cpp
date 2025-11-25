@@ -424,8 +424,10 @@ void HttpClient::readAll()
       //m_state = FINISHED;
       break;
     case CONNECTION_CLOSED:
+      // This doesn't mean that the website is fully downloaded, only that one
+      // element has been downloaded and the server has closed the connection
       debug("readAll(): CONNECTION_CLOSED");
-      // We have received the full payload, flush Flush m_controller->m_document
+      // We have received the full payload, flush m_controller->m_document
       // to display the results.
       if (m_controller)
         m_controller->m_document.flush();

@@ -209,7 +209,10 @@ void View::notify()
             {
               if (m_state == BROWSE and m_controller.downloadingFile() != m_document.uri())
               {
-                m_controller.stop();
+                if (m_controller.downloadQueueIsEmpty())
+                {
+                  m_controller.stop();
+                }
                 break;
               }
               saveAs();

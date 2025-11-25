@@ -521,6 +521,28 @@ void Controller::stop()
   }
 }
 
+bool Controller::downloadQueueIsEmpty()
+{
+  switch (m_httpClient.state())
+  {
+    case HttpClient::WIFI_OFF:
+        return m_downloadQ.empty();
+
+    case HttpClient::CONNECT_WIFI:
+    case HttpClient::CONNECT_SOCKET:
+    case HttpClient::PROXY_SSL_HANDSHAKE:
+    case HttpClient::GET_URL:
+    case HttpClient::READING_ALL:
+        return false; // Currently downloading something
+
+    case HttpClient::FINISHED:
+    case HttpClient::FAILED:
+        return m_downloadQ.empty();
+  }
+
+  return true;
+}
+
 bool Controller::stopped() const
 {
   return m_stop;
