@@ -24,14 +24,6 @@ bunjalloo-nds: 3rdparty-nds
 bunjalloo-sdl: 3rdparty-sdl
 	PLAT=SDL make -C bunjalloo -j`nproc`
 
-.PHONY: libfont-nds libfont-sdl
-
-libfont-nds:
-	PLAT=NDS make -C libfont -j`nproc`
-
-libfont-sdl:
-	PLAT=SDL make -C libfont -j`nproc`
-
 .PHONY: clean tests tools
 
 clean:
@@ -40,7 +32,7 @@ clean:
 	PLAT=NDS make -C tests -j`nproc` clean
 	make -C tools -j`nproc` clean
 
-tests: bunjalloo-sdl bunjalloo-nds libfont-sdl libfont-nds
+tests: bunjalloo-sdl bunjalloo-nds tools
 	make -C tests -j`nproc`
 
 tools:

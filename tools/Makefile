@@ -2,13 +2,19 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2025
 
-SUBDIRS := $(shell find * -mindepth 1 -maxdepth 1 -name Makefile -printf '%h\n')
+.PHONY: all clean convertftf libfont-nds libfont-sdl
 
-.PHONY: all clean $(SUBDIRS)
+all: convertftf libfont-nds libfont-sdl
 
-all: $(SUBDIRS)
+clean:
+	make clean -C convertftf
+	make clean -C libfont
 
-clean: $(SUBDIRS)
+convertftf:
+	make -C convertftf -j`nproc`
 
-$(SUBDIRS):
-	@$(MAKE) -C $@ $(MAKECMDGOALS)
+libfont-nds:
+	PLAT=NDS make -C libfont -j`nproc`
+
+libfont-sdl:
+	PLAT=SDL make -C libfont -j`nproc`

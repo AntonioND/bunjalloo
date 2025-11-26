@@ -18,7 +18,7 @@ SOURCEDIRS	?= .
 INCLUDEDIRS += ../../bunjalloo/bunjalloo/include/ \
                ../../bunjalloo/bwt/include/ \
                ../../bunjalloo/ndspp/include/ \
-               ../../libfont/include/ \
+               ../../tools/libfont/include/ \
                ../../3rdparty/googletest-1.17.0/googletest/include/ \
 
 GFXDIRS		:=
@@ -38,7 +38,7 @@ LIBS    := -lbunjalloo_sdl -lfont_sdl \
 
 LIBDIRS += ../../3rdparty \
            ../../bunjalloo \
-           ../../libfont \
+           ../../tools/libfont \
 
 # Build artifacts
 # ---------------
