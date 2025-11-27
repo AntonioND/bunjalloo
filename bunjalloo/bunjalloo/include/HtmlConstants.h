@@ -21,21 +21,27 @@ class HtmlConstants
 {
   public:
     const static char A_TAG[];
+    const static char ADDRESS_TAG[];
+    const static char BASE_TAG[];
     const static char BODY_TAG[];
     const static char BR_TAG[];
     const static char B_TAG[];
     const static char DD_TAG[];
     const static char DIV_TAG[];
     const static char DT_TAG[];
+    const static char FONT_TAG[];
     const static char FORM_TAG[];
     const static char FRAMESET_TAG[];
     const static char HEAD_TAG[];
     const static char HR_TAG[];
     const static char HTML_TAG[];
+    const static char I_TAG[];
     const static char IMG_TAG[];
     const static char INPUT_TAG[];
     const static char LI_TAG[];
+    const static char LINK_TAG[];
     const static char META_TAG[];
+    const static char MENU_TAG[];
     const static char NOSCRIPT_TAG[];
     const static char OL_TAG[];
     const static char OPTGROUP_TAG[];
@@ -50,6 +56,7 @@ class HtmlConstants
     const static char TEXT[];
     const static char TEXTAREA_TAG[];
     const static char TITLE_TAG[];
+    const static char U_TAG[];
     const static char UL_TAG[];
 };
 #endif

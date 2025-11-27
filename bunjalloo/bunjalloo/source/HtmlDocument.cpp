@@ -184,8 +184,8 @@ void HtmlDocument::inHead(const std::string & tag, const AttributeVector & attrs
     m_state = MAIN_WAITING_TOKEN;
   }
   else if (
-         tag == "base"
-      or tag == "link"
+         tag == HtmlConstants::BASE_TAG
+      or tag == HtmlConstants::LINK_TAG
       or tag == HtmlConstants::META_TAG
       )
   {
@@ -253,8 +253,8 @@ void HtmlDocument::afterHead(const std::string & tag, const AttributeVector & at
     insertElement(element);
     m_insertionMode = IN_FRAMESET;
   }
-  else if (   tag == "base"
-      or tag == "link"
+  else if (   tag == HtmlConstants::BASE_TAG
+      or tag == HtmlConstants::LINK_TAG
       or tag == HtmlConstants::META_TAG
       or tag == HtmlConstants::SCRIPT_TAG
       or tag == HtmlConstants::STYLE_TAG
@@ -292,8 +292,8 @@ static void setNewAttributes(HtmlElement * element, const AttributeVector & attr
 
 void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs)
 {
-  if (   tag == "base"
-      or tag == "link"
+  if (   tag == HtmlConstants::BASE_TAG
+      or tag == HtmlConstants::LINK_TAG
       or tag == HtmlConstants::META_TAG
       or tag == HtmlConstants::SCRIPT_TAG
       or tag == HtmlConstants::STYLE_TAG
@@ -315,7 +315,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
       setNewAttributes(body, attrs);
     }
   }
-  else if ( tag == "address"
+  else if ( tag == HtmlConstants::ADDRESS_TAG
       or tag == "blockquote"
       or tag == "center"
       or tag == "dir"
@@ -323,11 +323,11 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
       or tag == "dl"
       or tag == "fieldset"
       or tag == "listing"
-      or tag == "menu"
+      or tag == HtmlConstants::MENU_TAG
       or tag == HtmlConstants::OL_TAG
       or tag == HtmlConstants::P_TAG
       or tag == HtmlConstants::UL_TAG
-      or tag == "pre"
+      or tag == HtmlConstants::PRE_TAG
       or tag == HtmlConstants::NOSCRIPT_TAG
       )
   {
@@ -345,7 +345,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
         element->setBlock();
       }
     }
-    // FIXME: if tag == "pre" then eat following LF (if any)
+    // FIXME: if tag == HtmlConstants::PRE_TAG then eat following LF (if any)
   }
   else if (tag == HtmlConstants::FORM_TAG)
   {
@@ -418,15 +418,15 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
   else if ( tag == HtmlConstants::B_TAG
       or tag == "big"
       or tag == "em"
-      or tag == "font"
-      or tag == "i"
+      or tag == HtmlConstants::FONT_TAG
+      or tag == HtmlConstants::I_TAG
       or tag == "nobr"
       or tag == "s"
       or tag == "small"
       or tag == "strike"
       or tag == "strong"
       or tag == "tt"
-      or tag == "u" )
+      or tag == HtmlConstants::U_TAG )
   {
     reconstructActiveFormatters();
     HtmlElement * element = ElementFactory::create(tag, attrs);
@@ -438,7 +438,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
       or tag == "bgsound"
       or tag == HtmlConstants::BR_TAG
       or tag == "embed"
-      or tag == "img"
+      or tag == HtmlConstants::IMG_TAG
       or tag == "param"
       or tag == "spacer"
       or tag == "wbr")
@@ -506,7 +506,7 @@ void HtmlDocument::inBody(const std::string & tag)
       handleEndTag(tag);
     }
   }
-  else if ( tag == "address"
+  else if ( tag == HtmlConstants::ADDRESS_TAG
       or tag == "blockquote"
       or tag == "center"
       or tag == "dir"
@@ -514,9 +514,9 @@ void HtmlDocument::inBody(const std::string & tag)
       or tag == "dl"
       or tag == "fieldset"
       or tag == "listing"
-      or tag == "menu"
+      or tag == HtmlConstants::MENU_TAG
       or tag == HtmlConstants::OL_TAG
-      or tag == "pre"
+      or tag == HtmlConstants::PRE_TAG
       or tag == HtmlConstants::UL_TAG
       or tag == HtmlConstants::NOSCRIPT_TAG
       )
@@ -577,15 +577,15 @@ void HtmlDocument::inBody(const std::string & tag)
          or tag == HtmlConstants::B_TAG
          or tag == "big"
          or tag == "em"
-         or tag == "font"
-         or tag == "i"
+         or tag == HtmlConstants::FONT_TAG
+         or tag == HtmlConstants::I_TAG
          or tag == "nobr"
          or tag == "s"
          or tag == "small"
          or tag == "strike"
          or tag == "strong"
          or tag == "tt"
-         or tag == "u" )
+         or tag == HtmlConstants::U_TAG )
   {
     adoptionAgency(tag);
   }
@@ -632,7 +632,7 @@ void HtmlDocument::inBody(const std::string & tag)
       or tag == "bgsound"
       or tag == HtmlConstants::BR_TAG
       or tag == "embed"
-      or tag == "img"
+      or tag == HtmlConstants::IMG_TAG
       or tag == "param"
       or tag == "spacer"
       or tag == "wbr")
@@ -1199,15 +1199,15 @@ bool HtmlDocument::isFormatting(HtmlElement * node)
     or node->isa(HtmlConstants::B_TAG)
     or node->isa("big")
     or node->isa("em")
-    or node->isa("font")
-    or node->isa("i")
+    or node->isa(HtmlConstants::FONT_TAG)
+    or node->isa(HtmlConstants::I_TAG)
     or node->isa("nobr")
     or node->isa("s")
     or node->isa("small")
     or node->isa("strike")
     or node->isa("strong")
     or node->isa("tt")
-    or node->isa("u");
+    or node->isa(HtmlConstants::U_TAG);
 }
 bool HtmlDocument::isPhrasing(HtmlElement * node)
 {
@@ -1600,7 +1600,7 @@ void HtmlDocument::startScopeClosedElement(const std::string & tag, const std::s
     /* 3. If node is not in the formatting category, and is not in the
      * phrasing category, and is not an address or div element, then stop
      * this algorithm.  */
-    if (not isFormatting(node) and not isPhrasing(node) and not node->isa("address") and not node->isa(HtmlConstants::DIV_TAG))
+    if (not isFormatting(node) and not isPhrasing(node) and not node->isa(HtmlConstants::ADDRESS_TAG) and not node->isa(HtmlConstants::DIV_TAG))
     {
       break;
     }
