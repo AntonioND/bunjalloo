@@ -36,6 +36,7 @@ class HtmlConstants
     const static char INPUT_TAG[];
     const static char LI_TAG[];
     const static char META_TAG[];
+    const static char NOSCRIPT_TAG[];
     const static char OL_TAG[];
     const static char OPTGROUP_TAG[];
     const static char OPTION_TAG[];

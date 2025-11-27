@@ -32,6 +32,7 @@ const char HtmlConstants::IMG_TAG[] = "img";
 const char HtmlConstants::INPUT_TAG[] = "input";
 const char HtmlConstants::LI_TAG[] = "li";
 const char HtmlConstants::META_TAG[] = "meta";
+const char HtmlConstants::NOSCRIPT_TAG[] = "noscript";
 const char HtmlConstants::OL_TAG[] = "ol";
 const char HtmlConstants::OPTGROUP_TAG[] = "optgroup";
 const char HtmlConstants::OPTION_TAG[] = "option";

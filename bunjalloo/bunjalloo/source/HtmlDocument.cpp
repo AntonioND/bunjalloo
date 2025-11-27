@@ -301,6 +301,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
      )
   {
     // Parse error.. or not. Process as if in IN_HEAD mode
+    // Note: All scripts are added to the head node
     m_insertionMode = IN_HEAD;
     handleStartTag(tag, attrs);
     m_insertionMode = IN_BODY;
@@ -327,6 +328,7 @@ void HtmlDocument::inBody(const std::string & tag, const AttributeVector & attrs
       or tag == HtmlConstants::P_TAG
       or tag == HtmlConstants::UL_TAG
       or tag == "pre"
+      or tag == HtmlConstants::NOSCRIPT_TAG
       )
   {
     if (inScope(HtmlConstants::P_TAG))
@@ -516,6 +518,7 @@ void HtmlDocument::inBody(const std::string & tag)
       or tag == HtmlConstants::OL_TAG
       or tag == "pre"
       or tag == HtmlConstants::UL_TAG
+      or tag == HtmlConstants::NOSCRIPT_TAG
       )
   {
     if (inScope(tag))
