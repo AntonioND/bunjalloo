@@ -140,10 +140,12 @@ class Font
      * @param x the x position in 24.8 fixed point
      * @param y the y position in 24.8 fixed point
      * @param right edge of the area in 24.8 fixed point
+     * @param bottom edge of the area in 24.8 fixed point
      * @param color the color of the glyph
      * @return -1 if a new line, else the size of the value advance.
      */
-    int doSingleChar(unsigned int value, int x, int y, int right, int color, int bgcolor);
+    int doSingleChar(unsigned int value, int x, int y, int right, int bottom,
+                     int color, int bgcolor);
 
     /** Initialise the font.
      * @param imageData the glyph image data

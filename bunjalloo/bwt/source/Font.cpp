@@ -320,7 +320,8 @@ std::string Font::shorterWordFromLong(
   return shorterWord;
 }
 
-int Font::doSingleChar(unsigned int value, int cursorx, int cursory, int right, int color, int bgcolor)
+int Font::doSingleChar(unsigned int value, int cursorx, int cursory, int right, int bottom,
+                       int color, int bgcolor)
 {
   if (value == '\n')
     return -1;
@@ -330,6 +331,10 @@ int Font::doSingleChar(unsigned int value, int cursorx, int cursory, int right, 
   if (round_down(cursorx + g->advanceX) > round_down(right)) {
     return -2;
   }
+  if ((cursory + height()) > round_down(bottom)) {
+    return -2;
+  }
+
   printAt(*g, cursorx, cursory, color, bgcolor);
   return g->advanceX;
 }

@@ -19,6 +19,7 @@
 
 #include "Font.h"
 #include "Component.h"
+#include "Rectangle.h"
 #include <list>
 
 /** A widget for displaying text.*/
@@ -119,9 +120,10 @@ class TextArea : public Component
     inline std::string & currentLine();
 
     /** Called for each line of text that is visible. */
-    virtual void printu(const std::string & unicodeString);
+    virtual void printu(const std::string & unicodeString,
+                        const nds::Rectangle & clip);
 
-    bool doSingleChar(int value);
+    bool doSingleChar(int value, const nds::Rectangle & clip);
 
   protected:
     //! Position that the current line is at.

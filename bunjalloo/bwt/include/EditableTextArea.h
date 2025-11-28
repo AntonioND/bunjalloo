@@ -17,6 +17,7 @@
 #ifndef EditableTextArea_h_seen
 #define EditableTextArea_h_seen
 
+#include "Rectangle.h"
 #include "TextArea.h"
 #include "TextEntryI.h"
 
@@ -71,7 +72,8 @@ class EditableTextArea: public TextArea, public TextEntryI
     virtual bool stylusDown(const Stylus * stylus);
   protected:
     /** Overloaded from TextArea. If echo is off, shows * instead of text.*/
-    virtual void printu(const std::string &unicodeString);
+    virtual void printu(const std::string &unicodeString,
+                        const nds::Rectangle & clip);
 
   private:
     int m_caretLine { -1 };

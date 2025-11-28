@@ -166,39 +166,57 @@ void TextArea::incrLine()
   m_cursory += m_font->height();
 }
 
-bool TextArea::doSingleChar(int value)
+bool TextArea::doSingleChar(int value, const nds::Rectangle & clip)
 {
   int advance = m_font->doSingleChar(
       value,
       m_cursorx,
       m_cursory,
-      m_bounds.right() << 8,
+      min(m_bounds.right(), clip.right()) << 8,
+      min(m_bounds.bottom(), clip.bottom()) << 8,
       m_fgCol,
       m_bgCol);
   if (advance == -2) {
     // requires more space
     incrLine();
+    if ((m_cursory > m_bounds.bottom()) or (m_cursory > clip.bottom()))
+      return true;
+
     advance = m_font->doSingleChar(
         value,
         m_cursorx,
         m_cursory,
-        m_bounds.right() << 8,
+        min(m_bounds.right(), clip.right()) << 8,
+        min(m_bounds.bottom(), clip.bottom()) << 8,
         m_fgCol,
         m_bgCol);
     if (advance < 0)
       return false;
   }
   m_cursorx += advance;
-  return m_cursory > m_bounds.bottom();
+  if ((m_cursory > m_bounds.bottom()) or (m_cursory > clip.bottom()))
+    return true;
+
+  return false;
 }
 
-void TextArea::printu(const std::string & unicodeString)
+void TextArea::printu(const std::string & unicodeString,
+                      const nds::Rectangle & clip)
 {
   std::string::const_iterator it(unicodeString.begin());
-  for (; it != unicodeString.end() and m_cursory < m_bounds.bottom(); )
+  while (1)
   {
+    if (it == unicodeString.end())
+      break;
+
+    if ((m_cursory >= m_bounds.bottom()) or (m_cursory >= clip.bottom()))
+      break;
+
+    if ((m_cursorx >= (m_bounds.right() << 8)) or (m_cursorx >= (clip.right() << 8)))
+      break;
+
     uint32_t value = utf8::next(it, unicodeString.end());
-    if (doSingleChar(value))
+    if (doSingleChar(value, clip))
       break;
   }
 }
@@ -271,7 +289,7 @@ void TextArea::paint(const nds::Rectangle & clip)
 
   for (; it != m_document.end() and (m_cursory < m_bounds.bottom()) and (m_cursory < clip.bottom()); ++it)
   {
-    printu(*it);
+    printu(*it, clip);
     incrLine();
   }
 }

@@ -20,6 +20,7 @@
 #include <map>
 #include "TextArea.h"
 #include "Link.h"
+#include "Rectangle.h"
 
 class LinkListener;
 /** Class that adds clickable Links, etc, to a standard TextArea. */
@@ -78,7 +79,8 @@ class RichTextArea: public TextArea
   protected:
     /** Overloaded from TextArea. This checks the current char vs the links to
      * see if the current character is a link or not.*/
-    virtual void printu(const std::string &unicodeString);
+    virtual void printu(const std::string &unicodeString,
+                        const nds::Rectangle & clip);
 
     virtual void incrLine();
 

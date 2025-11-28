@@ -172,8 +172,10 @@ void RichTextArea::incrLine()
   m_lineNumber++;
 }
 
-void RichTextArea::printu(const std::string & unicodeString)
+void RichTextArea::printu(const std::string & unicodeString,
+                          const nds::Rectangle & clip)
 {
+  // TODO: Use "clip" to check bounds faster than just relying on doSingleChar()
   static const std::string delimeter(" \r\n\t");
   unsigned int lastPosition = findLastNotOf(unicodeString, delimeter);
   unsigned int i = 0;
@@ -196,7 +198,7 @@ void RichTextArea::printu(const std::string & unicodeString)
     if (i > lastPosition) {
       continue;
     }
-    if (doSingleChar(value))
+    if (doSingleChar(value, clip))
       break;
     ++i;
   }
@@ -344,7 +346,7 @@ void RichTextArea::paint(const nds::Rectangle & clip)
 
   for (; it != m_document.end() and (m_cursory < m_bounds.bottom()) and (m_cursory < clip.bottom()); ++it)
   {
-    printu(*it);
+    printu(*it, clip);
     incrLine();
   }
 }

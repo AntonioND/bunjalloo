@@ -21,6 +21,7 @@
 #include "Palette.h"
 #include "ScrollPane.h"
 #include "Stylus.h"
+#include "Rectangle.h"
 #include "TextListener.h"
 #include "utf8.h"
 #include "WidgetColors.h"
@@ -34,16 +35,19 @@ EditableTextArea::EditableTextArea(Font * font) :
 {
 }
 
-void EditableTextArea::printu(const std::string & unicodeString)
+void EditableTextArea::printu(const std::string & unicodeString,
+                              const nds::Rectangle & clip)
 {
   if (echoText())
   {
-    TextArea::printu(unicodeString);
+    TextArea::printu(unicodeString, clip);
   }
   else
   {
-    TextArea::printu(createPasswordMask(
-          utf8::distance(unicodeString.begin(), unicodeString.end())));
+    TextArea::printu(
+        createPasswordMask(utf8::distance(unicodeString.begin(),
+                                          unicodeString.end())),
+        clip);
   }
 }
 
