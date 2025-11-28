@@ -394,6 +394,7 @@ void ViewRender::pushTextArea()
 void ViewRender::setTextAreaIndentation()
 {
   m_textArea->setIndentation(m_indentation);
+  m_textArea->setLocation(m_indentation, m_textArea->y());
   m_textArea->setSize(nds::Canvas::instance().width()-7-m_indentation,
                       m_textArea->font().height());
 }

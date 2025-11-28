@@ -48,18 +48,6 @@ class BoxLayout::Box
       for_each(m_children.begin(), m_children.end(), delete_ptr());
     }
 
-    bool tryAdd(Component *child)
-    {
-      if (m_forceEnd)
-        return false;
-      if ((child->width() + m_bounds.w) > m_parent->width())
-      {
-        return false;
-      }
-      addPrivate(child);
-      return true;
-    }
-
     void setPosition(int x, int y)
     {
       m_bounds.x = x;
@@ -113,6 +101,16 @@ class BoxLayout::Box
         return 0;
       BoundComponent *bc(*m_children.rbegin());
       return bc->component();
+    }
+
+    void addPrivate(Component *child)
+    {
+      BoundComponent * boundChild = new (std::nothrow) BoundComponent(child);
+      if (boundChild == NULL)
+        libndsCrash("addPrivate(): OOM");
+
+      m_children.insert(boundChild);
+      recalcSize();
     }
 
     int m_indentation { -1 };
@@ -174,18 +172,6 @@ class BoxLayout::Box
       m_bounds.w = w;
       m_bounds.h = h;
     }
-
-    void addPrivate(Component *child)
-    {
-      child->setLocation(m_bounds.right(), m_bounds.top());
-
-      BoundComponent * boundChild = new (std::nothrow) BoundComponent(child);
-      if (boundChild == NULL)
-        libndsCrash("addPrivate(): OOM");
-
-      m_children.insert(boundChild);
-      recalcSize();
-    }
 };
 
 BoxLayout::BoxLayout()
@@ -210,56 +196,83 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::addToLayout(Component *child)
 {
-  // mostly copied from RichTextArea...
-  // now see *where* this should go in box terms
-  // oh! idea: add a "setSizeFixed()" method to prevent RichTextArea and
+  // See where this component should be placed considering the location of the
+  // previous components. It can only place components directly to the right of
+  // the previous one or directly below all previous components. It can't place
+  // it below a component that is already to the right of another component.
+
+  // TODO: Add a "setSizeFixed()" method to prevent RichTextArea and
   // friends from resizing after being fixed into position?
+
   const Rectangle &bounds(child->preferredSize());
+
+  // Calculate max allowed width considering the indentation of the element.
   int w(bounds.w);
-  if (w > m_bounds.w) {
-    w = m_bounds.w;
-  }
-  child->setSize(w, bounds.h);
-  Box *lastBox(m_boxes.front());
-  // remove height from last box, in case we resize the box
-  if (m_boxes.size() > 1)
+  if (child->indentation() == -1)
   {
-    m_bounds.h -= lastBox->bounds().h;
+    if (w > m_bounds.w)
+      w = m_bounds.w;
   }
   else
   {
-    m_bounds.h = 0;
+    if (w > m_bounds.w + child->indentation())
+      w = m_bounds.w - child->indentation();
   }
+  child->setSize(w, bounds.h);
 
-  bool added = false;
-  // If no indentation has been specified, try to append  to previous element
-  if (child->indentation() == -1)
-    added = lastBox->tryAdd(child);
-
-  if (not added)
+  // Get position of the previous component
+  int lastBoxX = 0;
+  int lastBoxY = 0;
+  int lastBoxW = 0;
+  //int lastBoxH = 0;
+  bool lastBoxForceEnd = false;
   {
-    // Did not fit, so now we need to add the last height on again
-    m_bounds.h += lastBox->bounds().h;
-    Rectangle lbb(lastBox->bounds());
-    lastBox = new (std::nothrow) Box(this);
-    if (lastBox == NULL)
-      libndsCrash("addToLayout(): OOM");
-
-    if (child->indentation() == -1)
-      lastBox->setPosition(lbb.x, lbb.bottom());
-    else
-      lastBox->setPosition(child->indentation(), lbb.bottom());
-
-    int right = lastBox->bounds().x + lastBox->bounds().w;
-    if (right > m_bounds.w) {
-      lastBox->setSize(m_bounds.w - lastBox->bounds().x, lastBox->bounds().h);
+    Box *lastBox(m_boxes.front());
+    if (lastBox)
+    {
+      lastBoxX = lastBox->bounds().x;
+      lastBoxY = lastBox->bounds().y;
+      lastBoxW = lastBox->bounds().w;
+      //lastBoxH = lastBox->bounds().h;
+      lastBoxForceEnd = lastBox->forceEnd();
     }
-
-    lastBox->tryAdd(child);
-    m_boxes.push_front(lastBox);
   }
+
+  bool canBeAppended = false;
+
+  if ((!lastBoxForceEnd) and (child->indentation() == -1))
+  {
+    // If a new line hasn't been forced and a new indentation hasn't been set,
+    // try to add the new component to the right of the previous ones.
+
+    if ((w + lastBoxX + lastBoxW) < width())
+    {
+      canBeAppended = true;
+      child->setLocation(lastBoxX + lastBoxW, lastBoxY);
+    }
+  }
+
+  if (!canBeAppended)
+  {
+    // If it can't be appended (it doesn't fit, or a new line/indentation has
+    // been requested) add it below everything else.
+    child->setLocation(child->indentation(), m_bounds.h);
+  }
+
+  Box * newBox = new (std::nothrow) Box(this);
+  if (newBox == NULL)
+    libndsCrash("addToLayout(): OOM");
+
+  newBox->setPosition(child->x(), child->y());
+  newBox->setSize(child->width(), child->height());
+
+  newBox->addPrivate(child);
+  m_boxes.push_front(newBox);
+
   // Add height of the last box, whatever it was to the bounds height
-  m_bounds.h += lastBox->bounds().h;
+  int newLimitY = newBox->bounds().y + newBox->bounds().h;
+  if (newLimitY > m_bounds.h)
+    m_bounds.h = newLimitY;
 }
 
 void BoxLayout::add(Component *child)
@@ -346,6 +359,8 @@ unsigned int BoxLayout::boxCount() const
 
 void BoxLayout::doLayout(bool force)
 {
+  m_bounds.h = 0;
+
   // redo all boxes layout
   std::list<Box*>::iterator it = m_boxes.begin();
   if (not force) {
