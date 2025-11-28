@@ -267,9 +267,13 @@ void Font::printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int colo
     if ((yPosition + ybounds) < 0) return;
     ystart = -yPosition;
   }
-  const unsigned char *data = &g.image.bitmap[ystart * (g.image.width / 4)];
+
   for (int y = ystart; y < ybounds; ++y)
   {
+    // Get pointer to the start of this row. We may not be able to draw full
+    // rows if we're on the right edge of the text area.
+    const unsigned char *data = &g.image.bitmap[y * (g.image.width / 4)];
+
     // width is not a multiple of 4 necessarily
     int x = 0;
     unsigned char pixelCuartet(0);
