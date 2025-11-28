@@ -359,45 +359,33 @@ unsigned int BoxLayout::boxCount() const
 
 void BoxLayout::doLayout(bool force)
 {
+  // The height needs to be set to 0 so that it is recalculated here. HOwever, X
+  // and Y shouldn't be needed in principle. In practice, they also need to be
+  // set to 0.
+  m_bounds.x = 0;
+  m_bounds.y = 0;
   m_bounds.h = 0;
 
-  // redo all boxes layout
-  std::list<Box*>::iterator it = m_boxes.begin();
-  if (not force) {
-    it = find_if(
-        m_boxes.begin(), m_boxes.end(),
-        std::mem_fun(&Box::hasChanged));
-  }
-  if (it != m_boxes.end())
+  std::vector<bool> forceEndVector;
+
+  // Delete all Boxes to avoid mem leaks
+  for (std::list<Box*>::const_iterator it(m_boxes.begin()); it != m_boxes.end(); ++it)
   {
-    // needs redoing
-    // find the components that are followed by forced newlines
-    // delete all Boxes to avoid mem leaks
-    std::set<Component*> lastBeforeForce;
-    for (std::list<Box*>::const_iterator it(m_boxes.begin()); it != m_boxes.end(); ++it)
-    {
-      Box *b(*it);
-      if (b->forceEnd())
-      {
-        Component * c(b->lastComponent());
-        if (c)
-        {
-          lastBeforeForce.insert(c);
-        }
-      }
-      delete b;
-    }
-    m_boxes.clear();
-    initBoxes();
-    for (std::vector<Component*>::iterator it(m_children.begin()); it != m_children.end(); ++it)
-    {
-      Component *c(*it);
-      addToLayout(c);
-      if (lastBeforeForce.find(c) != lastBeforeForce.end())
-      {
-        m_boxes.front()->setForceEnd(true);
-      }
-    }
+    Box *b(*it);
+    forceEndVector.push_back(b->forceEnd());
+    delete b;
+  }
+  m_boxes.clear();
+
+  // Recreate list of Boxes
+  initBoxes();
+  int i = 0;
+  for (std::vector<Component*>::iterator it(m_children.begin()); it != m_children.end(); ++it)
+  {
+    Component *c(*it);
+    addToLayout(c);
+    if (forceEndVector[i++])
+      insertNewline();
   }
 }
 
