@@ -173,7 +173,7 @@ bool TextArea::doSingleChar(int value, const nds::Rectangle & clip)
       m_cursorx,
       m_cursory,
       min(m_bounds.right(), clip.right()) << 8,
-      min(m_bounds.bottom(), clip.bottom()) << 8,
+      min(m_bounds.bottom(), clip.bottom()),
       m_fgCol,
       m_bgCol);
   if (advance == -2) {
@@ -187,7 +187,7 @@ bool TextArea::doSingleChar(int value, const nds::Rectangle & clip)
         m_cursorx,
         m_cursory,
         min(m_bounds.right(), clip.right()) << 8,
-        min(m_bounds.bottom(), clip.bottom()) << 8,
+        min(m_bounds.bottom(), clip.bottom()),
         m_fgCol,
         m_bgCol);
     if (advance < 0)

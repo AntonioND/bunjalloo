@@ -235,11 +235,13 @@ inline int M(const Color &fg, const Color &bg)
 }
 static int colors[4] = { 0 };
 
-void Font::printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int color, int bgcolor)
+void Font::printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int right, int bottom,
+                   int color, int bgcolor)
 {
   xPosition += g.deltaX << 7;
   yPosition = yPosition + base() + g.deltaY;
-  if ( (colors[0] != color) or (colors[3] != bgcolor)) {
+
+  if ((colors[0] != color) or (colors[3] != bgcolor)) {
     Color fg(color);
     Color bg(bgcolor);
     colors[0] = bg;
@@ -247,22 +249,29 @@ void Font::printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int colo
     colors[2] = M(fg, bg);
     colors[3] = fg;
   }
+
   Canvas &canvas(Canvas::instance());
   const nds::Rectangle &clip(canvas.clip());
+
   int xbounds = g.image.width;
-  if ((xPosition + round_up(g.image.width)) > round_up(clip.right())) {
-    xbounds = clip.right() - round_down(xPosition);
+  if ((xPosition + round_up(g.image.width)) > right) {
+    xbounds = round_down(right - xPosition);
     if (xbounds < 0)
       xbounds = 0;
   }
+
   int ybounds = g.image.height;
-  if ((yPosition + ybounds) > clip.bottom()) {
-    ybounds = clip.bottom() - yPosition;
+  if ((yPosition + ybounds) > bottom) {
+    ybounds = bottom - yPosition;
+    if (ybounds < 0)
+      ybounds = 0;
   }
+
   int ystart = 0;
   if (clip.top() > yPosition) {
     ystart = clip.top() - yPosition;
   }
+
   if (yPosition < 0) {
     if ((yPosition + ybounds) < 0) return;
     ystart = -yPosition;
@@ -328,14 +337,23 @@ int Font::doSingleChar(unsigned int value, int cursorx, int cursory, int right, 
   if (value == 0xfffd)
     value = '?';
   t_prerenderedGlyph *g(glyph(value));
+
+  // If the character doesn't fully fit in this line, tell the caller to go down
+  // one line.
   if (round_down(cursorx + g->advanceX) > round_down(right)) {
     return -2;
   }
-  if ((cursory + height()) > round_down(bottom)) {
+
+  // If the top of the character is completely outside of the limits, return.
+  // However, don't return if it's only partially inside. If it's partially
+  // inside we may be printing in a text box that can't fit all text and we may
+  // have reached the limit. Also, we need to print partial characters if we're
+  // scrolling.
+  if (cursory > bottom) {
     return -2;
   }
 
-  printAt(*g, cursorx, cursory, color, bgcolor);
+  printAt(*g, cursorx, cursory, right, bottom, color, bgcolor);
   return g->advanceX;
 }
 

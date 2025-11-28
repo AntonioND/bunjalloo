@@ -167,7 +167,8 @@ class Font
     t_prerenderedGlyph *glyph(unsigned int charCode) const;
     int valueToIndex(unsigned int codepoint) const;
     int minGlyph() const;
-    void printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int color, int bg);
+    void printAt(t_prerenderedGlyph &g, int xPosition, int yPosition, int right, int bottom,
+                 int color, int bg);
 
     DISALLOW_COPY_AND_ASSIGN(Font);
 };
