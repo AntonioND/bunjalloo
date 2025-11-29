@@ -1,5 +1,89 @@
 # Bunjaloo Changelog
 
+## Version DEV (XXXX-XX-XX)
+
+- User changes:
+
+  - Lists (unordered and ordered) are now supported. They aren't perfect, but
+    they make lots of websites a lot more readable than before.
+  - The system that lays out elements on the screen has been heavily reworked,
+    which was needed to support lists. Some websites display more spaces than
+    before in some places.
+  - Links of the type `//yourdomain.com/about/example.html` now work. They are
+    absolute links that contain everything except for the schema (HTTP, HTTPS,
+    etc), which is preserved.
+  - The download queue used to stop before some files were fully downloaded.
+    This prevented some images from being displayed, for example.
+  - MIME type `text/xhtml` is now allowed. It's parsed the same way as HTML.
+  - Editable text areas were very buggy. The caret jumped around when editing
+    text around the edges, adding and deleting characters could make the
+    application crash. This has been fixed.
+  - Combo boxes with entries that were too long displayed text outside of the
+    box, on the right (only after selecting a too long entry). The text is now
+    clipped correctly.
+  - The font Bitstream Vera has been replaced by DejaVu, which is based on
+    Bitstream Vera and adds a lot of additional characters. The license text has
+    been replaced as well. Note that it wasn't possible to keep using the old
+    TTF file because the converted font wasn't created using `convertftf`, but a
+    conversion script that was removed before version 0.8.0.
+  - Charset detection has been improved. Some websites, like Wikipedia, were
+    using `meta` tags to communicate the encoding, and they were ignored by the
+    parser.
+  - Websites are now considered to be encoded in UTF-8 instead of ISO 8859-1.
+    This is needed because some websites may communicate the encoding in ways
+    that Bunjalloo doesn't understand, and most websites are in UTF-8 anyway.
+  - ISO 8859-1 decoding has been improved. Replacement characters are printed
+    when invalid encodings are found.
+  - The home page of the browser has been simplified.
+  - Websites that ended with an incomplete UTF-8 character would hang the HTML
+    parser. This has been fixed.
+  - Version 0.11.0 partially fixed a bug where combo boxes would remain open
+    after going forwards or backwards in the browsing history, for example. This
+    has now been fixed properly.
+  - The SDL application will exit instead of crashing if the inittialization of
+    SDL fails.
+
+- Dev changes:
+
+  - Components now support having indentation. ViewRender and BoxLayout have
+    been modified to support components with indentation, like lists. In a list,
+    new text areas are created whenever a new indentation is needed.
+  - The HTML renderer and BoxLayout have been modified to support indentation.
+  - 3 digit color codes are now supported in the HTML parser. They will be used
+    to change the background color, but it isn't supported yet.
+  - The HTML formatting of the in-application user documentation has been fixed.
+  - The build system has been heavily refactored. Instead of building many
+    libraries (libbunjalloo, libbwt, libndspp) and linking them with the final
+    binary (Bunjalloo and unit tests), now there's a common makefile that
+    generates libbunjalloo and the Bunjalloo binary. Thanks to this the
+    makefiles of the tests only have to link one library instead of three. Also,
+    it's easier to make changes to Bunjalloo because any changes in the code
+    will trigger a rebuild of the final binary (with different libraries the
+    Makefile of the binary couldn't detect changes to the libraries).
+  - The HTML parser now looks for `noscript` tags explicitly. Previously it
+    still displayed the contents inside of them, but now it will be easier to
+    change their display style if needed.
+  - libvera has been renamed to libfont to be more generic and to not require
+    more changes in the future.
+  - Some outdated documentation has been cleaned and moved out of the wiki
+    folder where they were initially saved.
+  - All remaining tests with issues have been fixed. For example, the updater
+    tests no longer crash on exit (it was caused due to a call to a pure virtual
+    function in the Client class, which has been fixed).
+  - There is now some debug code that paints rectangles around website elements
+    on the screen. This is useful for debugging only, and it requires a rebuild
+    to be enabled.
+  - Some hardcoded strings have been replaced by constant names.
+  - Bunjalloo now requests UTF-8 encoding before ISO 8859-1 in GET requests.
+  - `convertftf` has been improved:
+
+    - It has more error checks.
+    - It allows cutting off pixels from the top or bottom of the font so that it
+      fits better in the current widgets.
+    - Color rounding has been simplified.
+    - An additional shell script has been added to convert DejaVu automatically
+      instead of having to remember how to run `convertftf` every time.
+
 ## Version 0.11.0 (2025-11-16)
 
 When updating to this version you should keep your `data/bunjalloo/user` files
