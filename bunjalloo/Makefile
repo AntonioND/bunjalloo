@@ -16,9 +16,9 @@ ifeq ($(PLAT),NDS)
     NAME		:= bunjalloo
     ARCHIVE		:= lib/lib$(NAME)_nds.a
 
-    GAME_TITLE	:= Bunjalloo 0.11.0
+    GAME_TITLE	:= Bunjalloo 0.12.0
     GAME_SUBTITLE	:= Web Browser
-    GAME_AUTHOR	:= By Richard Quirk
+    GAME_AUTHOR	:= for Nintendo DS
     GAME_ICON	:= icon.bmp
 
 else ifeq ($(PLAT),SDL)

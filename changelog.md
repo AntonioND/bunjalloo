@@ -1,6 +1,6 @@
 # Bunjaloo Changelog
 
-## Version DEV (XXXX-XX-XX)
+## Version 0.12.0 (2025-11-29)
 
 - User changes:
 
