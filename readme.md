@@ -2,7 +2,7 @@
 
 This is Bunjalloo, the open source Nintendo DS web browser. It was originally
 developed by Richard Quirk until 2010. This repository contains a working fork
-that you can build with modern BlocksDS.
+that you can build with modern [BlocksDS](https://blocksds.skylyrac.net).
 
 Bunjalloo has been implemented from scratch [using the whatwg user agent design
 rules](http://www.whatwg.org/).
