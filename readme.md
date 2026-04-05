@@ -33,6 +33,11 @@ SD card. The contents of `sdroot` must be copied to the root of your SD card.
 - Click stylus: Follow link, enter data in forms, press keys.
 - Hold stylus: Scroll.
 
+## User guide
+
+You can check [this link](./docs/user_guide.md) for more information about
+several settings and controls.
+
 ## Features
 
 - Slot-2 RAM expansion support (Opera, SuperCard SD, etc).
