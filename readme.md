@@ -17,7 +17,7 @@ debug it.
 ## Setup
 
 In order to install it in your Nintendo DS or DSi, copy `bunjalloo.nds` to your
-SD card. The contents of `sdroot` must be copied to the root of your SD card.
+SD card.
 
 ## Controls
 
