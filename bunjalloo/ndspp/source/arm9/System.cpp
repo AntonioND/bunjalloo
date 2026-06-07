@@ -20,7 +20,10 @@
 
 const char * nds::System::uname()
 {
-  return "Nintendo DS";
+  if (isDSiMode())
+    return "Nintendo DSi";
+  else
+    return "Nintendo DS";
 }
 
 int nds::System::language()
